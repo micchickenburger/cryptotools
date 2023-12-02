@@ -1,0 +1,26 @@
+{
+  "name": "@micchickenburger/cryptotools",
+  "version": "0.0.1",
+  "description": "Simple tools for secure random generation, transformation, and crypto operations in the browser",
+  "browser": true,
+  "private": true,
+  "scripts": {
+    "start": "esbuild index.ts --bundle --minify --sourcemap --platform=browser --target=es6 --outfile=../public/lib/script.js --watch=forever",
+    "build": "esbuild index.ts --bundle --minify --sourcemap --platform=browser --target=es6 --outfile=../public/lib/script.js"
+  },
+  "author": "Micah Henning <hello@micah.soy>",
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://github.com/micchickenburger/cryptotools#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/micchickenburger/cryptotools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/micchickenburger/cryptotools/issues"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.8",
+    "esbuild-plugin-tsc": "^0.4.0",
+    "typescript": "^5.3.2"
+  }
+}

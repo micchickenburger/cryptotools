@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/index.ts"],
+  "sourcesContent": ["console.log('test');\n"],
+  "mappings": "mBAAA,QAAQ,IAAI,MAAM",
+  "names": []
+}

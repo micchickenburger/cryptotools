@@ -1,0 +1,18 @@
+version: '3'
+services:
+  node:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./src:/src
+      - ./public:/public
+
+  web:
+    image: nginx
+    ports:
+      - 8080:80
+    volumes:
+      - ./public:/usr/share/nginx/html:ro
