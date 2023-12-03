@@ -3,7 +3,7 @@ services:
   node:
     build:
       context: .
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./docker/node.Dockerfile
     environment:
       NODE_ENV: development
     volumes:
@@ -11,8 +11,10 @@ services:
       - ./public:/public
 
   web:
-    image: nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx.Dockerfile
     ports:
-      - 8080:80
+      - 8443:443
     volumes:
       - ./public:/usr/share/nginx/html:ro
