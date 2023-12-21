@@ -34,6 +34,20 @@ copyAnchor?.addEventListener('click', async (event) => {
   }
 });
 
+const menuLabel = document.querySelector<HTMLElement>('footer .menu-label');
+menuLabel?.addEventListener('click', (event) => {
+  event.preventDefault();
+  const menu = document.querySelector<HTMLElement>('#menu');
+  if (menu) menu.classList.add('open');
+});
+
+const menuCloseLabel = document.querySelector<HTMLElement>('footer #menu .close');
+menuCloseLabel?.addEventListener('click', (event) => {
+  event.preventDefault();
+  const menu = document.querySelector<HTMLElement>('#menu');
+  if (menu) menu.classList.remove('open');
+});
+
 async function digestMessage(message: string) {
   const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
   const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8); // hash the message

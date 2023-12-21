@@ -9,9 +9,11 @@
     <div id="loader"></div>
     <main>
       <h1>SHA-512 Digest</h1>
-      <p>Produce a SHA-512 digest from input data.</p>
-      <textarea id="from" rows="10" placeholder="Paste text..."></textarea>
-      <button>Generate Digest</button>
+      <div>
+        <p>Produce a SHA-512 digest from input data.</p>
+        <textarea id="from" rows="10" placeholder="Paste text..."></textarea>
+        <button>Generate Digest</button>
+      </div>
       <div id="result">
         <div class="content"></div>
         <a href="#" class="copy">
@@ -20,7 +22,27 @@
         </a>
       </div>
     </main>
-    <footer></footer>
+    <footer>
+      <div class="copyright">
+        &copy; <a href="https://micah.soy">Micah Henning</a>
+      </div>
+      <a class="menu-label" href="#">Menu</a>
+      <div id="menu">
+        <div class="content">
+          <div class="sha">
+            <h1>Digests</h1>
+            <h2>SHA</h2>
+            <ul>
+              <li>SHA-512</li>
+            </ul>
+          </div>
+        </div>
+        <a class="close" href="#">Close X</a>
+      </div>
+      <div class="host">
+        Hosted on <a href="https://ghosthost.app">Ghost Host</a>
+      </div>
+    </footer>
     <script src="/lib/script.js"></script>
   </body>
 </html>
