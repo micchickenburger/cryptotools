@@ -40,8 +40,47 @@ body {
   color: var(--background);
 }
 
+/**
+ *
+ * Generic Element Styles
+ *
+ */
+
 input:focus, textarea:focus {
   outline: dashed 2px var(--highlight);
+}
+
+select {
+  background: transparent;
+  appearance: none;
+  cursor: pointer;
+  border: none;
+  font: 200 1rem 'Inconsolata', monospace;
+  margin-top: 4px;
+  padding-bottom: 2px;
+  border-bottom: 2px solid var(--highlight);
+  border-radius: 0;
+}
+
+input {
+  background: transparent;
+  padding: 0.5rem 0 0.5rem 0.5rem;
+  border: none;
+  border-bottom: 2px solid var(--highlight);
+  margin-right: 5px;
+  font: 200 1rem 'Inconsolata', monospace;
+  color: var(--text);
+}
+
+button {
+  background: var(--highlight);
+  border: 0;
+  outline: 0;
+  font: 100 1rem 'Lora', serif;
+  border-radius: 5px;
+  padding: 1rem;
+  color: var(--background);
+  cursor: pointer;
 }
 
 h1, h2, h3, h4, h5 {
@@ -53,6 +92,14 @@ a {
   text-decoration: none;
   color: var(--highlight);
 }
+
+svg { color: var(--highlight); }
+
+/**
+ *
+ * Main Styles
+ *
+ */
 
 #loader {
   position: fixed;
@@ -106,6 +153,12 @@ main section.active { display: block; }
 
 main h1 { margin-top: 0; }
 
+/**
+ *
+ * Digest Section Styles
+ *
+ */
+
 #digest menu {
   margin: 0;
   padding: 0;
@@ -124,7 +177,7 @@ main h1 { margin-top: 0; }
 }
 
 #digest menu > li:first-child {
-  background: var(--highlight);
+  background: var(--active-element);
   border-radius: 5px 0 0 0;
 }
 
@@ -136,32 +189,8 @@ main h1 { margin-top: 0; }
   padding: 0 1rem;
 }
 
-#digest menu > li:hover::before {
-  content: attr(data-title);
-  position: absolute;
-  background: var(--active-element);
-  padding: 0.5rem;
-  border-radius: 5px;
-  top: -3rem;
-  width: max-content;
-}
-#digest menu > li:hover::after {
-  content: '';
-  position: absolute;
-  top: -1rem;
-  left: 50%;
-  border-width: 5px;
-  border-style: solid;
-  border-color: var(--active-element) transparent transparent transparent;
-}
-
 #digest menu select {
-  background: transparent;
-  appearance: none;
-  cursor: pointer;
-  border: none;
-  font: 200 1rem 'Inconsolata', monospace;
-  color: var(--background);
+  color: var(--text);
 }
 
 #digest textarea {
@@ -178,7 +207,7 @@ main h1 { margin-top: 0; }
   border-radius: 0 0 5px 5px;
   display: flex;
   justify-content: space-between;
-  margin-top: -9px;
+  margin-top: -7px;
   align-items: center;
 }
 
@@ -188,17 +217,55 @@ main h1 { margin-top: 0; }
 }
 
 #digest .footer button {
-  background: var(--highlight);
-  border: 0;
-  outline: 0;
-  font: 100 1rem 'Lora', serif;
   border-radius: 0 0 5px 0;
-  padding: 1rem;
-  color: var(--background);
-  cursor: pointer;
 }
 
-#digest .result {
+/**
+ *
+ * PRNG Section Styles
+ *
+ */
+
+#random > div {
+  display: flex;
+  background: var(--element);
+  border-radius: 5px;
+  width: fit-content;
+  margin: 5vh auto;
+  font: 200 1rem 'Inconsolata', monospace;
+}
+
+#random .prng-options, #random .control.output-encoding-control { display: none; }
+#random .prng-options.active, #random .output-encoding-control.active { display: flex; }
+
+#random .control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  margin: 0.3rem;
+  border-radius: 5px;
+}
+
+#random > div > .control:first-child { background: var(--active-element); }
+
+#random .control svg {
+  min-width: 18px;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+#random .control select { color: var(--text); }
+
+#random button { border-radius: 0 5px 5px 0; }
+
+/**
+ *
+ * Result Section Styles
+ *
+ */
+
+#result {
   font-family: 'Inconsolata', monospace;
   padding: 2rem;
   border-radius: 5px;
@@ -209,11 +276,43 @@ main h1 { margin-top: 0; }
   color: var(--text);
   margin-top: 3rem;
 }
-#digest .result .copy {
+#result .copy {
   display: inline-block;
   margin-top: 1rem;
 }
-#digest .result svg { width: 24px; }
+#result svg { width: 24px; }
+
+/**
+ *
+ * Tooltip Styles
+ *
+ */
+
+#digest menu > li:hover::before, #random .control:hover::before {
+  content: attr(data-title);
+  position: absolute;
+  background: var(--active-element);
+  padding: 0.5rem;
+  border-radius: 5px;
+  top: -3rem;
+  width: max-content;
+}
+
+#digest menu > li:hover::after, #random .control:hover::after {
+  content: '';
+  position: absolute;
+  top: -1rem;
+  left: 50%;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--active-element) transparent transparent transparent;
+}
+
+/**
+ *
+ * Footer Styles
+ *
+ */
 
 footer {
   display: flex;
@@ -223,3 +322,11 @@ footer {
   font-size: 1rem;;
   line-height: 5vh;
 }
+
+footer svg {
+  width: 24px;
+  color: var(--text);
+  vertical-align: middle;
+}
+
+footer a, footer span { vertical-align: middle; }
