@@ -30,7 +30,7 @@
 html, body { padding: 0; margin: 0; }
 
 body {
-  font: 100 2rem 'Lora', serif;
+  font: 100 1.5rem 'Lora', serif;
   background: var(--background);
   color: var(--text);
 }
@@ -64,17 +64,49 @@ a {
   background: var(--highlight);
 }
 
+#main-menu {
+  list-style: none;
+  display: flex;
+  font-size: 1rem;
+  margin: 5vh auto 0;
+  background: var(--element);
+  border-radius: 5px;
+  width: fit-content;
+  padding: 0;
+}
+
+#main-menu > li {
+  padding: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0.3rem;
+  display: flex;
+  align-items: center;
+}
+
+#main-menu > li svg {
+  width: 30px;
+  margin-right: 10px;
+}
+
+#main-menu > li.active, #main-menu > li:hover {
+  background: var(--active-element)
+}
+
 main {
   width: 80vw;
-  min-height: 90vh;
+  min-height: 80vh;
   max-width: 1200px;
-  margin: 5vh auto 0;
+  margin: 3vh auto 0;
   text-align: center;
 }
 
+main section { display: none; }
+main section.active { display: block; }
+
 main h1 { margin-top: 0; }
 
-main menu {
+#digest menu {
   margin: 0;
   padding: 0;
   background: var(--element);
@@ -85,18 +117,18 @@ main menu {
   align-items: center;
 }
 
-main menu svg {
+#digest menu svg {
   min-width: 18px;
   vertical-align: middle;
   margin-right: 0.5rem;
 }
 
-main menu > li:first-child {
+#digest menu > li:first-child {
   background: var(--highlight);
   border-radius: 5px 0 0 0;
 }
 
-main menu > li {
+#digest menu > li {
   position: relative;
   display: flex;
   height: 3rem;
@@ -104,7 +136,7 @@ main menu > li {
   padding: 0 1rem;
 }
 
-main menu > li:hover::before {
+#digest menu > li:hover::before {
   content: attr(data-title);
   position: absolute;
   background: var(--active-element);
@@ -113,7 +145,7 @@ main menu > li:hover::before {
   top: -3rem;
   width: max-content;
 }
-main menu > li:hover::after {
+#digest menu > li:hover::after {
   content: '';
   position: absolute;
   top: -1rem;
@@ -123,7 +155,7 @@ main menu > li:hover::after {
   border-color: var(--active-element) transparent transparent transparent;
 }
 
-main menu select {
+#digest menu select {
   background: transparent;
   appearance: none;
   cursor: pointer;
@@ -132,7 +164,7 @@ main menu select {
   color: var(--background);
 }
 
-textarea {
+#digest textarea {
   width: calc(100% - 2rem);
   border: 0;
   padding: 1rem;
@@ -141,7 +173,7 @@ textarea {
   background: var(--active-element);
 }
 
-#digest-footer {
+#digest .footer {
   background: var(--element);
   border-radius: 0 0 5px 5px;
   display: flex;
@@ -150,12 +182,12 @@ textarea {
   align-items: center;
 }
 
-#character-count {
+#digest .character-count {
   font-size: 1rem;
   margin-left: 1rem;
 }
 
-#digest-footer button {
+#digest .footer button {
   background: var(--highlight);
   border: 0;
   outline: 0;
@@ -166,7 +198,7 @@ textarea {
   cursor: pointer;
 }
 
-#result {
+#digest .result {
   font-family: 'Inconsolata', monospace;
   padding: 2rem;
   border-radius: 5px;
@@ -177,11 +209,11 @@ textarea {
   color: var(--text);
   margin-top: 3rem;
 }
-#result .copy {
+#digest .result .copy {
   display: inline-block;
   margin-top: 1rem;
 }
-#result svg { width: 24px; }
+#digest .result svg { width: 24px; }
 
 footer {
   display: flex;

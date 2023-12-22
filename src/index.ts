@@ -1,11 +1,30 @@
+/**
+ * Loader logic
+ */
 const loader = document.querySelector<HTMLElement>('#loader');
 const load = (pct: number) => {
   if (loader) loader.style.width = `${pct}%`;
 };
 
+/**
+ * Main Menu
+ */
+const menuItems = document.querySelectorAll('#main-menu li') as unknown as HTMLElement[];
+const sections = document.querySelectorAll('main section') as unknown as HTMLElement[];
+menuItems.forEach((item) => item.addEventListener('click', (event) => {
+  menuItems.forEach(i => i.classList.remove('active'));
+  sections.forEach(i => i.classList.remove('active'));
+  item.classList.add('active');
+  if (item.dataset.target) document.querySelector(item.dataset.target)?.classList.add('active');
+}));
+
+/**
+ * Digest Logic
+ */
+
 const showResult = (value: string) => {
   load(100);
-  const result = document.querySelector<HTMLElement>('#result');
+  const result = document.querySelector<HTMLElement>('#digest .result');
   if (result) {
     const content = result.querySelector('.content');
     if (content) content.textContent = value;
@@ -15,16 +34,16 @@ const showResult = (value: string) => {
 };
 
 const hideResult = () => {
-  const result = document.querySelector<HTMLElement>('#result');
+  const result = document.querySelector<HTMLElement>('#digest .result');
   if (result) result.style.opacity = '0';
 };
 
 const setCopyText = (value: string = 'Copy') => {
-  const copyText = document.querySelector('#result .copy span');
+  const copyText = document.querySelector('#digest .result .copy span');
   if (copyText) copyText.textContent = value;
 };
 
-const copyAnchor = document.querySelector('#result > a.copy');
+const copyAnchor = document.querySelector('#digest .result > a.copy');
 copyAnchor?.addEventListener('click', async (event) => {
   event.preventDefault();
   const parent = (event.currentTarget as HTMLElement).parentElement;
@@ -44,7 +63,7 @@ copyAnchor?.addEventListener('click', async (event) => {
  */
 const input = document.querySelector('textarea');
 input?.addEventListener('input', () => {
-  const characterCount = document.querySelector('#character-count');
+  const characterCount = document.querySelector('#digest .character-count');
   if (characterCount) {
     const count = input.value.length;
     if (count === 1) characterCount.textContent = '1 character';
@@ -80,7 +99,7 @@ let selected: DOMStringMap;
 
 const digestSelect = document.querySelector('#digest-select') as HTMLSelectElement;
 digestSelect?.addEventListener('change', (event) => {
-  const menu = document.querySelector('#digest-menu');
+  const menu = document.querySelector('#digest menu');
   const outputLength = menu?.querySelector('#digest-output-length span');
   const blockSize = menu?.querySelector('#digest-block-size span');
   const method = menu?.querySelector('#digest-method span');
