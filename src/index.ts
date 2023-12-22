@@ -40,6 +40,19 @@ copyAnchor?.addEventListener('click', async (event) => {
 });
 
 /**
+ * Character count
+ */
+const input = document.querySelector('textarea');
+input?.addEventListener('input', () => {
+  const characterCount = document.querySelector('#character-count');
+  if (characterCount) {
+    const count = input.value.length;
+    if (count === 1) characterCount.textContent = '1 character';
+    else characterCount.textContent = `${count} characters`;
+  }
+});
+
+/**
  * Digest Generation
  */
 async function digestMessage(message: string, algorithm: string) {
@@ -55,7 +68,7 @@ async function digestMessage(message: string, algorithm: string) {
 const button = document.querySelector('button');
 button?.addEventListener('click', () => {
   load(0);
-  const text = document.querySelector('textarea')?.value;
+  const text = input?.value;
   if (text && selected.alg) {
     digestMessage(text, selected.alg).then((digestHex) => {
       showResult(digestHex);

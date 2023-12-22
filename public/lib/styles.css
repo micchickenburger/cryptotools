@@ -147,6 +147,12 @@ textarea {
   display: flex;
   justify-content: space-between;
   margin-top: -9px;
+  align-items: center;
+}
+
+#character-count {
+  font-size: 1rem;
+  margin-left: 1rem;
 }
 
 #digest-footer button {
