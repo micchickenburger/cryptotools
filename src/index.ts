@@ -1,3 +1,5 @@
+import * as bcrypt from 'bcryptjs';
+
 /**
  * Loader logic
  */
@@ -166,9 +168,10 @@ const encode = (array: Uint8Array, radix: number): string => {
 };
 
 prngGenerateButton.addEventListener('click', () => {
+  load(0);
   switch (prngOperation.selectedOptions[0].value) {
     case 'random':
-      const bytes = parseInt(prngByteLength.value, 10);
+      const bytes = parseInt(prngByteLength.value, 10) || 64;
       const array = new Uint8Array(bytes);
       self.crypto.getRandomValues(array);
 
@@ -186,6 +189,7 @@ prngGenerateButton.addEventListener('click', () => {
           // Cleanup
           document.body.removeChild(a);
           window.URL.revokeObjectURL(uri);
+          load(100);
           break;
         case 'display':
           const radix = parseInt(prngOutputEncoding.selectedOptions[0].value, 10);
@@ -199,4 +203,75 @@ prngGenerateButton.addEventListener('click', () => {
       break;
     default:
   }
+});
+
+/**
+ * Password Hashing Logic
+ */
+
+let selectedHashAlgorithm: DOMStringMap;
+
+const hashSelect = document.querySelector('#hash-select') as HTMLSelectElement;
+hashSelect?.addEventListener('change', (event) => {
+  const menu = document.querySelector('#passwords menu');
+  const outputLength = menu?.querySelector('#hash-output-length span');
+  const blockSize = menu?.querySelector('#hash-block-size span');
+  const method = menu?.querySelector('#hash-method span');
+  const specification = menu?.querySelector('#hash-specification span');
+  
+  selectedHashAlgorithm = hashSelect.selectedOptions[0].dataset;
+  if (outputLength) outputLength.textContent = selectedHashAlgorithm.ol || '';
+  if (blockSize) blockSize.textContent = selectedHashAlgorithm.bs || '';
+  if (method) method.textContent = selectedHashAlgorithm.method || '';
+  if (specification) specification.textContent = selectedHashAlgorithm.spec || '';
+
+  hideResult();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  hashSelect.dispatchEvent(new Event('change'));
+});
+
+const hashOperation = document.querySelector('#passwords #hash-operation') as HTMLSelectElement;
+hashOperation?.addEventListener('change', () => {
+  const operation = hashOperation.selectedOptions[0].value;
+  const hash = hashSelect.selectedOptions[0].dataset.alg;
+  const target = document.querySelector(`#passwords #${operation}-${hash}`);
+
+  const settings = document.querySelectorAll('#passwords .settings');
+  settings.forEach((setting) => setting.classList.remove('active'));
+  target?.classList.add('active');
+});
+
+// Update bcrypt cost iterations count
+const bcryptControl = document.querySelector('#hash-bcrypt .control.cost') as HTMLDivElement;
+const bcryptCost = document.querySelector('#hash-bcrypt input.cost') as HTMLInputElement;
+
+bcryptCost?.addEventListener('change', () => {
+  const value = parseInt(bcryptCost.value, 10);
+  bcryptControl.dataset.title = `Cost: 2^${value} = ${Math.pow(2, value).toLocaleString()} iterations`;
+});
+
+// Generate bcrypt
+const bcryptHashButton = document.querySelector('#hash-bcrypt button');
+bcryptHashButton?.addEventListener('click', () => {
+  load(0);
+
+  const cost = parseInt(bcryptCost.value, 10) || 10;
+  const password = document.querySelector('#hash-bcrypt .password input') as HTMLInputElement;
+
+  const hash = bcrypt.hashSync(password.value, cost);
+  showResult(hash);
+});
+
+// Verify bcrypt
+const bcryptVerifyButton = document.querySelector('#verify-bcrypt button');
+bcryptVerifyButton?.addEventListener('click', () => {
+  load(0);
+
+  const password = document.querySelector('#verify-bcrypt .password input') as HTMLInputElement;
+  const hash = document.querySelector('#verify-bcrypt .hash input') as HTMLInputElement;
+
+  const result = bcrypt.compareSync(password.value, hash.value);
+  showResult(String(result));
 });
