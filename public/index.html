@@ -35,7 +35,7 @@
               <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M192 48v160H64l64-80l-64-80Z" opacity=".2"/><path d="M184 72V56H80.65l53.6 67a8 8 0 0 1 0 10l-53.6 67H184v-16a8 8 0 0 1 16 0v24a8 8 0 0 1-8 8H64a8 8 0 0 1-6.25-13l60-75l-60-75A8 8 0 0 1 64 40h128a8 8 0 0 1 8 8v24a8 8 0 0 1-16 0"/></g></svg>
               <select id="digest-select">
                 <option data-alg="SHA-1" data-method="Web Crypto API" data-bs="512 bits" data-ol="160 bits" data-spec="FIPS 180-4 &sect; 6.1">SHA-1</option>
-                <option data-alg="SHA-256" data-method="Web Crypto API" data-bs="512 bits" data-ol="256 bits" data-spec="FIPS 180-4 &sect; 6.2">SHA-256</option>
+                <option data-alg="SHA-256" data-method="Web Crypto API" data-bs="512 bits" data-ol="256 bits" data-spec="FIPS 180-4 &sect; 6.2" selected>SHA-256</option>
                 <option data-alg="SHA-384" data-method="Web Crypto API" data-bs="1024 bits" data-ol="384 bits" data-spec="FIPS 180-4 &sect; 6.5">SHA-384</option>
                 <option data-alg="SHA-512" data-method="Web Crypto API" data-bs="1024 bits" data-ol="512 bits" data-spec="FIPS 180-4 &sect; 6.4">SHA-512</option>
               </select>
@@ -71,7 +71,7 @@
           <div class="control" data-title="Operation">
             <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 48v160a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8h160a8 8 0 0 1 8 8" opacity=".2"/><path d="M112 72a8 8 0 0 1-8 8H40a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8m-8 104H80v-24a8 8 0 0 0-16 0v24H40a8 8 0 0 0 0 16h24v24a8 8 0 0 0 16 0v-24h24a8 8 0 0 0 0-16m48 0h64a8 8 0 0 0 0-16h-64a8 8 0 0 0 0 16m64 16h-64a8 8 0 0 0 0 16h64a8 8 0 0 0 0-16m-61.66-90.34a8 8 0 0 0 11.32 0L184 83.31l18.34 18.35a8 8 0 0 0 11.32-11.32L195.31 72l18.35-18.34a8 8 0 0 0-11.32-11.32L184 60.69l-18.34-18.35a8 8 0 0 0-11.32 11.32L172.69 72l-18.35 18.34a8 8 0 0 0 0 11.32"/></g></svg>
             <select class="operation">
-              <option value="random">Random Values</option>
+              <option value="random" selected>Random Values</option>
               <option value="uuid">UUIDv4</option>
             </select>
           </div>
@@ -83,7 +83,7 @@
             <div class="control" data-title="Output Format">
               <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 48v160a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8h160a8 8 0 0 1 8 8" opacity=".2"/><path d="M208 32H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16m0 176H48V48h160ZM80 128a8 8 0 0 1 8-8h60.69l-18.35-18.34a8 8 0 0 1 11.32-11.32l32 32a8 8 0 0 1 0 11.32l-32 32a8 8 0 0 1-11.32-11.32L148.69 136H88a8 8 0 0 1-8-8"/></g></svg>
               <select class="output">
-                <option value="display">Display</option>
+                <option value="display" selected>Display</option>
                 <option value="download">Download</option>
               </select>
             </div>
@@ -92,7 +92,8 @@
               <select class="output-encoding">
                 <option value="2">Binary</option>
                 <option value="8">Octal</option>
-                <option value="16">Hexadecimal</option>
+                <option value="16" selected>Hexadecimal</option>
+                <option value="64">Base64</option>
               </select>
             </div>
           </div>
@@ -112,13 +113,13 @@
             <li id="hash-algorithm" data-title="Algorithm">
               <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M192 48v160H64l64-80l-64-80Z" opacity=".2"/><path d="M184 72V56H80.65l53.6 67a8 8 0 0 1 0 10l-53.6 67H184v-16a8 8 0 0 1 16 0v24a8 8 0 0 1-8 8H64a8 8 0 0 1-6.25-13l60-75l-60-75A8 8 0 0 1 64 40h128a8 8 0 0 1 8 8v24a8 8 0 0 1-16 0"/></g></svg>
               <select id="hash-select">
-                <option data-alg="bcrypt" data-method="bcrypt.js" data-bs="512 bits" data-ol="192 bits" data-spec="Provos N, Maziéres D (10 June 1999)">Bcrypt</option>
+                <option data-alg="bcrypt" data-method="bcrypt.js" data-bs="512 bits" data-ol="192 bits" data-spec="Provos N, Maziéres D (10 June 1999)" selected>Bcrypt</option>
               </select>
             </li>
             <li data-title="Operation">
               <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 48v160a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8h160a8 8 0 0 1 8 8" opacity=".2"/><path d="M112 72a8 8 0 0 1-8 8H40a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8m-8 104H80v-24a8 8 0 0 0-16 0v24H40a8 8 0 0 0 0 16h24v24a8 8 0 0 0 16 0v-24h24a8 8 0 0 0 0-16m48 0h64a8 8 0 0 0 0-16h-64a8 8 0 0 0 0 16m64 16h-64a8 8 0 0 0 0 16h64a8 8 0 0 0 0-16m-61.66-90.34a8 8 0 0 0 11.32 0L184 83.31l18.34 18.35a8 8 0 0 0 11.32-11.32L195.31 72l18.35-18.34a8 8 0 0 0-11.32-11.32L184 60.69l-18.34-18.35a8 8 0 0 0-11.32 11.32L172.69 72l-18.35 18.34a8 8 0 0 0 0 11.32"/></g></svg>
               <select id="hash-operation">
-                <option value="hash">Hash</option>
+                <option value="hash" selected>Hash</option>
                 <option value="verify">Verify</option>
               </select>
             </li>
