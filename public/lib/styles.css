@@ -339,6 +339,11 @@ menu.tooltips > li:hover::after, .control:hover::after {
  *
  */
 
+main .notice {
+  opacity: 0.5;
+  font-size: 1rem;
+}
+
 footer {
   display: flex;
   justify-content: space-between;
