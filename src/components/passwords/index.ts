@@ -12,39 +12,40 @@
 
 import { hideResult } from '../../lib/result';
 import './bcrypt';
+import './pbkdf2';
 
-let selectedHashAlgorithm: DOMStringMap;
+const hashSelect = document.querySelector('#passwords menu .algorithm select') as HTMLSelectElement;
+const hashOperation = document.querySelector('#passwords .operation') as HTMLSelectElement;
 
-const hashSelect = document.querySelector('#hash-select') as HTMLSelectElement;
 hashSelect?.addEventListener('change', (event) => {
   const menu = document.querySelector('#passwords menu');
-  const outputLength = menu?.querySelector('#hash-output-length span');
-  const blockSize = menu?.querySelector('#hash-block-size span');
-  const method = menu?.querySelector('#hash-method span');
-  const specification = menu?.querySelector('#hash-specification span');
+  const outputLength = menu?.querySelector('.output-length span');
+  const blockSize = menu?.querySelector('.block-size span');
+  const method = menu?.querySelector('.method span');
+  const specification = menu?.querySelector('.specification span');
   
-  selectedHashAlgorithm = hashSelect.selectedOptions[0].dataset;
-  if (outputLength) outputLength.textContent = selectedHashAlgorithm.ol || '';
-  if (blockSize) blockSize.textContent = selectedHashAlgorithm.bs || '';
-  if (method) method.textContent = selectedHashAlgorithm.method || '';
-  if (specification) specification.textContent = selectedHashAlgorithm.spec || '';
+  const selected = hashSelect.selectedOptions[0].dataset;
+  if (outputLength) outputLength.textContent = selected.ol || '';
+  if (blockSize) blockSize.textContent = selected.bs || '';
+  if (method) method.textContent = selected.method || '';
+  if (specification) specification.textContent = selected.spec || '';
 
   hideResult();
 });
+
+const updateHashView = () => {
+  const operation = hashOperation.selectedOptions[0].value;
+  const hash = hashSelect.selectedOptions[0].dataset.alg;
+  const target = document.querySelector(`#passwords #${operation}-${hash}`);
+  
+  const settings = document.querySelectorAll('#passwords .settings');
+  settings.forEach((setting) => setting.classList.remove('active'));
+  target?.classList.add('active');
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   hashSelect.dispatchEvent(new Event('change'));
 });
 
-const hashOperation = document.querySelector('#passwords #hash-operation') as HTMLSelectElement;
-const updateHashView = () => {
-  const operation = hashOperation.selectedOptions[0].value;
-  const hash = hashSelect.selectedOptions[0].dataset.alg;
-  const target = document.querySelector(`#passwords #${operation}-${hash}`);
-
-  const settings = document.querySelectorAll('#passwords .settings');
-  settings.forEach((setting) => setting.classList.remove('active'));
-  target?.classList.add('active');
-};
 hashOperation?.addEventListener('change', updateHashView);
 hashSelect?.addEventListener('change', updateHashView);

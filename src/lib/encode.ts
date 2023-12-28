@@ -39,7 +39,31 @@ const encode = (rawData: ArrayBuffer, radix: number): string => {
  * @returns ArrayBuffer
  */
 const decode = (encodedData: string, radix: number): ArrayBuffer => {
-  throw new Error('Not implemented');
+  let array: Uint8Array;
+
+  // Base 64
+  if (radix === 64) {
+    const str = atob(encodedData);
+    array = new Uint8Array(str.length);
+    for (let i = 0; i < str.length; i += 1) {
+      array[i] = str.charCodeAt(i);
+    }
+    return array.buffer;
+  }
+
+  let separator: number = 0;
+  if (radix === 2) separator = 8; // Binary
+  if (radix === 8) separator = 3; // Octal
+  if (radix === 16) separator = 2; // Hexadecimal
+  if (!separator) throw new Error(`Radix ${radix} is not supported`);
+
+  const length = encodedData.length / separator;
+  array = new Uint8Array(length);
+
+  encodedData.match(new RegExp(`.{1,${separator}}`, 'g'))
+    ?.forEach((byte, i) => array[i] = parseInt(byte, radix));
+
+  return array.buffer;
 };
 
 export { decode, encode };
