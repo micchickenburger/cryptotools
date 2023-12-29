@@ -4,6 +4,7 @@
   --element: #292929;
   --active-element: #3c3c3c;
   --text: #e1e1e1;
+  --sub-text: #b9b9b9;
 }
 
 @font-face {
@@ -46,43 +47,7 @@ body {
  *
  */
 
-input:focus, textarea:focus {
-  outline: dashed 2px var(--highlight);
-}
-
-select {
-  background: transparent;
-  appearance: none;
-  cursor: pointer;
-  border: none;
-  font: 200 1rem 'Inconsolata', monospace;
-  padding: 0.5rem 0;
-  border-bottom: 2px solid var(--highlight);
-  border-radius: 0;
-}
-
-input {
-  background: transparent;
-  padding: 0.5rem 0 0.5rem 0.5rem;
-  border: none;
-  border-bottom: 2px solid var(--highlight);
-  margin-right: 5px;
-  font: 200 1rem 'Inconsolata', monospace;
-  color: var(--text);
-}
-
-button {
-  background: var(--highlight);
-  border: 0;
-  outline: 0;
-  font: 100 1rem 'Lora', serif;
-  border-radius: 5px;
-  padding: 1rem;
-  color: var(--background);
-  cursor: pointer;
-}
-
-h1, h2, h3, h4, h5 {
+ h1, h2, h3, h4, h5 {
   font-style: italic;
   font-weight: 100;
 }
@@ -92,7 +57,88 @@ a {
   color: var(--highlight);
 }
 
-svg { color: var(--highlight); }
+svg {
+  min-width: 18px;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+menu > li {
+  white-space: nowrap;
+  min-width: 0; /* needed for flex children */
+}
+
+menu > li span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/**
+ *
+ * Form Element Styles
+ *
+ */
+
+input, select, textarea {
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  font: 200 1rem 'Inconsolata', monospace;
+  color: var(--text);
+}
+
+select {
+  padding: 0.5rem 0;
+  cursor: pointer;
+  padding-right: calc(18px + 0.5rem); /* spacing for down arrow svg */
+}
+
+/* Position drop-down arrow over select to trigger open on click */
+select + svg {
+  margin-right: 0;
+  margin-left: -18px;
+  pointer-events: none;
+}
+
+input {
+  padding: 0.5rem 0 0.5rem 0.5rem;
+  margin-right: 5px;
+  width: 100%;
+}
+
+input:focus, textarea:focus {
+  outline: dashed 2px var(--highlight);
+}
+
+button {
+  background: var(--highlight);
+  font: 100 1rem 'Lora', serif;
+  color: var(--background);
+  cursor: pointer;
+  padding: 1rem;
+  border: 0;
+  border-radius: 5px;
+  outline: 0;
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  margin: 0.3rem;
+  border-bottom: 2px solid;
+  cursor: pointer;
+}
+
+.control svg { color: var(--highlight); }
+
+.settings label { margin: 1rem; }
+.settings label.grow { flex-grow: 1; }
+
+.menu-control {
+  background: var(--active-element);
+}
+.menu-control:first-child { border-radius: 5px 0 0 0; }
 
 /**
  *
@@ -133,6 +179,7 @@ svg { color: var(--highlight); }
 #main-menu > li svg {
   width: 30px;
   margin-right: 10px;
+  color: var(--highlight);
 }
 
 #main-menu > li.active, #main-menu > li:hover {
@@ -150,7 +197,15 @@ main {
 main section { display: none; }
 main section.active { display: block; }
 
-main h1 { margin-top: 0; }
+main h1 { margin: 0 0 1rem; }
+main p.subtitle { color: var(--sub-text); }
+main .subsection { margin: 3rem 0; }
+
+/* Readability */
+main p {
+  margin: 0 auto;
+  max-width: 800px;
+}
 
 /**
  *
@@ -176,18 +231,10 @@ main h1 { margin-top: 0; }
 #passwords > div > .settings { display: none; }
 #passwords > div > .settings.active { display: flex; }
 
-#passwords .control.password, #passwords .control.hash { flex-grow: 1; }
-#passwords input[type="password"], #passwords input[type="text"] { width: 100%; }
 #passwords .settings button { margin-right: 1rem; }
 
 /* Two rows of settings */
 #passwords #hash-PBKDF2.active { display: block; }
-
-#digest menu svg, #passwords menu svg {
-  min-width: 18px;
-  vertical-align: middle;
-  margin-right: 0.5rem;
-}
 
 #digest menu > li:first-child, #password menu > li:first-child {
   background: var(--active-element);
@@ -202,16 +249,9 @@ main h1 { margin-top: 0; }
   padding: 0 1rem;
 }
 
-#digest menu select, #passwords menu select {
-  color: var(--text);
-}
-
 #digest textarea {
   width: calc(100% - 2rem);
-  border: 0;
   padding: 1rem;
-  font: 200 1.5rem 'Inconsolata', monospace;
-  color: var(--text);
   background: var(--active-element);
 }
 
@@ -239,7 +279,7 @@ main h1 { margin-top: 0; }
  *
  */
 
-#random > div {
+#random .settings {
   display: flex;
   background: var(--element);
   border-radius: 5px;
@@ -250,28 +290,6 @@ main h1 { margin-top: 0; }
 
 #random .prng-options, #random .control.output-encoding-control { display: none; }
 #random .prng-options.active, #random .output-encoding-control.active { display: flex; }
-
-.control {
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  margin: 0.3rem;
-  border-radius: 5px;
-}
-
-#random > div > .control:first-child, #passwords menu > li:first-child {
-  background: var(--active-element);
-  border-radius: 5px 0 0 0;
-}
-
-.control svg {
-  min-width: 18px;
-  vertical-align: middle;
-  margin-right: 0.5rem;
-}
-
-.control select { color: var(--text); }
 
 #random button { border-radius: 0 5px 5px 0; }
 
@@ -284,13 +302,13 @@ main h1 { margin-top: 0; }
 #result {
   font-family: 'Inconsolata', monospace;
   padding: 2rem;
+  margin-bottom: 3rem;
   border-radius: 5px;
   word-break: break-all;
   opacity: 0;
   transition: opacity 250ms ease-in-out;
   background: var(--active-element);
   color: var(--text);
-  margin-top: 3rem;
 }
 #result .copy {
   display: inline-block;
@@ -304,34 +322,38 @@ main h1 { margin-top: 0; }
  *
  */
 
-menu.tooltips > li:hover::before, .control:hover::before {
-  content: attr(data-title);
+[data-tooltip] { position: relative; }
+
+[data-tooltip]:hover::before {
+  content: attr(data-tooltip);
   position: absolute;
   background: var(--active-element);
   padding: 0.5rem;
   border-radius: 5px;
-  top: -3rem;
+  top: -2rem;
+  left: calc(50% - 3rem); /* TODO: figure out a better way */
   width: max-content;
   z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-menu.tooltips > li:hover::after, .control:hover::after {
+[data-tooltip]:hover::after {
   content: '';
   position: absolute;
-  top: -1rem;
+  top: 3px;
   left: 50%;
   border-width: 5px;
   border-style: solid;
-  border-color: var(--active-element) transparent transparent transparent;
+  border-color: rgba(255, 255, 255, 0.1) transparent transparent transparent;
   z-index: 1;
 }
 
 /* Tooltips below for submenus */
-.settings .control:hover::before { top: 5.5rem; }
+/* .settings .control:hover::before { top: 5.5rem; }
 .settings .control:hover::after {
   top: 4.9rem;
   border-color: transparent transparent var(--active-element) transparent;
-}
+} */
 
 /**
  *
