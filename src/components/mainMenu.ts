@@ -5,15 +5,15 @@
  * @license GPL-3.0-or-later
  */
 
-import { hideResult } from '../lib/result';
+import { hideResults } from '../lib/result';
 
-const menuItems = document.querySelectorAll('#main-menu li') as unknown as HTMLElement[];
-const sections = document.querySelectorAll('main section') as unknown as HTMLElement[];
+const menuItems = document.querySelectorAll<HTMLElement>('#main-menu li');
+const sections = document.querySelectorAll<HTMLElement>('main section');
 
-menuItems.forEach((item) => item.addEventListener('click', (event) => {
+menuItems.forEach((item) => item.addEventListener('click', () => {
   menuItems.forEach(i => i.classList.remove('active'));
   sections.forEach(i => i.classList.remove('active'));
   item.classList.add('active');
   if (item.dataset.target) document.querySelector(item.dataset.target)?.classList.add('active');
-  hideResult();
+  hideResults();
 }));

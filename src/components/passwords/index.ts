@@ -10,27 +10,25 @@
  * drastically increase the energy required to brute force them.
  */
 
-import { hideResult } from '../../lib/result';
+import { hideResults } from '../../lib/result';
 import './bcrypt';
 import './pbkdf2';
 
-const hashSelect = document.querySelector('#passwords menu .algorithm select') as HTMLSelectElement;
-const hashOperation = document.querySelector('#passwords .operation') as HTMLSelectElement;
+const hashSelect = document.querySelector<HTMLSelectElement>('#passwords menu .algorithm select')!;
+const hashOperation = document.querySelector<HTMLSelectElement>('#passwords .operation')!;
 
 hashSelect?.addEventListener('change', (event) => {
-  const menu = document.querySelector('#passwords menu');
-  const outputLength = menu?.querySelector('.output-length span');
-  const blockSize = menu?.querySelector('.block-size span');
-  const method = menu?.querySelector('.method span');
-  const specification = menu?.querySelector('.specification span');
+  const menu = document.querySelector('#passwords menu')!;
+  const blockSize = menu.querySelector('.block-size span')!;
+  const method = menu.querySelector('.method span')!;
+  const specification = menu.querySelector('.specification span')!;
   
   const selected = hashSelect.selectedOptions[0].dataset;
-  if (outputLength) outputLength.textContent = selected.ol || '';
-  if (blockSize) blockSize.textContent = selected.bs || '';
-  if (method) method.textContent = selected.method || '';
-  if (specification) specification.textContent = selected.spec || '';
+  blockSize.textContent = selected.bs || '';
+  method.textContent = selected.method || '';
+  specification.textContent = selected.spec || '';
 
-  hideResult();
+  hideResults();
 });
 
 const updateHashView = () => {
@@ -47,5 +45,5 @@ document.addEventListener('DOMContentLoaded', () => {
   hashSelect.dispatchEvent(new Event('change'));
 });
 
-hashOperation?.addEventListener('change', updateHashView);
-hashSelect?.addEventListener('change', updateHashView);
+hashOperation.addEventListener('change', updateHashView);
+hashSelect.addEventListener('change', updateHashView);

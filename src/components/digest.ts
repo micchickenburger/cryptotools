@@ -13,8 +13,9 @@
  * browser with native code.
  */
 
+import { ENCODING } from '../lib/encode';
 import load from '../lib/loader';
-import { hideResult, showResult } from '../lib/result';
+import { hideResults, showResults } from '../lib/result';
 
 /**
  * Character count
@@ -33,43 +34,35 @@ input?.addEventListener('input', () => {
  * Digest Generation
  */
 async function digestMessage(message: string, algorithm: string) {
-  const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
-  const hashBuffer = await crypto.subtle.digest(algorithm, msgUint8); // hash the message
-  const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
-  const hashHex = hashArray
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join(''); // convert bytes to hex string
-  return hashHex;
+  const data = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
+  const digest = await crypto.subtle.digest(algorithm, data); // hash the message
+  return digest;
 }
 
 const button = document.querySelector('button');
-button?.addEventListener('click', () => {
+button?.addEventListener('click', async () => {
   load(0);
-  const text = input?.value;
-  if (text && selected.alg) {
-    digestMessage(text, selected.alg).then((digestHex) => {
-      showResult(digestHex);
-    });
-  }
+  const text = input!.value;
+  const algorithm = selected!.alg!;
+  const digest = await digestMessage(text, algorithm);
+  showResults([{ label: `${algorithm} Digest`, value: digest, defaultEncoding: ENCODING.HEXADECIMAL }]);
 });
 
 let selected: DOMStringMap;
 
-const digestSelect = document.querySelector('#digest-select') as HTMLSelectElement;
-digestSelect?.addEventListener('change', (event) => {
-  const menu = document.querySelector('#digest menu');
-  const outputLength = menu?.querySelector('#digest-output-length span');
-  const blockSize = menu?.querySelector('#digest-block-size span');
-  const method = menu?.querySelector('#digest-method span');
-  const specification = menu?.querySelector('#digest-specification span');
+const digestSelect = document.querySelector<HTMLSelectElement>('#digest-select')!;
+digestSelect.addEventListener('change', (event) => {
+  const menu = document.querySelector('#digest menu')!;
+  const blockSize = menu.querySelector('#digest-block-size span')!;
+  const method = menu.querySelector('#digest-method span')!;
+  const specification = menu.querySelector('#digest-specification span')!;
   
   selected = digestSelect.selectedOptions[0].dataset;
-  if (outputLength) outputLength.textContent = selected.ol || '';
-  if (blockSize) blockSize.textContent = selected.bs || '';
-  if (method) method.textContent = selected.method || '';
-  if (specification) specification.textContent = selected.spec || '';
+  blockSize.textContent = selected.bs || '';
+  method.textContent = selected.method || '';
+  specification.textContent = selected.spec || '';
 
-  hideResult();
+  hideResults();
 });
 
 document.addEventListener('DOMContentLoaded', () => {

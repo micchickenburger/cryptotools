@@ -12,14 +12,14 @@
  */
 
 import * as bcrypt from 'bcryptjs';
-import { showResult } from '../../lib/result';
+import { showResults } from '../../lib/result';
 import load from '../../lib/loader';
 
 // Update bcrypt cost iterations count
-const bcryptControl = document.querySelector('#hash-bcrypt .control.cost') as HTMLDivElement;
-const bcryptCost = document.querySelector('#hash-bcrypt input.cost') as HTMLInputElement;
+const bcryptControl = document.querySelector<HTMLDivElement>('#hash-bcrypt .control.cost')!;
+const bcryptCost = document.querySelector<HTMLInputElement>('#hash-bcrypt input.cost')!;
 
-bcryptCost?.addEventListener('change', () => {
+bcryptCost.addEventListener('change', () => {
   const value = parseInt(bcryptCost.value, 10);
   bcryptControl.dataset.title = `Cost: 2^${value} = ${Math.pow(2, value).toLocaleString()} iterations`;
 });
@@ -27,7 +27,22 @@ bcryptCost?.addEventListener('change', () => {
 // Bcrypt finish and progress functions
 const bcryptComplete = (button: HTMLButtonElement, text: string | null) => (error: Error | null, result: string | boolean) => {
   if (error) console.error(error);
-  showResult(String(result));
+
+  if (typeof result === 'boolean') {
+    showResults([{ label: 'Bcrypt Verification Result', value: String(result) }]);
+  } else {
+    const sansHash = bcrypt.getSalt(result); // Like $2a$10$uTzw7mkyaPz.6Kb.H0d/sO
+    const salt = sansHash.replace(/^.+\$/, '');
+    const hash = result.substring(sansHash.length);
+    console.debug(salt, salt.length, bcrypt.decodeBase64(salt, Infinity).length);
+    console.debug(hash, hash.length, bcrypt.decodeBase64(hash, Infinity).length);
+    showResults([
+      { label: 'Bcrypt String', value: result },
+      { label: 'Salt', value: salt },
+      { label: 'Hash', value: hash },
+    ]);
+  }
+
   button.textContent = text;
   button.disabled = false;
 };
@@ -38,13 +53,13 @@ const bcryptProgress = (button: HTMLButtonElement) => (num: number) => {
 };
 
 // Generate bcrypt
-const bcryptHashButton = document.querySelector('#hash-bcrypt button') as HTMLButtonElement;
+const bcryptHashButton = document.querySelector<HTMLButtonElement>('#hash-bcrypt button');
 bcryptHashButton?.addEventListener('click', () => {
   load(0);
   bcryptHashButton.disabled = true;
 
   const cost = parseInt(bcryptCost.value, 10) || 10;
-  const password = document.querySelector('#hash-bcrypt .password input') as HTMLInputElement;
+  const password = document.querySelector<HTMLInputElement>('#hash-bcrypt .password input')!;
 
   bcrypt.hash(
     password.value,
@@ -55,13 +70,13 @@ bcryptHashButton?.addEventListener('click', () => {
 });
 
 // Verify bcrypt
-const bcryptVerifyButton = document.querySelector('#verify-bcrypt button') as HTMLButtonElement;
+const bcryptVerifyButton = document.querySelector<HTMLButtonElement>('#verify-bcrypt button');
 bcryptVerifyButton?.addEventListener('click', async () => {
   load(0);
   bcryptVerifyButton.disabled = true;
 
-  const password = document.querySelector('#verify-bcrypt .password input') as HTMLInputElement;
-  const hash = document.querySelector('#verify-bcrypt .hash input') as HTMLInputElement;
+  const password = document.querySelector<HTMLInputElement>('#verify-bcrypt .password input')!;
+  const hash = document.querySelector<HTMLInputElement>('#verify-bcrypt .hash input')!;
 
   bcrypt.compare(
     password.value,

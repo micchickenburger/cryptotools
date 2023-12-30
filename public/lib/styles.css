@@ -5,6 +5,7 @@
   --active-element: #3c3c3c;
   --text: #e1e1e1;
   --sub-text: #b9b9b9;
+  --border: #545454;
 }
 
 @font-face {
@@ -100,6 +101,7 @@ select + svg {
   margin-left: -18px;
   pointer-events: none;
 }
+.control select + svg { color: var(--text); }
 
 input {
   padding: 0.5rem 0 0.5rem 0.5rem;
@@ -116,7 +118,8 @@ button {
   font: 100 1rem 'Lora', serif;
   color: var(--background);
   cursor: pointer;
-  padding: 1rem;
+  height: 3rem;
+  padding: 0 1rem;
   border: 0;
   border-radius: 5px;
   outline: 0;
@@ -126,7 +129,7 @@ button {
   display: flex;
   align-items: center;
   margin: 0.3rem;
-  border-bottom: 2px solid;
+  border-bottom: 2px solid var(--border);
   cursor: pointer;
 }
 
@@ -156,18 +159,22 @@ button {
   background: var(--highlight);
 }
 
-#main-menu {
+#main-menu, .section-menu {
   list-style: none;
   display: flex;
   font-size: 1rem;
-  margin: 5vh auto 0;
+  margin: 0 auto;
   background: var(--element);
-  border-radius: 5px;
+  border-radius: 5px 5px 0 0;
   width: fit-content;
   padding: 0;
 }
+#main-menu {
+  border-radius: 5px;
+  margin: 5vh auto 0;
+}
 
-#main-menu > li {
+#main-menu > li, .section-menu li {
   padding: 1rem;
   border-radius: 5px;
   cursor: pointer;
@@ -176,13 +183,13 @@ button {
   align-items: center;
 }
 
-#main-menu > li svg {
+#main-menu > li svg, .section-menu > li svg {
   width: 30px;
   margin-right: 10px;
   color: var(--highlight);
 }
 
-#main-menu > li.active, #main-menu > li:hover {
+#main-menu > li.active, #main-menu > li:hover, .section-menu > li.active, .section-menu > li:hover {
   background: var(--active-element)
 }
 
@@ -199,7 +206,11 @@ main section.active { display: block; }
 
 main h1 { margin: 0 0 1rem; }
 main p.subtitle { color: var(--sub-text); }
-main .subsection { margin: 3rem 0; }
+main .subsection {
+  width: fit-content;
+  margin: 3rem auto 1.5rem;
+}
+main .subsection.full { width: 100%; }
 
 /* Readability */
 main p {
@@ -209,11 +220,11 @@ main p {
 
 /**
  *
- * Digest, Password Section Styles
+ * Section Styles
  *
  */
 
-#digest menu, #passwords menu, #passwords .settings {
+.operations-menu, section .settings {
   margin: 0;
   padding: 0;
   background: var(--element);
@@ -223,25 +234,37 @@ main p {
   font: 200 1rem 'Inconsolata', monospace;
   align-items: center;
 }
-#passwords .settings {
+.operations-menu + .settings {
   background: var(--active-element);
   border-radius: 0 0 5px 5px;
 }
 
-#passwords > div > .settings { display: none; }
-#passwords > div > .settings.active { display: flex; }
+section .subsection > .settings { display: none; }
+section .subsection > .settings.active { display: flex; }
 
-#passwords .settings button { margin-right: 1rem; }
+section .settings button { margin-right: 1rem; }
 
 /* Two rows of settings */
 #passwords #hash-PBKDF2.active { display: block; }
 
-#digest menu > li:first-child, #password menu > li:first-child {
+/* Hidden settings */
+.subsection > button {
+  width: 100%;
+  border-radius: 0 0 5px 5px;
+}
+
+/* Special case where two form elements are in the same control */
+#passwords #hash-PBKDF2 .salt select + svg {
+  padding-right: 0.5rem;
+  border-right: 1px solid var(--border);
+}
+
+.operations-menu > li:first-child {
   background: var(--active-element);
   border-radius: 5px 0 0 0;
 }
 
-#digest menu > li, #passwords menu > li {
+.operations-menu > li{
   position: relative;
   display: flex;
   height: 3rem;
@@ -257,17 +280,14 @@ main p {
 
 #digest .footer {
   background: var(--element);
-  border-radius: 0 0 5px 5px;
+  font: 200 1rem 'Inconsolata', monospace;
   display: flex;
   justify-content: space-between;
-  margin-top: -7px;
   align-items: center;
+  border-radius: 0 0 5px 5px;
+  margin-top: -7px;
 }
-
-#digest .character-count {
-  font-size: 1rem;
-  margin-left: 1rem;
-}
+#digest .footer div { margin-left: 1rem; }
 
 #digest .footer button {
   border-radius: 0 0 5px 0;
@@ -275,46 +295,58 @@ main p {
 
 /**
  *
- * PRNG Section Styles
- *
- */
-
-#random .settings {
-  display: flex;
-  background: var(--element);
-  border-radius: 5px;
-  width: fit-content;
-  margin: 5vh auto;
-  font: 200 1rem 'Inconsolata', monospace;
-}
-
-#random .prng-options, #random .control.output-encoding-control { display: none; }
-#random .prng-options.active, #random .output-encoding-control.active { display: flex; }
-
-#random button { border-radius: 0 5px 5px 0; }
-
-/**
- *
  * Result Section Styles
  *
  */
 
-#result {
+#results {
+  color: var(--text);
   font-family: 'Inconsolata', monospace;
-  padding: 2rem;
-  margin-bottom: 3rem;
-  border-radius: 5px;
-  word-break: break-all;
   opacity: 0;
   transition: opacity 250ms ease-in-out;
+}
+
+/* Double chevron */
+#results > svg {
+  width: 3rem;
+  margin: 0;
+}
+
+#results .result {
   background: var(--active-element);
-  color: var(--text);
+  margin: 1.5rem 0;
+  border-radius: 5px;
 }
-#result .copy {
-  display: inline-block;
-  margin-top: 1rem;
+
+#results .result h2 {
+  font: 100 italic 1rem 'Lora', serif;
+  color: var(--sub-text);
+  text-align: left;
+  padding-top: 1rem;
+  margin: 0 0 0 1rem;
 }
-#result svg { width: 24px; }
+
+#results .result .content {
+  word-break: break-all;
+  margin: 2rem;
+}
+
+#results .result .stats {
+  background: var(--element);
+  display: flex;
+  font-size: 1rem;
+  border-radius: 0 0 5px 5px;
+  align-items: center;
+  height: 3rem;
+}
+
+#results .result .stats > div { padding: 0.5rem 1rem; }
+
+#results .stats a { /* copy anchor */
+  padding: 0.5rem;
+  margin-left: auto;
+}
+#results .stats a svg { width: 24px; }
 
 /**
  *
@@ -330,30 +362,26 @@ main p {
   background: var(--active-element);
   padding: 0.5rem;
   border-radius: 5px;
-  top: -2rem;
-  left: calc(50% - 3rem); /* TODO: figure out a better way */
+  top: -2.3rem;
+  left: calc(50% - 2rem); /* TODO: figure out a better way */
   width: max-content;
   z-index: 1;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1rem;
+  line-height: normal;
 }
 
 [data-tooltip]:hover::after {
   content: '';
   position: absolute;
-  top: 3px;
+  top: -2px;
   left: 50%;
   border-width: 5px;
   border-style: solid;
-  border-color: rgba(255, 255, 255, 0.1) transparent transparent transparent;
+  border-color: var(--border) transparent transparent transparent;
   z-index: 1;
 }
-
-/* Tooltips below for submenus */
-/* .settings .control:hover::before { top: 5.5rem; }
-.settings .control:hover::after {
-  top: 4.9rem;
-  border-color: transparent transparent var(--active-element) transparent;
-} */
 
 /**
  *
@@ -364,6 +392,7 @@ main p {
 main .notice {
   opacity: 0.5;
   font-size: 1rem;
+  padding: 3rem 0; /* margin will push footer off page */
 }
 
 footer {

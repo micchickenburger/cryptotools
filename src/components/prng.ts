@@ -11,37 +11,31 @@
  * enable production of random UUIDv4 values.
  */
 
-import { encode } from '../lib/encode';
 import load from '../lib/loader';
-import { showResult } from '../lib/result';
+import { hideResults, showResults } from '../lib/result';
 
-const prngOperation = document.querySelector('#random .operation') as HTMLSelectElement;
-const prngOptions = document.querySelector('#random .prng-options') as HTMLElement;
-const prngByteLength = document.querySelector('#random .byte-length') as HTMLInputElement;
-const prngOutput = document.querySelector('#random .output') as HTMLSelectElement;
-const prngOutputEncodingControl = document.querySelector('#random .output-encoding-control') as HTMLElement;
-const prngOutputEncoding = document.querySelector('#random .output-encoding') as HTMLSelectElement;
-const prngGenerateButton = document.querySelector('#random button') as HTMLButtonElement;
 
-prngOperation?.addEventListener('change', () => {
-  const op = prngOperation.selectedOptions[0].value;
-  if (op === 'uuid') prngOptions.classList.remove('active');
-  else prngOptions.classList.add('active'); // op === 'random'
-});
+const menuItems = document.querySelectorAll<HTMLLIElement>('#random .section-menu li');
+const sections = document.querySelectorAll<HTMLDivElement>('#random .subsection > div.settings');
 
-prngOutput?.addEventListener('change', () => {
-  const out = prngOutput.selectedOptions[0].value;
-  if (out === 'display') prngOutputEncodingControl.classList.add('active');
-  else prngOutputEncodingControl.classList.remove('active'); // out === 'download'
-});
+menuItems.forEach((item) => item.addEventListener('click', () => {
+  menuItems.forEach(i => i.classList.remove('active'));
+  sections.forEach(i => i.classList.remove('active'));
+  item.classList.add('active');
+  if (item.dataset.target) document.querySelector(`.${item.dataset.target}`)?.classList.add('active');
+  hideResults();
+}));
 
+const prngGenerateButton = document.querySelector<HTMLButtonElement>('#random button')!;
 prngGenerateButton.addEventListener('click', () => {
   load(0);
+  
+  const prngByteLength = document.querySelector<HTMLInputElement>('#random .byte-length')!;
+  const prngOutput = document.querySelector<HTMLSelectElement>('#random .output')!;
+  const op = document.querySelector<HTMLElement>('#random .section-menu li.active')!.dataset.target;
+  if (op === 'uuid') return showResults([{ label: 'UUID', value: self.crypto.randomUUID() }]);
 
-  const op = prngOperation.selectedOptions[0].value;
-  if (op === 'uuid') return showResult(self.crypto.randomUUID());
-
-  // If not 'uuid', then 'random'
+  // If not 'uuid', then 'random-values'
   const bytes = parseInt(prngByteLength.value, 10) || 64;
   const array = new Uint8Array(bytes);
   self.crypto.getRandomValues(array);
@@ -49,9 +43,7 @@ prngGenerateButton.addEventListener('click', () => {
   const out = prngOutput.selectedOptions[0].value;
 
   if (out === 'display') {
-    const enc = prngOutputEncoding.selectedOptions[0].value;
-    const radix = parseInt(enc, 10);
-    return showResult(encode(array, radix));
+    return showResults([{ label: 'Random Values', value: array.buffer }]);
   }
 
   // If not 'display', then 'download'
