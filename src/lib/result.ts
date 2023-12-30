@@ -12,27 +12,34 @@
 import { ENCODING, decode, encode, guessEncoding } from './encode';
 import load from './loader';
 import {
-  COPIED_SVG, COPY_SVG, TEXT_SVG, RULER_SVG, CODE_SVG, DOUBLE_CHEVRON_SVG,
+  DONE_SVG, COPY_SVG, TEXT_SVG, RULER_SVG, CODE_SVG, DOUBLE_CHEVRON_SVG, DOWNLOAD_SVG, DOWNLOAD_SIMPLE_SVG,
 } from './svg';
 
-const copyEvent = (content: HTMLElement, copy: HTMLElement) => async (event: Event) => {
-  event.preventDefault();
+const downloadEvent = (data: string | ArrayBuffer) => async () => {
+  let array: ArrayBuffer;
+  let extension = 'bin';
 
-  try {
-    await navigator.clipboard.writeText(content.textContent!);
-    copy.innerHTML = COPIED_SVG;
-    copy.dataset.tooltip = 'Copied!';
-    setTimeout(() => {
-      copy.innerHTML = COPY_SVG;
-      copy.dataset.tooltip = 'Copy';
-    }, 5000); // revert icon after five seconds
-  } catch (e) {
-    console.error(e);
-  }
+  if (typeof data === 'string') {
+    array = (new TextEncoder()).encode(data);
+    extension = 'txt';
+  } else array = data;
+
+  const blob = new Blob([array], { type: 'application/octet-stream' });
+  const uri = window.URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = uri;
+  a.download = `cryptotools-result.${extension}`;
+  document.body.appendChild(a);
+  a.click();
+
+  // Cleanup
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(uri);
 };
 
 const buildResultElement = (
-  label: string, value: string, encoding: ENCODING, bitLength: number,
+  label: string, value: string, encoding: ENCODING, bitLength: number, rawData: string | ArrayBuffer,
 ): HTMLElement => {
   const container = document.createElement('div');
   container.classList.add('result');
@@ -73,12 +80,52 @@ const buildResultElement = (
   });
   container.appendChild(stats);
 
-  const copy = document.createElement('a');
-  copy.dataset.tooltip = 'Copy';
-  copy.href = '#';
-  copy.addEventListener('click', copyEvent(content, copy));
-  copy.innerHTML = COPY_SVG;
-  stats.appendChild(copy);
+  const links = document.createElement('div');
+  links.classList.add('links');
+  stats.appendChild(links);
+  [{
+    tooltip: 'Download Raw Data',
+    tooltipAfter: 'Downloaded!',
+    icon: DOWNLOAD_SIMPLE_SVG,
+    callback: downloadEvent(rawData),
+    data: rawData,
+  }, {
+    tooltip: 'Download Text',
+    tooltipAfter: 'Downloaded!',
+    icon: DOWNLOAD_SVG,
+    callback: downloadEvent(value),
+    data: value,
+  }, {
+    tooltip: 'Copy',
+    tooltipAfter: 'Copied!',
+    icon: COPY_SVG,
+    callback: () => navigator.clipboard.writeText(content.textContent!),
+  }]
+  .forEach(({ tooltip, tooltipAfter, icon, callback }) => {
+    const a = document.createElement('a');
+    a.dataset.tooltip = tooltip;
+    a.href = '#';
+    a.addEventListener('click', async (event) => {
+      event.preventDefault();
+
+      try {
+        await callback();
+
+        a.innerHTML = DONE_SVG;
+        a.dataset.tooltip = tooltipAfter;
+        setTimeout(() => {
+          a.innerHTML = icon;
+          a.dataset.tooltip = tooltip;
+        }, 5000); // revert icon after five seconds
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    a.innerHTML = icon;
+    links.appendChild(a);
+  });
+
 
   return container;
 };
@@ -115,7 +162,7 @@ const showResults = (results: Result[]) => {
       }
     }
 
-    const result = buildResultElement(label, content, encoding, byteLength * 8);
+    const result = buildResultElement(label, content, encoding, byteLength * 8, value);
     resultElement.appendChild(result);
   });
   

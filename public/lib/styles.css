@@ -341,11 +341,8 @@ section .settings button { margin-right: 1rem; }
 }
 
 #results .result .stats > div { padding: 0.5rem 1rem; }
-
-#results .stats a { /* copy anchor */
-  padding: 0.5rem;
-  margin-left: auto;
-}
+#results .stats .links { margin-left: auto; }
+#results .stats a { padding: 0.5rem; }
 #results .stats a svg { width: 24px; }
 
 /**
