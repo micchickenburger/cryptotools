@@ -5,6 +5,17 @@
  * @license GPL-3.0-or-later
  */
 
+import * as bcrypt from 'bcryptjs';
+
+enum ENCODING {
+  UNKNOWN = 0,
+  BINARY = 2,
+  OCTAL = 8,
+  HEXADECIMAL = 16,
+  BASE64 = 64, // RFC 4648
+  BASE64_CRYPT = -64, // Nonstandard OpenBSD alphabet used by crypt, bcrypt
+}
+
 /**
  * Encode raw binary data into a string of binary, octal, hexadecimal, or
  * Base 64 text.
@@ -13,18 +24,21 @@
  * @param radix The base representation of the encoding
  * @returns string
  */
-const encode = (rawData: ArrayBuffer, radix: number): string => {
+const encode = (rawData: ArrayBuffer, radix: ENCODING): string => {
   const array = new Uint8Array(rawData);
 
-  // Base 64
-  if (radix === 64) {
+  if (radix === ENCODING.BASE64) {
     return btoa(array.reduce((str, byte) => str + String.fromCharCode(byte), ''));
   }
 
+  if (radix === ENCODING.BASE64_CRYPT) {
+    return bcrypt.encodeBase64(new Uint8Array(rawData), Infinity);
+  }
+
   let padding: number = 0;
-  if (radix === 2) padding = 8; // Binary
-  if (radix === 8) padding = 3; // Octal
-  if (radix === 16) padding = 2; // Hexadecimal
+  if (radix === ENCODING.BINARY) padding = 8;
+  if (radix === ENCODING.OCTAL) padding = 3;
+  if (radix === ENCODING.HEXADECIMAL) padding = 2;
   if (!padding) throw new Error(`Radix ${radix} is not supported`);
 
   return array.reduce<string>((str, byte) => str + byte.toString(radix).padStart(padding, '0'), '');
@@ -38,11 +52,10 @@ const encode = (rawData: ArrayBuffer, radix: number): string => {
  * @param radix The base representation of the encoding
  * @returns ArrayBuffer
  */
-const decode = (encodedData: string, radix: number): ArrayBuffer => {
+const decode = (encodedData: string, radix: ENCODING): ArrayBuffer => {
   let array: Uint8Array;
 
-  // Base 64
-  if (radix === 64) {
+  if (radix === ENCODING.BASE64) {
     const str = atob(encodedData);
     array = new Uint8Array(str.length);
     for (let i = 0; i < str.length; i += 1) {
@@ -51,10 +64,15 @@ const decode = (encodedData: string, radix: number): ArrayBuffer => {
     return array.buffer;
   }
 
+  if (radix === ENCODING.BASE64_CRYPT) {
+    const arr = bcrypt.decodeBase64(encodedData, Infinity);
+    return Uint8Array.from(arr).buffer;
+  }
+
   let separator: number = 0;
-  if (radix === 2) separator = 8; // Binary
-  if (radix === 8) separator = 3; // Octal
-  if (radix === 16) separator = 2; // Hexadecimal
+  if (radix === ENCODING.BINARY) separator = 8;
+  if (radix === ENCODING.OCTAL) separator = 3;
+  if (radix === ENCODING.HEXADECIMAL) separator = 2;
   if (!separator) throw new Error(`Radix ${radix} is not supported`);
 
   const length = encodedData.length / separator;
@@ -66,4 +84,22 @@ const decode = (encodedData: string, radix: number): ArrayBuffer => {
   return array.buffer;
 };
 
-export { decode, encode };
+/**
+ * Guess the encoding of a string based on character groupings
+ * @param encodedData Source data
+ * @returns number
+ */
+const guessEncoding = (encodedData: string): ENCODING => {
+  // Start with more restrictive/confident character sets and work our way down
+  if (/^([01]{8})+$/.test(encodedData)) return ENCODING.BINARY;
+  if (/^([0-7]{3})+$/.test(encodedData)) return ENCODING.OCTAL;
+  if (/^([0-9a-f]{2})+$|^([0-9A-F]{2})+$/.test(encodedData)) return ENCODING.HEXADECIMAL;
+  if (/^([0-9a-zA-Z+\/]{4})*[0-9a-zA-Z+\/]{2}[0-9a-zA-Z+\/=]{2}$/.test(encodedData)) return ENCODING.BASE64;
+
+  // Base64 crypt uses a dot instead of a plus, and has no padding or groupings
+  if (/^[0-9a-zA-Z.\/]+$/.test(encodedData)) return ENCODING.BASE64_CRYPT;
+
+  return ENCODING.UNKNOWN;
+};
+
+export { ENCODING, decode, encode, guessEncoding };
