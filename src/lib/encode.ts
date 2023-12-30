@@ -9,6 +9,7 @@ import * as bcrypt from 'bcryptjs';
 
 enum ENCODING {
   BOOLEAN = -1,
+  UUID = -2,
   UNKNOWN = 0,
 
   BINARY = 2,
@@ -75,6 +76,13 @@ const decode = (encodedData: string, radix: ENCODING): ArrayBuffer => {
     return Uint8Array.from(arr).buffer;
   }
 
+  if (radix === ENCODING.UUID) {
+    const data = encodedData.replace(/-/g, '');
+    array = new Uint8Array(data.length / 2);
+    data.match(new RegExp(`.{1,2}`, 'g'))?.forEach((byte, i) => array[i] = parseInt(byte, 16));
+    return array.buffer;
+  }
+
   let separator: number = 0;
   if (radix === ENCODING.BINARY) separator = 8;
   if (radix === ENCODING.OCTAL) separator = 3;
@@ -99,6 +107,7 @@ const guessEncoding = (encodedData: string): ENCODING => {
   // Start with more restrictive/confident character sets and work our way down
   if (encodedData.toLowerCase() === 'true' || encodedData.toLowerCase() === 'false') return ENCODING.BOOLEAN;
 
+  if (/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(encodedData)) return ENCODING.UUID;
   if (/^([01]{8})+$/.test(encodedData)) return ENCODING.BINARY;
   if (/^([0-7]{3})+$/.test(encodedData)) return ENCODING.OCTAL;
   if (/^([0-9a-f]{2})+$|^([0-9A-F]{2})+$/.test(encodedData)) return ENCODING.HEXADECIMAL;
