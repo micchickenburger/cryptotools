@@ -34,8 +34,7 @@ const bcryptComplete = (button: HTMLButtonElement, text: string | null) => (erro
     const sansHash = bcrypt.getSalt(result); // Like $2a$10$uTzw7mkyaPz.6Kb.H0d/sO
     const salt = sansHash.replace(/^.+\$/, '');
     const hash = result.substring(sansHash.length);
-    console.debug(salt, salt.length, bcrypt.decodeBase64(salt, Infinity).length);
-    console.debug(hash, hash.length, bcrypt.decodeBase64(hash, Infinity).length);
+
     showResults([
       { label: 'Bcrypt String', value: result },
       { label: 'Salt', value: salt },
