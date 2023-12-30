@@ -14,6 +14,7 @@
 import * as bcrypt from 'bcryptjs';
 import { showResults } from '../../lib/result';
 import load from '../../lib/loader';
+import { handleError } from '../../lib/error';
 
 // Update bcrypt cost iterations count
 const bcryptControl = document.querySelector<HTMLDivElement>('#hash-bcrypt .control.cost')!;
@@ -26,7 +27,7 @@ bcryptCost.addEventListener('change', () => {
 
 // Bcrypt finish and progress functions
 const bcryptComplete = (button: HTMLButtonElement, text: string | null) => (error: Error | null, result: string | boolean) => {
-  if (error) console.error(error);
+  if (error) handleError(error); // TODO: Determine whether we should return or throw here; execution continues
 
   if (typeof result === 'boolean') {
     showResults([{ label: 'Bcrypt Verification Result', value: String(result) }]);
@@ -57,15 +58,17 @@ bcryptHashButton?.addEventListener('click', () => {
   load(0);
   bcryptHashButton.disabled = true;
 
-  const cost = parseInt(bcryptCost.value, 10) || 10;
-  const password = document.querySelector<HTMLInputElement>('#hash-bcrypt .password input')!;
-
-  bcrypt.hash(
-    password.value,
-    cost,
-    bcryptComplete(bcryptHashButton, bcryptHashButton.textContent),
-    bcryptProgress(bcryptHashButton),
-  );
+  try {
+    const cost = parseInt(bcryptCost.value, 10) || 10;
+    const password = document.querySelector<HTMLInputElement>('#hash-bcrypt .password input')!;
+  
+    bcrypt.hash(
+      password.value,
+      cost,
+      bcryptComplete(bcryptHashButton, bcryptHashButton.textContent),
+      bcryptProgress(bcryptHashButton),
+    );
+  } catch (e) { handleError(e); }
 });
 
 // Verify bcrypt
@@ -77,10 +80,12 @@ bcryptVerifyButton?.addEventListener('click', async () => {
   const password = document.querySelector<HTMLInputElement>('#verify-bcrypt .password input')!;
   const hash = document.querySelector<HTMLInputElement>('#verify-bcrypt .hash input')!;
 
-  bcrypt.compare(
-    password.value,
-    hash.value,
-    bcryptComplete(bcryptVerifyButton, bcryptVerifyButton.textContent),
-    bcryptProgress(bcryptVerifyButton),
-  );
+  try {
+    bcrypt.compare(
+      password.value,
+      hash.value,
+      bcryptComplete(bcryptVerifyButton, bcryptVerifyButton.textContent),
+      bcryptProgress(bcryptVerifyButton),
+    );
+  } catch (e) { handleError(e); }
 });

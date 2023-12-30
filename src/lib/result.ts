@@ -10,6 +10,7 @@
  */
 
 import { ENCODING, decode, encode, guessEncoding } from './encode';
+import { clearError } from './error';
 import load from './loader';
 import {
   DONE_SVG, COPY_SVG, TEXT_SVG, RULER_SVG, CODE_SVG, DOUBLE_CHEVRON_SVG, DOWNLOAD_SVG, DOWNLOAD_SIMPLE_SVG,
@@ -140,6 +141,7 @@ const resultElement = document.querySelector<HTMLElement>('#results')!;
 
 const showResults = (results: Result[]) => {
   resultElement.innerHTML = DOUBLE_CHEVRON_SVG; // remove any previous results
+  clearError(); // as well as any previous error
 
   results.forEach(({ label, value, defaultEncoding }) => {
     let encoding: ENCODING;

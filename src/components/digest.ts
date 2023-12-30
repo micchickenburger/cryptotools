@@ -13,6 +13,7 @@
  * browser with native code.
  */
 
+import { handleError } from '../lib/error';
 import { ENCODING } from '../lib/encode';
 import load from '../lib/loader';
 import { hideResults, showResults } from '../lib/result';
@@ -44,8 +45,10 @@ button?.addEventListener('click', async () => {
   load(0);
   const text = input!.value;
   const algorithm = selected!.alg!;
-  const digest = await digestMessage(text, algorithm);
-  showResults([{ label: `${algorithm} Digest`, value: digest, defaultEncoding: ENCODING.HEXADECIMAL }]);
+  try {
+    const digest = await digestMessage(text, algorithm);
+    showResults([{ label: `${algorithm} Digest`, value: digest, defaultEncoding: ENCODING.HEXADECIMAL }]);
+  } catch (e) { handleError(e); }
 });
 
 let selected: DOMStringMap;

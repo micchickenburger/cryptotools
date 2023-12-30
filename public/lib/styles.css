@@ -1,11 +1,12 @@
 :root {
   --highlight: #42dbd1;
-  --background: #120303;
+  --background: #0d0d0d;
   --element: #292929;
   --active-element: #3c3c3c;
   --text: #e1e1e1;
   --sub-text: #b9b9b9;
   --border: #545454;
+  --error: #db4263;
 }
 
 @font-face {
@@ -291,6 +292,30 @@ section .settings button { margin-right: 1rem; }
 
 #digest .footer button {
   border-radius: 0 0 5px 0;
+}
+
+/**
+ *
+ * Error Section Styles
+ *
+ */
+
+#error {
+  font-size: 1rem;
+  background: var(--element);
+  display: none;
+  align-items: center;
+  width: fit-content;
+  padding: 1rem;
+  border: 2px solid var(--error);
+  border-radius: 5px;
+  margin: 0 auto;
+}
+#error.active { display: flex; }
+
+#error svg {
+  min-width: 30px;
+  color: var(--error);
 }
 
 /**

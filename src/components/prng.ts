@@ -11,6 +11,7 @@
  * enable production of random UUIDv4 values.
  */
 
+import { handleError } from '../lib/error';
 import load from '../lib/loader';
 import { hideResults, showResults } from '../lib/result';
 
@@ -30,34 +31,37 @@ const prngGenerateButton = document.querySelector<HTMLButtonElement>('#random bu
 prngGenerateButton.addEventListener('click', () => {
   load(0);
   
-  const prngByteLength = document.querySelector<HTMLInputElement>('#random .byte-length')!;
-  const prngOutput = document.querySelector<HTMLSelectElement>('#random .output')!;
-  const op = document.querySelector<HTMLElement>('#random .section-menu li.active')!.dataset.target;
-  if (op === 'uuid') return showResults([{ label: 'UUID', value: self.crypto.randomUUID() }]);
+  try {
+    const prngByteLength = document.querySelector<HTMLInputElement>('#random .byte-length')!;
+    const prngOutput = document.querySelector<HTMLSelectElement>('#random .output')!;
+    const op = document.querySelector<HTMLElement>('#random .section-menu li.active')!.dataset.target;
+    if (op === 'uuid') return showResults([{ label: 'UUID', value: self.crypto.randomUUID() }]);
+  
+    // If not 'uuid', then 'random-values'
+    const bytes = parseInt(prngByteLength.value, 10) || 64;
+    const array = new Uint8Array(bytes);
+    self.crypto.getRandomValues(array);
+  
+    const out = prngOutput.selectedOptions[0].value;
+  
+    if (out === 'display') {
+      return showResults([{ label: 'Random Values', value: array.buffer }]);
+    }
+  
+    // If not 'display', then 'download'
+    const blob = new Blob([array], { type: 'application/octet-stream' });
+    const uri = window.URL.createObjectURL(blob);
+  
+    const a = document.createElement('a');
+    a.href = uri;
+    a.download = `prng-${bytes}-bytes.bin`;
+    document.body.appendChild(a);
+    a.click();
+  
+    // Cleanup
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(uri);
+  } catch (e) { handleError(e); }
 
-  // If not 'uuid', then 'random-values'
-  const bytes = parseInt(prngByteLength.value, 10) || 64;
-  const array = new Uint8Array(bytes);
-  self.crypto.getRandomValues(array);
-
-  const out = prngOutput.selectedOptions[0].value;
-
-  if (out === 'display') {
-    return showResults([{ label: 'Random Values', value: array.buffer }]);
-  }
-
-  // If not 'display', then 'download'
-  const blob = new Blob([array], { type: 'application/octet-stream' });
-  const uri = window.URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = uri;
-  a.download = `prng-${bytes}-bytes.bin`;
-  document.body.appendChild(a);
-  a.click();
-
-  // Cleanup
-  document.body.removeChild(a);
-  window.URL.revokeObjectURL(uri);
   load(100);
 });
