@@ -39,7 +39,7 @@ const encode = (rawData: ArrayBuffer, radix: ENCODING): string => {
   }
 
   if (radix === ENCODING.BASE64_CRYPT) {
-    return bcrypt.encodeBase64(new Uint8Array(rawData), Infinity);
+    return bcrypt.encodeBase64(array, array.length);
   }
 
   let padding: number = 0;
