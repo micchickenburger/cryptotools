@@ -9,3 +9,4 @@ import './components/mainMenu';
 import './components/digest';
 import './components/prng';
 import './components/passwords';
+import './lib/form';

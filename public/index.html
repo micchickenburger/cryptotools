@@ -67,40 +67,42 @@
         <h1>Digest</h1>
         <p class="subtitle">Generate a one-way hash, or digest, for integrity validation.</p>
         <div class="subsection full">
-          <menu class="operations-menu">
-            <li id="digest-algorithm" data-tooltip="Algorithm">
-              <label class="control">
-                <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M192 48v160H64l64-80l-64-80Z" opacity=".2"/><path d="M184 72V56H80.65l53.6 67a8 8 0 0 1 0 10l-53.6 67H184v-16a8 8 0 0 1 16 0v24a8 8 0 0 1-8 8H64a8 8 0 0 1-6.25-13l60-75l-60-75A8 8 0 0 1 64 40h128a8 8 0 0 1 8 8v24a8 8 0 0 1-16 0"/></g></svg>
-                <select id="digest-select">
-                  <option data-alg="SHA-1" data-method="Web Crypto API" data-bs="512 bits" data-spec="FIPS 180-4 &sect; 6.1">SHA-1</option>
-                  <option data-alg="SHA-256" data-method="Web Crypto API" data-bs="512 bits" data-spec="FIPS 180-4 &sect; 6.2" selected>SHA-256</option>
-                  <option data-alg="SHA-384" data-method="Web Crypto API" data-bs="1024 bits" data-spec="FIPS 180-4 &sect; 6.5">SHA-384</option>
-                  <option data-alg="SHA-512" data-method="Web Crypto API" data-bs="1024 bits" data-spec="FIPS 180-4 &sect; 6.4">SHA-512</option>
-                </select>
-                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
-              </label>
-            </li>
-            <li id="digest-block-size" data-tooltip="Block Size">
-              <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M128 129.09V232a8 8 0 0 1-3.84-1l-88-48.16a8 8 0 0 1-4.16-7V80.2a8 8 0 0 1 .7-3.27Z" opacity=".2"/><path d="m223.68 66.15l-88-48.15a15.88 15.88 0 0 0-15.36 0l-88 48.17a16 16 0 0 0-8.32 14v95.64a16 16 0 0 0 8.32 14l88 48.17a15.88 15.88 0 0 0 15.36 0l88-48.17a16 16 0 0 0 8.32-14V80.18a16 16 0 0 0-8.32-14.03M128 32l80.34 44L128 120L47.66 76ZM40 90l80 43.78v85.79l-80-43.75Zm96 129.57v-85.75L216 90v85.78Z"/></g></svg>
-              <span>Block Size</span>
-            </li>
-            <li id="digest-method" data-tooltip="Digest Method">
-              <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M208 216H48a8 8 0 0 1-6.86-12.12l30.48-50.8c13.23-2.48 32-1.41 56.37 10.92c32.25 16.33 54.75 12.91 67.5 7.65l19.34 32.23A8 8 0 0 1 208 216" opacity=".2"/><path d="M221.69 199.77L160 96.92V40h8a8 8 0 0 0 0-16H88a8 8 0 0 0 0 16h8v56.92L34.31 199.77A16 16 0 0 0 48 224h160a16 16 0 0 0 13.72-24.23Zm-110.83-96.52a7.93 7.93 0 0 0 1.14-4.11V40h32v59.14a7.93 7.93 0 0 0 1.14 4.11L183.36 167c-12 2.37-29.07 1.37-51.75-10.11c-15.91-8.05-31.05-12.32-45.22-12.81ZM48 208l28.54-47.58c14.25-1.73 30.31 1.85 47.82 10.72c19 9.61 35 12.88 48 12.88a69.89 69.89 0 0 0 19.55-2.7L208 208Z"/></g></svg>
-              <span>Method</span>
-            </li>
-            <li id="digest-specification" data-tooltip="Specification">
-              <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M232 128c0 12.51-17.82 21.95-22.68 33.69c-4.68 11.32 1.42 30.65-7.78 39.85s-28.53 3.1-39.85 7.78C150 214.18 140.5 232 128 232s-22-17.82-33.69-22.68c-11.32-4.68-30.65 1.42-39.85-7.78s-3.1-28.53-7.78-39.85C41.82 150 24 140.5 24 128s17.82-22 22.68-33.69c4.68-11.31-1.42-30.65 7.78-39.85s28.54-3.1 39.85-7.78C106.05 41.82 115.5 24 128 24s22 17.82 33.69 22.68c11.32 4.68 30.65-1.42 39.85 7.78s3.1 28.53 7.78 39.85C214.18 106.05 232 115.5 232 128" opacity=".2"/><path d="M225.86 102.82c-3.77-3.94-7.67-8-9.14-11.57c-1.36-3.27-1.44-8.69-1.52-13.94c-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52c-3.56-1.47-7.63-5.37-11.57-9.14C146.28 23.51 138.44 16 128 16s-18.27 7.51-25.18 14.14c-3.94 3.77-8 7.67-11.57 9.14c-3.25 1.36-8.69 1.44-13.94 1.52c-9.76.15-20.82.31-28.51 8s-7.8 18.75-8 28.51c-.08 5.25-.16 10.67-1.52 13.94c-1.47 3.56-5.37 7.63-9.14 11.57C23.51 109.72 16 117.56 16 128s7.51 18.27 14.14 25.18c3.77 3.94 7.67 8 9.14 11.57c1.36 3.27 1.44 8.69 1.52 13.94c.15 9.76.31 20.82 8 28.51s18.75 7.85 28.51 8c5.25.08 10.67.16 13.94 1.52c3.56 1.47 7.63 5.37 11.57 9.14c6.9 6.63 14.74 14.14 25.18 14.14s18.27-7.51 25.18-14.14c3.94-3.77 8-7.67 11.57-9.14c3.27-1.36 8.69-1.44 13.94-1.52c9.76-.15 20.82-.31 28.51-8s7.85-18.75 8-28.51c.08-5.25.16-10.67 1.52-13.94c1.47-3.56 5.37-7.63 9.14-11.57c6.63-6.9 14.14-14.74 14.14-25.18s-7.51-18.27-14.14-25.18m-11.55 39.29c-4.79 5-9.75 10.17-12.38 16.52c-2.52 6.1-2.63 13.07-2.73 19.82c-.1 7-.21 14.33-3.32 17.43s-10.39 3.22-17.43 3.32c-6.75.1-13.72.21-19.82 2.73c-6.35 2.63-11.52 7.59-16.52 12.38S132 224 128 224s-9.15-4.92-14.11-9.69s-10.17-9.75-16.52-12.38c-6.1-2.52-13.07-2.63-19.82-2.73c-7-.1-14.33-.21-17.43-3.32s-3.22-10.39-3.32-17.43c-.1-6.75-.21-13.72-2.73-19.82c-2.63-6.35-7.59-11.52-12.38-16.52S32 132 32 128s4.92-9.15 9.69-14.11s9.75-10.17 12.38-16.52c2.52-6.1 2.63-13.07 2.73-19.82c.1-7 .21-14.33 3.32-17.43s10.39-3.22 17.43-3.32c6.75-.1 13.72-.21 19.82-2.73c6.35-2.63 11.52-7.59 16.52-12.38S124 32 128 32s9.15 4.92 14.11 9.69s10.17 9.75 16.52 12.38c6.1 2.52 13.07 2.63 19.82 2.73c7 .1 14.33.21 17.43 3.32s3.22 10.39 3.32 17.43c.1 6.75.21 13.72 2.73 19.82c2.63 6.35 7.59 11.52 12.38 16.52S224 124 224 128s-4.92 9.15-9.69 14.11m-40.65-43.77a8 8 0 0 1 0 11.32l-56 56a8 8 0 0 1-11.32 0l-24-24a8 8 0 0 1 11.32-11.32L112 148.69l50.34-50.35a8 8 0 0 1 11.32 0"/></g></svg>
-              <span>Specification</span>
-            </li>
-          </menu>
-          <textarea id="from" rows="10" placeholder="Paste text..."></textarea>
-          <div class="footer">
-            <div>
-              <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M200 56v136a8 8 0 0 1-8 8H64a8 8 0 0 1-8-8V56Z" opacity=".2"/><path d="M208 56v32a8 8 0 0 1-16 0V64h-56v128h24a8 8 0 0 1 0 16H96a8 8 0 0 1 0-16h24V64H64v24a8 8 0 0 1-16 0V56a8 8 0 0 1 8-8h144a8 8 0 0 1 8 8"/></g></svg>
-              <span class="character-count">0 characters</span>
+          <form autocomplete="off">
+            <menu class="operations-menu">
+              <li id="digest-algorithm" data-tooltip="Algorithm">
+                <label class="control">
+                  <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M192 48v160H64l64-80l-64-80Z" opacity=".2"/><path d="M184 72V56H80.65l53.6 67a8 8 0 0 1 0 10l-53.6 67H184v-16a8 8 0 0 1 16 0v24a8 8 0 0 1-8 8H64a8 8 0 0 1-6.25-13l60-75l-60-75A8 8 0 0 1 64 40h128a8 8 0 0 1 8 8v24a8 8 0 0 1-16 0"/></g></svg>
+                  <select id="digest-select">
+                    <option data-alg="SHA-1" data-method="Web Crypto API" data-bs="512 bits" data-spec="FIPS 180-4 &sect; 6.1">SHA-1</option>
+                    <option data-alg="SHA-256" data-method="Web Crypto API" data-bs="512 bits" data-spec="FIPS 180-4 &sect; 6.2" selected>SHA-256</option>
+                    <option data-alg="SHA-384" data-method="Web Crypto API" data-bs="1024 bits" data-spec="FIPS 180-4 &sect; 6.5">SHA-384</option>
+                    <option data-alg="SHA-512" data-method="Web Crypto API" data-bs="1024 bits" data-spec="FIPS 180-4 &sect; 6.4">SHA-512</option>
+                  </select>
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
+                </label>
+              </li>
+              <li id="digest-block-size" data-tooltip="Block Size">
+                <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M128 129.09V232a8 8 0 0 1-3.84-1l-88-48.16a8 8 0 0 1-4.16-7V80.2a8 8 0 0 1 .7-3.27Z" opacity=".2"/><path d="m223.68 66.15l-88-48.15a15.88 15.88 0 0 0-15.36 0l-88 48.17a16 16 0 0 0-8.32 14v95.64a16 16 0 0 0 8.32 14l88 48.17a15.88 15.88 0 0 0 15.36 0l88-48.17a16 16 0 0 0 8.32-14V80.18a16 16 0 0 0-8.32-14.03M128 32l80.34 44L128 120L47.66 76ZM40 90l80 43.78v85.79l-80-43.75Zm96 129.57v-85.75L216 90v85.78Z"/></g></svg>
+                <span>Block Size</span>
+              </li>
+              <li id="digest-method" data-tooltip="Digest Method">
+                <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M208 216H48a8 8 0 0 1-6.86-12.12l30.48-50.8c13.23-2.48 32-1.41 56.37 10.92c32.25 16.33 54.75 12.91 67.5 7.65l19.34 32.23A8 8 0 0 1 208 216" opacity=".2"/><path d="M221.69 199.77L160 96.92V40h8a8 8 0 0 0 0-16H88a8 8 0 0 0 0 16h8v56.92L34.31 199.77A16 16 0 0 0 48 224h160a16 16 0 0 0 13.72-24.23Zm-110.83-96.52a7.93 7.93 0 0 0 1.14-4.11V40h32v59.14a7.93 7.93 0 0 0 1.14 4.11L183.36 167c-12 2.37-29.07 1.37-51.75-10.11c-15.91-8.05-31.05-12.32-45.22-12.81ZM48 208l28.54-47.58c14.25-1.73 30.31 1.85 47.82 10.72c19 9.61 35 12.88 48 12.88a69.89 69.89 0 0 0 19.55-2.7L208 208Z"/></g></svg>
+                <span>Method</span>
+              </li>
+              <li id="digest-specification" data-tooltip="Specification">
+                <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M232 128c0 12.51-17.82 21.95-22.68 33.69c-4.68 11.32 1.42 30.65-7.78 39.85s-28.53 3.1-39.85 7.78C150 214.18 140.5 232 128 232s-22-17.82-33.69-22.68c-11.32-4.68-30.65 1.42-39.85-7.78s-3.1-28.53-7.78-39.85C41.82 150 24 140.5 24 128s17.82-22 22.68-33.69c4.68-11.31-1.42-30.65 7.78-39.85s28.54-3.1 39.85-7.78C106.05 41.82 115.5 24 128 24s22 17.82 33.69 22.68c11.32 4.68 30.65-1.42 39.85 7.78s3.1 28.53 7.78 39.85C214.18 106.05 232 115.5 232 128" opacity=".2"/><path d="M225.86 102.82c-3.77-3.94-7.67-8-9.14-11.57c-1.36-3.27-1.44-8.69-1.52-13.94c-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52c-3.56-1.47-7.63-5.37-11.57-9.14C146.28 23.51 138.44 16 128 16s-18.27 7.51-25.18 14.14c-3.94 3.77-8 7.67-11.57 9.14c-3.25 1.36-8.69 1.44-13.94 1.52c-9.76.15-20.82.31-28.51 8s-7.8 18.75-8 28.51c-.08 5.25-.16 10.67-1.52 13.94c-1.47 3.56-5.37 7.63-9.14 11.57C23.51 109.72 16 117.56 16 128s7.51 18.27 14.14 25.18c3.77 3.94 7.67 8 9.14 11.57c1.36 3.27 1.44 8.69 1.52 13.94c.15 9.76.31 20.82 8 28.51s18.75 7.85 28.51 8c5.25.08 10.67.16 13.94 1.52c3.56 1.47 7.63 5.37 11.57 9.14c6.9 6.63 14.74 14.14 25.18 14.14s18.27-7.51 25.18-14.14c3.94-3.77 8-7.67 11.57-9.14c3.27-1.36 8.69-1.44 13.94-1.52c9.76-.15 20.82-.31 28.51-8s7.85-18.75 8-28.51c.08-5.25.16-10.67 1.52-13.94c1.47-3.56 5.37-7.63 9.14-11.57c6.63-6.9 14.14-14.74 14.14-25.18s-7.51-18.27-14.14-25.18m-11.55 39.29c-4.79 5-9.75 10.17-12.38 16.52c-2.52 6.1-2.63 13.07-2.73 19.82c-.1 7-.21 14.33-3.32 17.43s-10.39 3.22-17.43 3.32c-6.75.1-13.72.21-19.82 2.73c-6.35 2.63-11.52 7.59-16.52 12.38S132 224 128 224s-9.15-4.92-14.11-9.69s-10.17-9.75-16.52-12.38c-6.1-2.52-13.07-2.63-19.82-2.73c-7-.1-14.33-.21-17.43-3.32s-3.22-10.39-3.32-17.43c-.1-6.75-.21-13.72-2.73-19.82c-2.63-6.35-7.59-11.52-12.38-16.52S32 132 32 128s4.92-9.15 9.69-14.11s9.75-10.17 12.38-16.52c2.52-6.1 2.63-13.07 2.73-19.82c.1-7 .21-14.33 3.32-17.43s10.39-3.22 17.43-3.32c6.75-.1 13.72-.21 19.82-2.73c6.35-2.63 11.52-7.59 16.52-12.38S124 32 128 32s9.15 4.92 14.11 9.69s10.17 9.75 16.52 12.38c6.1 2.52 13.07 2.63 19.82 2.73c7 .1 14.33.21 17.43 3.32s3.22 10.39 3.32 17.43c.1 6.75.21 13.72 2.73 19.82c2.63 6.35 7.59 11.52 12.38 16.52S224 124 224 128s-4.92 9.15-9.69 14.11m-40.65-43.77a8 8 0 0 1 0 11.32l-56 56a8 8 0 0 1-11.32 0l-24-24a8 8 0 0 1 11.32-11.32L112 148.69l50.34-50.35a8 8 0 0 1 11.32 0"/></g></svg>
+                <span>Specification</span>
+              </li>
+            </menu>
+            <textarea id="from" rows="10" placeholder="Paste text..." spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+            <div class="footer">
+              <div>
+                <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M200 56v136a8 8 0 0 1-8 8H64a8 8 0 0 1-8-8V56Z" opacity=".2"/><path d="M208 56v32a8 8 0 0 1-16 0V64h-56v128h24a8 8 0 0 1 0 16H96a8 8 0 0 1 0-16h24V64H64v24a8 8 0 0 1-16 0V56a8 8 0 0 1 8-8h144a8 8 0 0 1 8 8"/></g></svg>
+                <span class="character-count">0 characters</span>
+              </div>
+              <button>Generate Digest</button>
             </div>
-            <button>Generate Digest</button>
-          </div>
+          </form>
         </div>
       </section>
       <section id="random">
@@ -117,21 +119,23 @@
               <span>UUIDv4</span>
             </li>
           </menu>
-          <div class="random-values settings active">
-            <label class="control" data-tooltip="Quantity of random bytes to generate">
-              <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M229.66 90.34L90.34 229.66a8 8 0 0 1-11.31 0L26.34 177a8 8 0 0 1 0-11.31L165.66 26.34a8 8 0 0 1 11.31 0L229.66 79a8 8 0 0 1 0 11.34" opacity=".2"/><path d="m235.32 73.37l-52.69-52.68a16 16 0 0 0-22.63 0L20.68 160a16 16 0 0 0 0 22.63l52.69 52.68a16 16 0 0 0 22.63 0L235.32 96a16 16 0 0 0 0-22.63M84.68 224L32 171.31l32-32l26.34 26.35a8 8 0 0 0 11.32-11.32L75.31 128L96 107.31l26.34 26.35a8 8 0 0 0 11.32-11.32L107.31 96L128 75.31l26.34 26.35a8 8 0 0 0 11.32-11.32L139.31 64l32-32L224 84.69Z"/></g></svg>
-              <input class="byte-length" type="number" min="1" max="65536" step="1" placeholder="64" required> Bytes
-            </label>
-            <label class="control" data-tooltip="Output Format">
-              <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 48v160a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8h160a8 8 0 0 1 8 8" opacity=".2"/><path d="M208 32H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16m0 176H48V48h160ZM80 128a8 8 0 0 1 8-8h60.69l-18.35-18.34a8 8 0 0 1 11.32-11.32l32 32a8 8 0 0 1 0 11.32l-32 32a8 8 0 0 1-11.32-11.32L148.69 136H88a8 8 0 0 1-8-8"/></g></svg>
-              <select class="output">
-                <option value="display" selected>Display</option>
-                <option value="download">Download</option>
-              </select>
-              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
-            </label>
-          </div>
-          <button>Generate</button>
+          <form autocomplete="off">
+            <div class="random-values settings active">
+              <label class="control" data-tooltip="Quantity of random bytes to generate">
+                <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M229.66 90.34L90.34 229.66a8 8 0 0 1-11.31 0L26.34 177a8 8 0 0 1 0-11.31L165.66 26.34a8 8 0 0 1 11.31 0L229.66 79a8 8 0 0 1 0 11.34" opacity=".2"/><path d="m235.32 73.37l-52.69-52.68a16 16 0 0 0-22.63 0L20.68 160a16 16 0 0 0 0 22.63l52.69 52.68a16 16 0 0 0 22.63 0L235.32 96a16 16 0 0 0 0-22.63M84.68 224L32 171.31l32-32l26.34 26.35a8 8 0 0 0 11.32-11.32L75.31 128L96 107.31l26.34 26.35a8 8 0 0 0 11.32-11.32L107.31 96L128 75.31l26.34 26.35a8 8 0 0 0 11.32-11.32L139.31 64l32-32L224 84.69Z"/></g></svg>
+                <input class="byte-length" type="number" min="0" max="65536" step="1" placeholder="64"> Bytes
+              </label>
+              <label class="control" data-tooltip="Output Format">
+                <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 48v160a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8h160a8 8 0 0 1 8 8" opacity=".2"/><path d="M208 32H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16m0 176H48V48h160ZM80 128a8 8 0 0 1 8-8h60.69l-18.35-18.34a8 8 0 0 1 11.32-11.32l32 32a8 8 0 0 1 0 11.32l-32 32a8 8 0 0 1-11.32-11.32L148.69 136H88a8 8 0 0 1-8-8"/></g></svg>
+                <select class="output">
+                  <option value="display" selected>Display</option>
+                  <option value="download">Download</option>
+                </select>
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
+              </label>
+            </div>
+            <button>Generate</button>
+          </form>
         </div>
       </section>
       <section id="encryption">
@@ -179,29 +183,29 @@
               <span>Specification</span>
             </li>
           </menu>
-          <div id="hash-bcrypt" class="settings active">
+          <form id="hash-bcrypt" class="settings active" autocomplete="off">
             <label class="control cost" data-tooltip="Cost: 2^10 = 1,024 iterations">
               <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M229.66 90.34L90.34 229.66a8 8 0 0 1-11.31 0L26.34 177a8 8 0 0 1 0-11.31L165.66 26.34a8 8 0 0 1 11.31 0L229.66 79a8 8 0 0 1 0 11.34" opacity=".2"/><path d="m235.32 73.37l-52.69-52.68a16 16 0 0 0-22.63 0L20.68 160a16 16 0 0 0 0 22.63l52.69 52.68a16 16 0 0 0 22.63 0L235.32 96a16 16 0 0 0 0-22.63M84.68 224L32 171.31l32-32l26.34 26.35a8 8 0 0 0 11.32-11.32L75.31 128L96 107.31l26.34 26.35a8 8 0 0 0 11.32-11.32L107.31 96L128 75.31l26.34 26.35a8 8 0 0 0 11.32-11.32L139.31 64l32-32L224 84.69Z"/></g></svg>
-              Cost <input class="cost" type="number" min="4" max="31" step="1" placeholder="10" required>
+              Cost <input class="cost" type="number" min="4" max="31" step="1" placeholder="10">
             </label>
             <label class="control password grow" data-tooltip="Password or passphrase (max length 64 bytes)">
               <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M232 96a72 72 0 0 1-98.83 66.83L120 176H96v24H72v24H32v-40l61.17-61.17A72 72 0 1 1 232 96" opacity=".2"/><path d="M160 16a80.07 80.07 0 0 0-76.09 104.78l-57.57 57.56A8 8 0 0 0 24 184v40a8 8 0 0 0 8 8h40a8 8 0 0 0 8-8v-16h16a8 8 0 0 0 8-8v-16h16a8 8 0 0 0 5.66-2.34l9.56-9.57A80 80 0 1 0 160 16m0 144a63.7 63.7 0 0 1-23.65-4.51a8 8 0 0 0-8.84 1.68L116.69 168H96a8 8 0 0 0-8 8v16H72a8 8 0 0 0-8 8v16H40v-28.69l58.83-58.82a8 8 0 0 0 1.68-8.84A64 64 0 1 1 160 160m32-84a12 12 0 1 1-12-12a12 12 0 0 1 12 12"/></g></svg>
-              <input type="password" placeholder="passw0rd" required>
+              <input type="password" placeholder="passw0rd" autocomplete="off">
             </label>
             <button>Hash Password</button>
-          </div>
-          <div id="verify-bcrypt" class="settings">
+          </form>
+          <form id="verify-bcrypt" class="settings" autocomplete="off">
             <label class="control password grow" data-tooltip="Password or passphrase (max length 64 bytes)">
               <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M232 96a72 72 0 0 1-98.83 66.83L120 176H96v24H72v24H32v-40l61.17-61.17A72 72 0 1 1 232 96" opacity=".2"/><path d="M160 16a80.07 80.07 0 0 0-76.09 104.78l-57.57 57.56A8 8 0 0 0 24 184v40a8 8 0 0 0 8 8h40a8 8 0 0 0 8-8v-16h16a8 8 0 0 0 8-8v-16h16a8 8 0 0 0 5.66-2.34l9.56-9.57A80 80 0 1 0 160 16m0 144a63.7 63.7 0 0 1-23.65-4.51a8 8 0 0 0-8.84 1.68L116.69 168H96a8 8 0 0 0-8 8v16H72a8 8 0 0 0-8 8v16H40v-28.69l58.83-58.82a8 8 0 0 0 1.68-8.84A64 64 0 1 1 160 160m32-84a12 12 0 1 1-12-12a12 12 0 0 1 12 12"/></g></svg>
-              <input type="password" placeholder="passw0rd" required>
+              <input type="password" placeholder="passw0rd" autocomplete="off">
             </label>
             <label class="control hash grow" data-tooltip="Bcrypt Hash">
               <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="m165.82 96l-11.64 64h-64l11.64-64Z" opacity=".2"/><path d="M224 88h-48.6l8.47-46.57a8 8 0 0 0-15.74-2.86l-9 49.43H111.4l8.47-46.57a8 8 0 0 0-15.74-2.86L95.14 88H48a8 8 0 0 0 0 16h44.23l-8.73 48H32a8 8 0 0 0 0 16h48.6l-8.47 46.57a8 8 0 0 0 6.44 9.3A7.79 7.79 0 0 0 80 224a8 8 0 0 0 7.86-6.57l9-49.43h47.74l-8.47 46.57a8 8 0 0 0 6.44 9.3a7.79 7.79 0 0 0 1.43.13a8 8 0 0 0 7.86-6.57l9-49.43H208a8 8 0 0 0 0-16h-44.23l8.73-48H224a8 8 0 0 0 0-16m-76.5 64H99.77l8.73-48h47.73Z"/></g></svg>
               <input type="text" pattern="^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$" placeholder="$2a$10$roZKs9FbxMvG7oLD8o4il.UMh0sr8EEY1ipoSU7vDE8txJdk2Cxji" required>
             </label>
             <button>Verify Password</button>
-          </div>
-          <div id="hash-PBKDF2" class="settings">
+          </form>
+          <form id="hash-PBKDF2" class="settings" autocomplete="off">
             <div class="settings">
               <label class="control prf-function" data-tooltip="Pseudorandom Function">
                 <svg fill="#42dbd1" viewBox="0 0 256 256"><g fill="currentColor"><path d="M224 128a96 96 0 1 1-96-96a96 96 0 0 1 96 96" opacity=".2"/><path d="M72 128a134.63 134.63 0 0 1-14.16 60.47a8 8 0 1 1-14.32-7.12A118.8 118.8 0 0 0 56 128a71.73 71.73 0 0 1 27-56.2a8 8 0 1 1 10 12.49A55.76 55.76 0 0 0 72 128m56-8a8 8 0 0 0-8 8a184.12 184.12 0 0 1-23 89.1a8 8 0 0 0 14 7.76A200.19 200.19 0 0 0 136 128a8 8 0 0 0-8-8m0-32a40 40 0 0 0-40 40a8 8 0 0 0 16 0a24 24 0 0 1 48 0a214.09 214.09 0 0 1-20.51 92a8 8 0 1 0 14.51 6.83A230 230 0 0 0 168 128a40 40 0 0 0-40-40m0-64A104.11 104.11 0 0 0 24 128a87.76 87.76 0 0 1-5 29.33a8 8 0 0 0 15.09 5.33A103.9 103.9 0 0 0 40 128a88 88 0 0 1 176 0a282.24 282.24 0 0 1-5.29 54.45a8 8 0 0 0 6.3 9.4a8.22 8.22 0 0 0 1.55.15a8 8 0 0 0 7.84-6.45A298.37 298.37 0 0 0 232 128A104.12 104.12 0 0 0 128 24M94.4 152.17a8 8 0 0 0-9.4 6.25a151 151 0 0 1-17.21 45.44a8 8 0 0 0 13.86 8a166.67 166.67 0 0 0 19-50.25a8 8 0 0 0-6.25-9.44M128 56a72.85 72.85 0 0 0-9 .56a8 8 0 0 0 2 15.87A56.08 56.08 0 0 1 184 128a252.12 252.12 0 0 1-1.92 31a8 8 0 0 0 6.92 9a8.39 8.39 0 0 0 1 .06a8 8 0 0 0 7.92-7a266.48 266.48 0 0 0 2-33A72.08 72.08 0 0 0 128 56m57.93 128.25a8 8 0 0 0-9.75 5.75c-1.46 5.69-3.15 11.4-5 17a8 8 0 0 0 5 10.13a7.88 7.88 0 0 0 2.55.42a8 8 0 0 0 7.58-5.46c2-5.92 3.79-12 5.35-18.05a8 8 0 0 0-5.72-9.78Z"/></g></svg>
@@ -215,11 +219,11 @@
               </label>
               <label class="control derivation-length grow" data-tooltip="Number of bytes to derive">
                 <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M229.66 90.34L90.34 229.66a8 8 0 0 1-11.31 0L26.34 177a8 8 0 0 1 0-11.31L165.66 26.34a8 8 0 0 1 11.31 0L229.66 79a8 8 0 0 1 0 11.34" opacity=".2"/><path d="m235.32 73.37l-52.69-52.68a16 16 0 0 0-22.63 0L20.68 160a16 16 0 0 0 0 22.63l52.69 52.68a16 16 0 0 0 22.63 0L235.32 96a16 16 0 0 0 0-22.63M84.68 224L32 171.31l32-32l26.34 26.35a8 8 0 0 0 11.32-11.32L75.31 128L96 107.31l26.34 26.35a8 8 0 0 0 11.32-11.32L107.31 96L128 75.31l26.34 26.35a8 8 0 0 0 11.32-11.32L139.31 64l32-32L224 84.69Z"/></g></svg>
-                <input class="derivation-length" type="number" min="1" step="1" placeholder="32" required> Bytes
+                <input class="derivation-length" type="number" min="1" step="1" placeholder="32"> Bytes
               </label>
               <label class="control iterations grow" data-tooltip="Iterations">
                 <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M229.66 90.34L90.34 229.66a8 8 0 0 1-11.31 0L26.34 177a8 8 0 0 1 0-11.31L165.66 26.34a8 8 0 0 1 11.31 0L229.66 79a8 8 0 0 1 0 11.34" opacity=".2"/><path d="m235.32 73.37l-52.69-52.68a16 16 0 0 0-22.63 0L20.68 160a16 16 0 0 0 0 22.63l52.69 52.68a16 16 0 0 0 22.63 0L235.32 96a16 16 0 0 0 0-22.63M84.68 224L32 171.31l32-32l26.34 26.35a8 8 0 0 0 11.32-11.32L75.31 128L96 107.31l26.34 26.35a8 8 0 0 0 11.32-11.32L107.31 96L128 75.31l26.34 26.35a8 8 0 0 0 11.32-11.32L139.31 64l32-32L224 84.69Z"/></g></svg>
-                <input class="iterations" type="number" min="0" step="1000" placeholder="100000" required>
+                <input class="iterations" type="number" min="1" step="1000" placeholder="100000">
               </label>
             </div>
             <div class="settings">
@@ -236,11 +240,11 @@
               </label>
               <label class="control password grow" data-tooltip="Password or passphrase">
                 <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M232 96a72 72 0 0 1-98.83 66.83L120 176H96v24H72v24H32v-40l61.17-61.17A72 72 0 1 1 232 96" opacity=".2"/><path d="M160 16a80.07 80.07 0 0 0-76.09 104.78l-57.57 57.56A8 8 0 0 0 24 184v40a8 8 0 0 0 8 8h40a8 8 0 0 0 8-8v-16h16a8 8 0 0 0 8-8v-16h16a8 8 0 0 0 5.66-2.34l9.56-9.57A80 80 0 1 0 160 16m0 144a63.7 63.7 0 0 1-23.65-4.51a8 8 0 0 0-8.84 1.68L116.69 168H96a8 8 0 0 0-8 8v16H72a8 8 0 0 0-8 8v16H40v-28.69l58.83-58.82a8 8 0 0 0 1.68-8.84A64 64 0 1 1 160 160m32-84a12 12 0 1 1-12-12a12 12 0 0 1 12 12"/></g></svg>
-                <input type="password" placeholder="passw0rd" required>
+                <input type="password" placeholder="passw0rd" autocomplete="off">
               </label>
               <button>Hash Password</button>
             </div>
-          </div>
+          </form>
         </div>
       </section>
       <div id="error">

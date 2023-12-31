@@ -226,7 +226,7 @@ main p {
  *
  */
 
-.operations-menu, section .settings {
+.operations-menu, .settings {
   margin: 0;
   padding: 0;
   background: var(--element);
@@ -236,21 +236,21 @@ main p {
   font: 200 1rem 'Inconsolata', monospace;
   align-items: center;
 }
-.operations-menu + .settings {
+#passwords .settings {
   background: var(--active-element);
   border-radius: 0 0 5px 5px;
 }
 
-section .subsection > .settings { display: none; }
-section .subsection > .settings.active { display: flex; }
+.settings { display: none; }
+.settings.active, .settings.active .settings { display: flex; }
 
-section .settings button { margin-right: 1rem; }
+.settings button { margin-right: 1rem; }
 
 /* Two rows of settings */
 #passwords #hash-PBKDF2.active { display: block; }
 
 /* Hidden settings */
-.subsection > button {
+#random .subsection button {
   width: 100%;
   border-radius: 0 0 5px 5px;
 }
@@ -266,7 +266,7 @@ section .settings button { margin-right: 1rem; }
   border-radius: 5px 0 0 0;
 }
 
-.operations-menu > li{
+.operations-menu > li {
   position: relative;
   display: flex;
   height: 3rem;

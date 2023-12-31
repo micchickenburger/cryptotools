@@ -14,12 +14,12 @@ import load from '../../lib/loader';
 import { handleError } from '../../lib/error';
 
 const hashSettings = document.querySelector<HTMLElement>('#hash-PBKDF2')!;
-const prfSelect = hashSettings.querySelector<HTMLSelectElement>('.prf-select');
-const lengthInput = hashSettings.querySelector<HTMLInputElement>('input.derivation-length');
-const iterationsInput = hashSettings.querySelector<HTMLInputElement>('input.iterations');
-const saltEncoding = hashSettings.querySelector<HTMLSelectElement>('select.input-encoding');
-const saltInput = hashSettings.querySelector<HTMLInputElement>('input.salt');
-const passwordInput = hashSettings.querySelector<HTMLInputElement>('.password input');
+const prfSelect = hashSettings.querySelector<HTMLSelectElement>('.prf-select')!;
+const lengthInput = hashSettings.querySelector<HTMLInputElement>('input.derivation-length')!;
+const iterationsInput = hashSettings.querySelector<HTMLInputElement>('input.iterations')!;
+const saltEncoding = hashSettings.querySelector<HTMLSelectElement>('select.input-encoding')!;
+const saltInput = hashSettings.querySelector<HTMLInputElement>('input.salt')!;
+const passwordInput = hashSettings.querySelector<HTMLInputElement>('.password input')!;
 const button = hashSettings.querySelector<HTMLButtonElement>('button');
 
 // Update Output Length
@@ -40,17 +40,17 @@ button?.addEventListener('click', async () => {
   button.disabled = true;
 
   try {
-    const password = (new TextEncoder()).encode(passwordInput?.value);
+    const password = (new TextEncoder()).encode(passwordInput.value);
     const key = await crypto.subtle.importKey('raw', password, { name: 'PBKDF2' }, false, ['deriveBits']);
   
     let salt: ArrayBuffer;
-    if (saltInput?.value) {
-      const radix = Number(saltEncoding?.selectedOptions[0].value);
+    if (saltInput.value) {
+      const radix = Number(saltEncoding.selectedOptions[0].value);
       salt = decode(saltInput.value, radix);
     } else salt = crypto.getRandomValues(new Uint8Array(16)).buffer; // 128 bits recommended by NIST
   
-    const hash = prfSelect?.selectedOptions[0].dataset.alg;
-    const iterations = Number(iterationsInput?.value) || 100000;
+    const hash = prfSelect.selectedOptions[0].dataset.alg;
+    const iterations = Number(iterationsInput.value.length ? iterationsInput.value : 100000);
     const algorithm = {
       name: 'PBKDF2',
       salt,
@@ -58,7 +58,8 @@ button?.addEventListener('click', async () => {
       iterations,
     };
   
-    const length = (Number(lengthInput?.value) || 32) * 8;
+    const length = Number(lengthInput.value.length ? lengthInput.value : 32) * 8;
+    if (length < 0) throw new Error('Byte length must be positive')
     const derivation = await crypto.subtle.deriveBits(algorithm, key, length);
   
     // PHC String Format requires that the = symbol only be used in the parameter map.  The hash
@@ -74,7 +75,7 @@ button?.addEventListener('click', async () => {
       { label: 'Hash', value: derivation, defaultEncoding: ENCODING.BASE64 },
       { label: 'Salt', value: salt, defaultEncoding: ENCODING.BASE64 },
     ]);
-  } catch (e) { handleError(e); }
+  } catch (e) { console.log(e); handleError(e); }
 
   button.disabled = false;
 });

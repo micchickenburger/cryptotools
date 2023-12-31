@@ -17,7 +17,7 @@ import { hideResults, showResults } from '../lib/result';
 
 
 const menuItems = document.querySelectorAll<HTMLLIElement>('#random .section-menu li');
-const sections = document.querySelectorAll<HTMLDivElement>('#random .subsection > div.settings');
+const sections = document.querySelectorAll<HTMLDivElement>('#random .subsection .settings');
 
 menuItems.forEach((item) => item.addEventListener('click', () => {
   menuItems.forEach(i => i.classList.remove('active'));
@@ -38,7 +38,7 @@ prngGenerateButton.addEventListener('click', () => {
     if (op === 'uuid') return showResults([{ label: 'UUID', value: self.crypto.randomUUID() }]);
   
     // If not 'uuid', then 'random-values'
-    const bytes = parseInt(prngByteLength.value, 10) || 64;
+    const bytes = Number(prngByteLength.value.length ? prngByteLength.value : 64);
     const array = new Uint8Array(bytes);
     self.crypto.getRandomValues(array);
   
