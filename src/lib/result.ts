@@ -10,11 +10,13 @@
  */
 
 import { ENCODING, decode, encode, guessEncoding } from './encode';
-import { clearError } from './error';
+import { clearError, handleError } from './error';
 import load from './loader';
 import {
-  DONE_SVG, COPY_SVG, TEXT_SVG, RULER_SVG, CODE_SVG, DOUBLE_CHEVRON_SVG, DOWNLOAD_SVG, DOWNLOAD_SIMPLE_SVG,
+  DONE_SVG, COPY_SVG, TEXT_SVG, RULER_SVG, CODE_SVG, DOUBLE_CHEVRON_SVG, DOWNLOAD_SVG, DOWNLOAD_SIMPLE_SVG, CHEVRON_SVG,
 } from './svg';
+
+const resultElement = document.querySelector<HTMLElement>('#results')!;
 
 const downloadEvent = (data: string | ArrayBuffer) => async () => {
   let array: ArrayBuffer;
@@ -41,7 +43,7 @@ const downloadEvent = (data: string | ArrayBuffer) => async () => {
 
 const buildResultElement = (
   label: string, value: string, encoding: ENCODING, bitLength: number, rawData: string | ArrayBuffer,
-): HTMLElement => {
+) => {
   const container = document.createElement('div');
   container.classList.add('result');
 
@@ -56,7 +58,8 @@ const buildResultElement = (
 
   const stats = document.createElement('div');
   stats.classList.add('stats');
-  [{
+
+  const statsItems = [{
     icon: TEXT_SVG,
     tooltip: 'Character length',
     content: `${value.length} characters`,
@@ -64,11 +67,56 @@ const buildResultElement = (
     icon: RULER_SVG,
     tooltip: 'Output length',
     content: `${bitLength} bits`,
-  }, {
-    icon: CODE_SVG,
-    tooltip: 'Encoding',
-    content: ENCODING[encoding].toLowerCase(),
-  }].forEach(({ icon, tooltip, content }) => {
+  }];
+
+  // Positive radixes are safe to encode and decode
+  if (encoding > 0 && typeof rawData === 'object') {
+    const formLabel = document.createElement('label');
+    formLabel.classList.add('control');
+    formLabel.dataset.tooltip = 'Encoding';
+    formLabel.innerHTML = CODE_SVG;
+
+    const select = document.createElement('select');
+
+    // Changing the encoding requires a rerender of the section to ensure
+    // stats and event handlers are referencing the correct data
+    select.addEventListener('change', () => {
+      const radix = Number(select.selectedOptions[0].value);
+
+      try {
+        const newValue = encode(rawData, radix);
+        const result = buildResultElement(label, newValue, radix, bitLength, rawData);
+        container.replaceWith(result);
+      } catch (e) { handleError(e); }
+    });
+
+    Object.entries(ENCODING).forEach(([label, radix]) => {
+      if (typeof radix === 'number' && radix > 0) {
+        const option = document.createElement('option');
+        option.textContent = label.toLowerCase();
+        option.value = String(radix);
+        if (radix === encoding) option.selected = true;
+        select.appendChild(option);
+      }
+    });
+
+    formLabel.appendChild(select);
+
+    // Chevron dropdown
+    const chevron = document.createElement('span');
+    chevron.innerHTML = CHEVRON_SVG;
+    formLabel.appendChild(chevron.firstChild!);
+
+    stats.appendChild(formLabel);
+  } else {
+    statsItems.unshift({
+      icon: CODE_SVG,
+      tooltip: 'Encoding',
+      content: ENCODING[encoding].toLowerCase(),
+    });
+  }
+  
+  statsItems.forEach(({ icon, tooltip, content }) => {
     const stat = document.createElement('div');
     if (tooltip) stat.dataset.tooltip = tooltip;
     stat.innerHTML = icon;
@@ -81,9 +129,9 @@ const buildResultElement = (
   });
   container.appendChild(stats);
 
-  const links = document.createElement('div');
-  links.classList.add('links');
-  stats.appendChild(links);
+  const actions = document.createElement('div');
+  actions.classList.add('links');
+  stats.appendChild(actions);
   [{
     tooltip: 'Download Raw Data',
     tooltipAfter: 'Downloaded!',
@@ -124,9 +172,8 @@ const buildResultElement = (
     });
 
     a.innerHTML = icon;
-    links.appendChild(a);
+    actions.appendChild(a);
   });
-
 
   return container;
 };
@@ -136,8 +183,6 @@ interface Result {
   defaultEncoding?: ENCODING;
   value: ArrayBuffer | string;
 }
-
-const resultElement = document.querySelector<HTMLElement>('#results')!;
 
 const showResults = (results: Result[]) => {
   resultElement.innerHTML = DOUBLE_CHEVRON_SVG; // remove any previous results
@@ -160,12 +205,15 @@ const showResults = (results: Result[]) => {
       try {
         byteLength = decode(value, encoding).byteLength;
       } catch (e) {
+        console.warn(`While calculating output length, tried to decode as \`${ENCODING[encoding].toLowerCase()}\` but an error occurred. Assuming utf-8 encoded text instead.`, `Value: ${content}`,e);
         byteLength = (new TextEncoder()).encode(value).byteLength; // assume utf-8 encoded text
       }
     }
 
-    const result = buildResultElement(label, content, encoding, byteLength * 8, value);
-    resultElement.appendChild(result);
+    try {
+      const result = buildResultElement(label, content, encoding, byteLength * 8, value);
+      resultElement.appendChild(result);
+    } catch (e) { handleError(e); }
   });
   
   resultElement.style.opacity = '100%';
@@ -175,6 +223,7 @@ const showResults = (results: Result[]) => {
 const hideResults = () => {
   resultElement.style.opacity = '0';
   resultElement.textContent = '';
+  clearError();
 }
 
 export { showResults, hideResults };

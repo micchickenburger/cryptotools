@@ -60,7 +60,7 @@ a {
 }
 
 svg {
-  min-width: 18px;
+  width: 18px;
   vertical-align: middle;
   margin-right: 0.5rem;
 }
@@ -152,6 +152,7 @@ button {
 
 #loader {
   position: fixed;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 100%;
@@ -277,6 +278,7 @@ section .settings button { margin-right: 1rem; }
   width: calc(100% - 2rem);
   padding: 1rem;
   background: var(--active-element);
+  position: relative; /* prevent outline from going under menu items in chrome */
 }
 
 #digest .footer {
@@ -366,6 +368,7 @@ section .settings button { margin-right: 1rem; }
 }
 
 #results .result .stats > div { padding: 0.5rem 1rem; }
+#results .result .stats > label { margin-left: 1rem; }
 #results .stats .links { margin-left: auto; }
 #results .stats a { padding: 0.5rem; }
 #results .stats a svg { width: 24px; }

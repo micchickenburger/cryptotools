@@ -54,7 +54,7 @@ button?.addEventListener('click', async () => {
 let selected: DOMStringMap;
 
 const digestSelect = document.querySelector<HTMLSelectElement>('#digest-select')!;
-digestSelect.addEventListener('change', (event) => {
+digestSelect.addEventListener('change', () => {
   const menu = document.querySelector('#digest menu')!;
   const blockSize = menu.querySelector('#digest-block-size span')!;
   const method = menu.querySelector('#digest-method span')!;
