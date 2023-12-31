@@ -10,6 +10,7 @@ import * as bcrypt from 'bcryptjs';
 enum ENCODING {
   BOOLEAN = -1,
   UUID = -2,
+  BIGINT = -3, // we could decode to other formats but decimal is uncommon for data representation
   UNKNOWN = 0,
 
   BINARY = 2,
@@ -74,6 +75,17 @@ const decode = (encodedData: string, radix: ENCODING): ArrayBuffer => {
   if (radix === ENCODING.BASE64_CRYPT) {
     const arr = bcrypt.decodeBase64(encodedData, Infinity);
     return Uint8Array.from(arr).buffer;
+  }
+
+  if (radix === ENCODING.BIGINT) {
+    // Assumes big endian byte order
+    let int = BigInt(encodedData);
+    const bytes = [];
+    while (int > 0) {
+      bytes.push(Number(int & 0xffn));
+      int >>= 8n;
+    }
+    return Uint8Array.from(bytes.reverse()).buffer;
   }
 
   if (radix === ENCODING.UUID) {

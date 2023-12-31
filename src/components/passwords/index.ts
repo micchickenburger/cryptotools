@@ -13,6 +13,7 @@
 import { hideResults } from '../../lib/result';
 import './bcrypt';
 import './pbkdf2';
+import './srp';
 
 const hashSelect = document.querySelector<HTMLSelectElement>('#passwords menu .algorithm select')!;
 const hashOperation = document.querySelector<HTMLSelectElement>('#passwords .operation')!;

@@ -61,6 +61,7 @@ a {
 
 svg {
   width: 18px;
+  min-width: 18px;
   vertical-align: middle;
   margin-right: 0.5rem;
 }
@@ -88,6 +89,12 @@ input, select, textarea {
   border-radius: 0;
   font: 200 1rem 'Inconsolata', monospace;
   color: var(--text);
+}
+input[type="checkbox"] {
+  appearance: auto;
+  padding: 0;
+  margin: 0.5rem 0 0.5rem 0.5rem;
+  width: auto;
 }
 
 select {
@@ -247,7 +254,7 @@ main p {
 .settings button { margin-right: 1rem; }
 
 /* Two rows of settings */
-#passwords #hash-PBKDF2.active { display: block; }
+.multi-row.active { display: block; }
 
 /* Hidden settings */
 #random .subsection button {
