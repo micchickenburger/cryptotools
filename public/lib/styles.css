@@ -180,7 +180,7 @@ button {
 }
 #main-menu {
   border-radius: 5px;
-  margin: 5vh auto 0;
+  margin-top: max(3rem, 5vh);
 }
 
 #main-menu > li, .section-menu li {
@@ -206,7 +206,8 @@ main {
   width: 80vw;
   min-height: 80vh;
   max-width: 1200px;
-  margin: 3vh auto 0;
+  margin: 0 auto;
+  margin-top: max(2rem, 3vh);
   text-align: center;
 }
 
@@ -430,7 +431,7 @@ main .notice {
 footer {
   display: flex;
   justify-content: space-between;
-  height: 5vh;
+  height: max(3rem, 5vh);
   padding: 0 2rem;
   font-size: 1rem;;
   line-height: 5vh;
@@ -443,3 +444,64 @@ footer svg {
 }
 
 footer a, footer span { vertical-align: middle; }
+
+/**
+ *
+ * Responsive Styles
+ *
+ */
+
+@media (max-width: 768px) {
+  #main-menu {
+    margin: 1rem 0 0;
+    width: 100%;
+  }
+  #main-menu li { flex-grow: 1; }
+
+  main {
+    width: auto;
+    margin: 2rem 1rem 0;
+  }
+}
+
+@media (max-width: 650px) {
+  #main-menu li { justify-content: center; }
+  #main-menu li svg { margin: 0; }
+  #main-menu li span { display: none; }
+  .operations-menu li.datum { display: none; }
+
+  main { min-height: auto; }
+
+  .settings {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .settings label { width: calc(100% - 2rem); }
+  .settings button { width: 100%; }
+
+  /* move result icons to top right of results box */
+  .result { position: relative; }
+  .result h2 { max-width: 60%; }
+  .links {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 0.4rem;
+  }
+  .links a:last-child svg { margin-right: 0; }
+
+  /* Result stats get squished, so show as column instead */
+  #results .result .stats {
+    flex-direction: column;
+    height: auto;
+    align-items: flex-start;
+    padding: 1rem 0;
+  }
+
+  footer {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    margin-bottom: 3rem;
+  }
+}
