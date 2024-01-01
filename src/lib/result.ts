@@ -9,11 +9,14 @@
  * font face, while providing common UX elements, like copy.
  */
 
-import { ENCODING, decode, encode, guessEncoding } from './encode';
 import { clearError, handleError } from './error';
 import load from './loader';
 import {
-  DONE_SVG, COPY_SVG, TEXT_SVG, RULER_SVG, CODE_SVG, DOUBLE_CHEVRON_SVG, DOWNLOAD_SVG, DOWNLOAD_SIMPLE_SVG, CHEVRON_SVG,
+  ENCODING, decode, encode, guessEncoding,
+} from './encode';
+import {
+  DONE_SVG, COPY_SVG, TEXT_SVG, RULER_SVG, CODE_SVG, DOUBLE_CHEVRON_SVG,
+  DOWNLOAD_SVG, DOWNLOAD_SIMPLE_SVG, CHEVRON_SVG,
 } from './svg';
 
 const resultElement = document.querySelector<HTMLElement>('#results')!;
@@ -42,7 +45,11 @@ const downloadEvent = (data: string | ArrayBuffer) => async () => {
 };
 
 const buildResultElement = (
-  label: string, value: string, encoding: ENCODING, bitLength: number, rawData: string | ArrayBuffer,
+  label: string,
+  value: string,
+  encoding: ENCODING,
+  bitLength: number,
+  rawData: string | ArrayBuffer,
 ) => {
   const container = document.createElement('div');
   container.classList.add('result');
@@ -62,11 +69,11 @@ const buildResultElement = (
   const statsItems = [{
     icon: TEXT_SVG,
     tooltip: 'Character length',
-    content: `${value.length} characters`,
+    statValue: `${value.length} characters`,
   }, {
     icon: RULER_SVG,
     tooltip: 'Output length',
-    content: `${bitLength} bits`,
+    statValue: `${bitLength} bits`,
   }];
 
   // Positive radixes are safe to encode and decode
@@ -90,10 +97,10 @@ const buildResultElement = (
       } catch (e) { handleError(e); }
     });
 
-    Object.entries(ENCODING).forEach(([label, radix]) => {
+    Object.entries(ENCODING).forEach(([labelContent, radix]) => {
       if (typeof radix === 'number' && radix > 0) {
         const option = document.createElement('option');
-        option.textContent = label.toLowerCase();
+        option.textContent = labelContent.toLowerCase();
         option.value = String(radix);
         if (radix === encoding) option.selected = true;
         select.appendChild(option);
@@ -112,17 +119,17 @@ const buildResultElement = (
     statsItems.unshift({
       icon: CODE_SVG,
       tooltip: 'Encoding',
-      content: ENCODING[encoding].toLowerCase(),
+      statValue: ENCODING[encoding].toLowerCase(),
     });
   }
-  
-  statsItems.forEach(({ icon, tooltip, content }) => {
+
+  statsItems.forEach(({ icon, tooltip, statValue }) => {
     const stat = document.createElement('div');
     if (tooltip) stat.dataset.tooltip = tooltip;
     stat.innerHTML = icon;
 
     const span = document.createElement('span');
-    span.textContent = content;
+    span.textContent = statValue;
 
     stat.appendChild(span);
     stats.appendChild(stat);
@@ -150,30 +157,33 @@ const buildResultElement = (
     icon: COPY_SVG,
     callback: () => navigator.clipboard.writeText(content.textContent!),
   }]
-  .forEach(({ tooltip, tooltipAfter, icon, callback }) => {
-    const a = document.createElement('a');
-    a.dataset.tooltip = tooltip;
-    a.href = '#';
-    a.addEventListener('click', async (event) => {
-      event.preventDefault();
+    .forEach(({
+      tooltip, tooltipAfter, icon, callback,
+    }) => {
+      const a = document.createElement('a');
+      a.dataset.tooltip = tooltip;
+      a.href = '#';
+      a.addEventListener('click', async (event) => {
+        event.preventDefault();
 
-      try {
-        await callback();
+        try {
+          await callback();
 
-        a.innerHTML = DONE_SVG;
-        a.dataset.tooltip = tooltipAfter;
-        setTimeout(() => {
-          a.innerHTML = icon;
-          a.dataset.tooltip = tooltip;
-        }, 5000); // revert icon after five seconds
-      } catch (e) {
-        console.error(e);
-      }
+          a.innerHTML = DONE_SVG;
+          a.dataset.tooltip = tooltipAfter;
+          setTimeout(() => {
+            a.innerHTML = icon;
+            a.dataset.tooltip = tooltip;
+          }, 5000); // revert icon after five seconds
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        }
+      });
+
+      a.innerHTML = icon;
+      actions.appendChild(a);
     });
-
-    a.innerHTML = icon;
-    actions.appendChild(a);
-  });
 
   return container;
 };
@@ -205,7 +215,8 @@ const showResults = (results: Result[]) => {
       try {
         byteLength = decode(value, encoding).byteLength;
       } catch (e) {
-        console.warn(`While calculating output length, tried to decode as \`${ENCODING[encoding].toLowerCase()}\` but an error occurred. Assuming utf-8 encoded text instead.`, `Value: ${content}`,e);
+        // eslint-disable-next-line no-console
+        console.warn(`While calculating output length, tried to decode as \`${ENCODING[encoding].toLowerCase()}\` but an error occurred. Assuming utf-8 encoded text instead.`, `Value: ${content}`, e);
         byteLength = (new TextEncoder()).encode(value).byteLength; // assume utf-8 encoded text
       }
     }
@@ -215,7 +226,7 @@ const showResults = (results: Result[]) => {
       resultElement.appendChild(result);
     } catch (e) { handleError(e); }
   });
-  
+
   resultElement.style.opacity = '100%';
   load(100);
 };
@@ -224,6 +235,6 @@ const hideResults = () => {
   resultElement.style.opacity = '0';
   resultElement.textContent = '';
   clearError();
-}
+};
 
 export { showResults, hideResults };

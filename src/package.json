@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "start": "esbuild index.ts --bundle --minify --sourcemap --platform=browser --target=es2020 --outfile=../public/lib/script.js --watch=forever",
-    "build": "esbuild index.ts --bundle --minify --sourcemap --platform=browser --target=es2020 --outfile=../public/lib/script.js"
+    "build": "esbuild index.ts --bundle --minify --sourcemap --platform=browser --target=es2020 --outfile=../public/lib/script.js",
+    "lint": "cd .. && npx eslint src"
   },
   "author": "Micah Henning <hello@micah.soy>",
   "license": "GPL-3.0-or-later",
@@ -20,8 +21,15 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
     "esbuild": "^0.19.8",
     "esbuild-plugin-tsc": "^0.4.0",
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jest": "^27.6.0",
     "typescript": "^5.3.2"
   },
   "dependencies": {

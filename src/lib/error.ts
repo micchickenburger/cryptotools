@@ -19,6 +19,6 @@ const handleError = (error: unknown) => {
 const clearError = () => {
   content.textContent = '';
   errorElement.classList.remove('active');
-}
+};
 
 export { handleError, clearError };

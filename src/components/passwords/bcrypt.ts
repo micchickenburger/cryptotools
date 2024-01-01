@@ -22,12 +22,16 @@ const bcryptCost = document.querySelector<HTMLInputElement>('#hash-bcrypt input.
 
 bcryptCost.addEventListener('change', () => {
   const value = parseInt(bcryptCost.value, 10);
-  bcryptControl.dataset.title = `Cost: 2^${value} = ${Math.pow(2, value).toLocaleString()} iterations`;
+  bcryptControl.dataset.title = `Cost: 2^${value} = ${(2 ** value).toLocaleString()} iterations`;
 });
 
 // Bcrypt finish and progress functions
-const bcryptComplete = (button: HTMLButtonElement, text: string | null) => (error: Error | null, result: string | boolean) => {
-  if (error) handleError(error); // TODO: Determine whether we should return or throw here; execution continues
+const bcryptComplete = (
+  button: HTMLButtonElement,
+  text: string | null,
+) => (error: Error | null, result: string | boolean) => {
+  // TODO: Determine whether we should return or throw here; execution continues
+  if (error) handleError(error);
 
   if (typeof result === 'boolean') {
     showResults([{ label: 'Bcrypt Verification Result', value: String(result) }]);
@@ -43,13 +47,15 @@ const bcryptComplete = (button: HTMLButtonElement, text: string | null) => (erro
     ]);
   }
 
-  button.textContent = text;
-  button.disabled = false;
+  const btn = button;
+  btn.textContent = text;
+  btn.disabled = false;
 };
 
 const bcryptProgress = (button: HTMLButtonElement) => (num: number) => {
   load(num * 100);
-  button.textContent = `${String(num * 100).substring(0, 4)}%`;
+  const btn = button;
+  btn.textContent = `${String(num * 100).substring(0, 4)}%`;
 };
 
 // Generate bcrypt
@@ -61,7 +67,7 @@ bcryptHashButton?.addEventListener('click', () => {
   try {
     const cost = parseInt(bcryptCost.value, 10) || 10;
     const password = document.querySelector<HTMLInputElement>('#hash-bcrypt .password input')!;
-  
+
     bcrypt.hash(
       password.value,
       cost,

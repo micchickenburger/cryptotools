@@ -27,7 +27,7 @@ enum ENCODING {
 /**
  * Encode raw binary data into a string of binary, octal, hexadecimal, or
  * Base 64 text.
- * 
+ *
  * @param rawData Source data to encode
  * @param radix The base representation of the encoding
  * @returns string
@@ -55,7 +55,7 @@ const encode = (rawData: ArrayBuffer, radix: ENCODING): string => {
 /**
  * Decode a string of binary, octal, hexadecimal, or Base 64 text into raw
  * binary data.
- * 
+ *
  * @param encodedData Source data to decode
  * @param radix The base representation of the encoding
  * @returns ArrayBuffer
@@ -82,7 +82,9 @@ const decode = (encodedData: string, radix: ENCODING): ArrayBuffer => {
     let int = BigInt(encodedData);
     const bytes = [];
     while (int > 0) {
+      // eslint-disable-next-line no-bitwise
       bytes.push(Number(int & 0xffn));
+      // eslint-disable-next-line no-bitwise
       int >>= 8n;
     }
     return Uint8Array.from(bytes.reverse()).buffer;
@@ -91,7 +93,7 @@ const decode = (encodedData: string, radix: ENCODING): ArrayBuffer => {
   if (radix === ENCODING.UUID) {
     const data = encodedData.replace(/-/g, '');
     array = new Uint8Array(data.length / 2);
-    data.match(new RegExp(`.{1,2}`, 'g'))?.forEach((byte, i) => array[i] = parseInt(byte, 16));
+    data.match(/.{1,2}/g)?.forEach((byte, i) => { array[i] = parseInt(byte, 16); });
     return array.buffer;
   }
 
@@ -105,7 +107,7 @@ const decode = (encodedData: string, radix: ENCODING): ArrayBuffer => {
   array = new Uint8Array(length);
 
   encodedData.match(new RegExp(`.{1,${separator}}`, 'g'))
-    ?.forEach((byte, i) => array[i] = parseInt(byte, radix));
+    ?.forEach((byte, i) => { array[i] = parseInt(byte, radix); });
 
   return array.buffer;
 };
@@ -123,10 +125,10 @@ const guessEncoding = (encodedData: string): ENCODING => {
   if (/^([01]{8})+$/.test(encodedData)) return ENCODING.BINARY;
   if (/^([0-7]{3})+$/.test(encodedData)) return ENCODING.OCTAL;
   if (/^([0-9a-f]{2})+$|^([0-9A-F]{2})+$/.test(encodedData)) return ENCODING.HEXADECIMAL;
-  if (/^([0-9a-zA-Z+\/]{4})*[0-9a-zA-Z+\/]{2}[0-9a-zA-Z+\/=]{2}$/.test(encodedData)) return ENCODING.BASE64;
+  if (/^([0-9a-zA-Z+/]{4})*[0-9a-zA-Z+/]{2}[0-9a-zA-Z+/=]{2}$/.test(encodedData)) return ENCODING.BASE64;
 
   // Base64 crypt uses a dot instead of a plus, and has no padding or groupings
-  if (/^[0-9a-zA-Z.\/]+$/.test(encodedData)) return ENCODING.BASE64_CRYPT;
+  if (/^[0-9a-zA-Z./]+$/.test(encodedData)) return ENCODING.BASE64_CRYPT;
 
   //
   // Password Hashing Formats
@@ -137,15 +139,17 @@ const guessEncoding = (encodedData: string): ENCODING => {
   // Note: I made the regexp look for identifiers more than three characters in
   //   length to reduce occasional PHC String matches from clearly Modular Crypt
   //   format strings.
-  if (/^\$[a-z0-9-]{4,32}(\$v=[0-9]+)?(\$[a-z0-9-]{1,32}=[a-zA-Z0-9\/+.-]+(,[a-z0-9-]{1,32}=[a-zA-Z0-9\/+.-]+)*)?(\$[a-zA-Z0-9\/+.-]+(\$[a-zA-Z0-9\/+]{2,})?)?$/.test(encodedData)) {
+  if (/^\$[a-z0-9-]{4,32}(\$v=[0-9]+)?(\$[a-z0-9-]{1,32}=[a-zA-Z0-9/+.-]+(,[a-z0-9-]{1,32}=[a-zA-Z0-9/+.-]+)*)?(\$[a-zA-Z0-9/+.-]+(\$[a-zA-Z0-9/+]{2,})?)?$/.test(encodedData)) {
     return ENCODING.PHC_STRING;
   }
 
   // Modular Crypt Format (deprecated in 2016 in favor of PHC)
   // @link https://passlib.readthedocs.io/en/stable/modular_crypt_format.html
-  if (/^\$[a-zA-Z0-9]+(\$[a-zA-Z0-9.\/]+)+$/.test(encodedData)) return ENCODING.MODULAR_CRYPT_FORMAT;
+  if (/^\$[a-zA-Z0-9]+(\$[a-zA-Z0-9./]+)+$/.test(encodedData)) return ENCODING.MODULAR_CRYPT_FORMAT;
 
   return ENCODING.UNKNOWN;
 };
 
-export { ENCODING, decode, encode, guessEncoding };
+export {
+  ENCODING, decode, encode, guessEncoding,
+};

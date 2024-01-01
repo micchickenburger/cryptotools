@@ -26,7 +26,13 @@ class SRP6aRoutines extends SRPRoutines {
 }
 
 // Produce a salt and verifier to send to server during account registration
-const register = async (username: string, password: string, strict: boolean, primeGroup: number, hashAlgorithm: string) => {
+const register = async (
+  username: string,
+  password: string,
+  strict: boolean,
+  primeGroup: number,
+  hashAlgorithm: string,
+) => {
   const group = SRPParameters.PrimeGroup[primeGroup];
   const hash = SRPParameters.H[hashAlgorithm];
   const params = new SRPParameters(group, hash);
@@ -52,7 +58,14 @@ button.addEventListener('click', async () => {
   const password = srpSettings.querySelector<HTMLInputElement>('input[type="password"]')?.value || '';
 
   try {
-    const { salt, verifier } = await register(username, password, strict, primeGroup, String(hashAlgorithm));
+    const { salt, verifier } = await register(
+      username,
+      password,
+      strict,
+      primeGroup,
+      String(hashAlgorithm),
+    );
+
     showResults([
       { label: 'Salt (store in user record)', value: salt.toString(), defaultEncoding: ENCODING.BIGINT },
       { label: 'Verifier (store in user record)', value: verifier.toString(), defaultEncoding: ENCODING.BIGINT },

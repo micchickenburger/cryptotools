@@ -15,13 +15,12 @@ import { handleError } from '../lib/error';
 import load from '../lib/loader';
 import { hideResults, showResults } from '../lib/result';
 
-
 const menuItems = document.querySelectorAll<HTMLLIElement>('#random .section-menu li');
 const sections = document.querySelectorAll<HTMLDivElement>('#random .subsection .settings');
 
 menuItems.forEach((item) => item.addEventListener('click', () => {
-  menuItems.forEach(i => i.classList.remove('active'));
-  sections.forEach(i => i.classList.remove('active'));
+  menuItems.forEach((i) => i.classList.remove('active'));
+  sections.forEach((i) => i.classList.remove('active'));
   item.classList.add('active');
   if (item.dataset.target) document.querySelector(`.${item.dataset.target}`)?.classList.add('active');
   hideResults();
@@ -30,34 +29,39 @@ menuItems.forEach((item) => item.addEventListener('click', () => {
 const prngGenerateButton = document.querySelector<HTMLButtonElement>('#random button')!;
 prngGenerateButton.addEventListener('click', () => {
   load(0);
-  
+
   try {
     const prngByteLength = document.querySelector<HTMLInputElement>('#random .byte-length')!;
     const prngOutput = document.querySelector<HTMLSelectElement>('#random .output')!;
     const op = document.querySelector<HTMLElement>('#random .section-menu li.active')!.dataset.target;
-    if (op === 'uuid') return showResults([{ label: 'UUID', value: self.crypto.randomUUID() }]);
-  
+
+    if (op === 'uuid') {
+      showResults([{ label: 'UUID', value: window.crypto.randomUUID() }]);
+      return;
+    }
+
     // If not 'uuid', then 'random-values'
     const bytes = Number(prngByteLength.value.length ? prngByteLength.value : 64);
     const array = new Uint8Array(bytes);
-    self.crypto.getRandomValues(array);
-  
+    window.crypto.getRandomValues(array);
+
     const out = prngOutput.selectedOptions[0].value;
-  
+
     if (out === 'display') {
-      return showResults([{ label: 'Random Values', value: array.buffer }]);
+      showResults([{ label: 'Random Values', value: array.buffer }]);
+      return;
     }
-  
+
     // If not 'display', then 'download'
     const blob = new Blob([array], { type: 'application/octet-stream' });
     const uri = window.URL.createObjectURL(blob);
-  
+
     const a = document.createElement('a');
     a.href = uri;
     a.download = `prng-${bytes}-bytes.bin`;
     document.body.appendChild(a);
     a.click();
-  
+
     // Cleanup
     document.body.removeChild(a);
     window.URL.revokeObjectURL(uri);

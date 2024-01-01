@@ -11,5 +11,5 @@ const submit = (event: Event) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('form')?.forEach(form => form.addEventListener('submit', submit));
+  document.querySelectorAll('form')?.forEach((form) => form.addEventListener('submit', submit));
 });

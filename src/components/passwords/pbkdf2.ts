@@ -42,13 +42,13 @@ button?.addEventListener('click', async () => {
   try {
     const password = (new TextEncoder()).encode(passwordInput.value);
     const key = await crypto.subtle.importKey('raw', password, { name: 'PBKDF2' }, false, ['deriveBits']);
-  
+
     let salt: ArrayBuffer;
     if (saltInput.value) {
       const radix = Number(saltEncoding.selectedOptions[0].value);
       salt = decode(saltInput.value, radix);
     } else salt = crypto.getRandomValues(new Uint8Array(16)).buffer; // 128 bits recommended by NIST
-  
+
     const hash = prfSelect.selectedOptions[0].dataset.alg;
     const iterations = Number(iterationsInput.value.length ? iterationsInput.value : 100000);
     const algorithm = {
@@ -57,11 +57,11 @@ button?.addEventListener('click', async () => {
       hash,
       iterations,
     };
-  
+
     const length = Number(lengthInput.value.length ? lengthInput.value : 32) * 8;
-    if (length < 0) throw new Error('Byte length must be positive')
+    if (length < 0) throw new Error('Byte length must be positive');
     const derivation = await crypto.subtle.deriveBits(algorithm, key, length);
-  
+
     // PHC String Format requires that the = symbol only be used in the parameter map.  The hash
     // MUST be in B64 format, which is Base64 without the padding.  Here we choose to represent
     // the salt in the same format, as well.
@@ -69,13 +69,13 @@ button?.addEventListener('click', async () => {
     const b64Salt = toB64(encode(salt, ENCODING.BASE64));
     const b64Hash = toB64(encode(derivation, ENCODING.BASE64));
     const hashString = `$pbkdf2$prf=hmac-${hash!.toLowerCase()},c=${iterations},dklen=${length}$${b64Salt}$${b64Hash}`;
-  
+
     showResults([
       { label: 'PBKDF2 String in PHC String Format (recommended by author)', value: hashString },
       { label: 'Hash', value: derivation, defaultEncoding: ENCODING.BASE64 },
       { label: 'Salt', value: salt, defaultEncoding: ENCODING.BASE64 },
     ]);
-  } catch (e) { console.log(e); handleError(e); }
+  } catch (e) { handleError(e); }
 
   button.disabled = false;
 });

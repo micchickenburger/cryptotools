@@ -8,7 +8,7 @@
  * cryptographic function to produce a digest, or hash of the data.
  * Such digest can be used to verify the integrity of the data when
  * the expected hash is previously known.
- * 
+ *
  * We use the Web Crypto API to perform all hashing functions in the
  * browser with native code.
  */
@@ -40,6 +40,8 @@ async function digestMessage(message: string, algorithm: string) {
   return digest;
 }
 
+let selected: DOMStringMap;
+
 const button = document.querySelector('button');
 button?.addEventListener('click', async () => {
   load(0);
@@ -51,15 +53,13 @@ button?.addEventListener('click', async () => {
   } catch (e) { handleError(e); }
 });
 
-let selected: DOMStringMap;
-
 const digestSelect = document.querySelector<HTMLSelectElement>('#digest-select')!;
 digestSelect.addEventListener('change', () => {
   const menu = document.querySelector('#digest menu')!;
   const blockSize = menu.querySelector('#digest-block-size span')!;
   const method = menu.querySelector('#digest-method span')!;
   const specification = menu.querySelector('#digest-specification span')!;
-  
+
   selected = digestSelect.selectedOptions[0].dataset;
   blockSize.textContent = selected.bs || '';
   method.textContent = selected.method || '';

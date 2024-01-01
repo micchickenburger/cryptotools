@@ -18,12 +18,12 @@ import './srp';
 const hashSelect = document.querySelector<HTMLSelectElement>('#passwords menu .algorithm select')!;
 const hashOperation = document.querySelector<HTMLSelectElement>('#passwords .operation')!;
 
-hashSelect?.addEventListener('change', (event) => {
+hashSelect?.addEventListener('change', () => {
   const menu = document.querySelector('#passwords menu')!;
   const blockSize = menu.querySelector('.block-size span')!;
   const method = menu.querySelector('.method span')!;
   const specification = menu.querySelector('.specification span')!;
-  
+
   const selected = hashSelect.selectedOptions[0].dataset;
   blockSize.textContent = selected.bs || '';
   method.textContent = selected.method || '';
@@ -36,7 +36,7 @@ const updateHashView = () => {
   const operation = hashOperation.selectedOptions[0].value;
   const hash = hashSelect.selectedOptions[0].dataset.alg;
   const target = document.querySelector(`#passwords #${operation}-${hash}`);
-  
+
   const settings = document.querySelectorAll('#passwords .settings');
   settings.forEach((setting) => setting.classList.remove('active'));
   target?.classList.add('active');
