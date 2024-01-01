@@ -76,8 +76,29 @@ const buildResultElement = (
     statValue: `${bitLength} bits`,
   }];
 
+  const actionItems = [{
+    tooltip: 'Download Text',
+    tooltipAfter: 'Downloaded!',
+    icon: DOWNLOAD_SVG,
+    callback: downloadEvent(value),
+  }, {
+    tooltip: 'Copy',
+    tooltipAfter: 'Copied!',
+    icon: COPY_SVG,
+    callback: () => navigator.clipboard.writeText(content.textContent!),
+  }];
+
   // Positive radixes are safe to encode and decode
   if (encoding > 0 && typeof rawData === 'object') {
+    // First, add the Download Raw Data action button
+    actionItems.unshift({
+      tooltip: 'Download Raw Data',
+      tooltipAfter: 'Downloaded!',
+      icon: DOWNLOAD_SIMPLE_SVG,
+      callback: downloadEvent(rawData),
+    });
+
+    // Then add encoding transformation control
     const formLabel = document.createElement('label');
     formLabel.classList.add('control');
     formLabel.dataset.tooltip = 'Encoding';
@@ -139,51 +160,34 @@ const buildResultElement = (
   const actions = document.createElement('div');
   actions.classList.add('links');
   stats.appendChild(actions);
-  [{
-    tooltip: 'Download Raw Data',
-    tooltipAfter: 'Downloaded!',
-    icon: DOWNLOAD_SIMPLE_SVG,
-    callback: downloadEvent(rawData),
-    data: rawData,
-  }, {
-    tooltip: 'Download Text',
-    tooltipAfter: 'Downloaded!',
-    icon: DOWNLOAD_SVG,
-    callback: downloadEvent(value),
-    data: value,
-  }, {
-    tooltip: 'Copy',
-    tooltipAfter: 'Copied!',
-    icon: COPY_SVG,
-    callback: () => navigator.clipboard.writeText(content.textContent!),
-  }]
-    .forEach(({
-      tooltip, tooltipAfter, icon, callback,
-    }) => {
-      const a = document.createElement('a');
-      a.dataset.tooltip = tooltip;
-      a.href = '#';
-      a.addEventListener('click', async (event) => {
-        event.preventDefault();
 
-        try {
-          await callback();
+  actionItems.forEach(({
+    tooltip, tooltipAfter, icon, callback,
+  }) => {
+    const a = document.createElement('a');
+    a.dataset.tooltip = tooltip;
+    a.href = '#';
+    a.addEventListener('click', async (event) => {
+      event.preventDefault();
 
-          a.innerHTML = DONE_SVG;
-          a.dataset.tooltip = tooltipAfter;
-          setTimeout(() => {
-            a.innerHTML = icon;
-            a.dataset.tooltip = tooltip;
-          }, 5000); // revert icon after five seconds
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error(e);
-        }
-      });
+      try {
+        await callback();
 
-      a.innerHTML = icon;
-      actions.appendChild(a);
+        a.innerHTML = DONE_SVG;
+        a.dataset.tooltip = tooltipAfter;
+        setTimeout(() => {
+          a.innerHTML = icon;
+          a.dataset.tooltip = tooltip;
+        }, 5000); // revert icon after five seconds
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
     });
+
+    a.innerHTML = icon;
+    actions.appendChild(a);
+  });
 
   return container;
 };
