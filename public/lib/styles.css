@@ -97,6 +97,20 @@ input[type="checkbox"] {
   width: auto;
 }
 
+/* Use the "visually-hidden" technique for accessibility */
+input[type="file"] {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px);
+}
+
+/* Dragover/dragenter style for textareas that receive files */
+textarea.dragover {
+  outline: dashed 2px var(--highlight);
+}
+
 select {
   padding: 0.5rem 0;
   cursor: pointer;
@@ -142,6 +156,11 @@ button {
 }
 
 .control svg { color: var(--highlight); }
+
+.control.upload {
+  margin: 0.3rem 1rem 0.3rem auto;
+  border-bottom: none;
+}
 
 .settings label { margin: 1rem; }
 .settings label.grow { flex-grow: 1; }
@@ -481,7 +500,7 @@ footer a, footer span { vertical-align: middle; }
 
   /* move result icons to top right of results box */
   .result { position: relative; }
-  .result h2 { max-width: 60%; }
+  .result h2 { max-width: 55%; }
   .links {
     position: absolute;
     top: 0;
