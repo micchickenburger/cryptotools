@@ -19,6 +19,7 @@ import load from '../lib/loader';
 import { hideResults, showResults } from '../lib/result';
 
 const digestSection = document.querySelector('#digest')!;
+const digestSelect = digestSection.querySelector<HTMLSelectElement>('#digest-select')!;
 
 /**
  * Character count
@@ -40,27 +41,24 @@ async function digestMessage(message: string, algorithm: string) {
   return digest;
 }
 
-let selected: DOMStringMap;
-
 const button = digestSection.querySelector('button');
 button?.addEventListener('click', async () => {
   load(0);
+  const algorithm = digestSelect.selectedOptions[0].dataset.alg!;
   const text = textarea.value;
-  const algorithm = selected!.alg!;
   try {
     const digest = await digestMessage(text, algorithm);
     showResults([{ label: `${algorithm} Digest`, value: digest, defaultEncoding: ENCODING.HEXADECIMAL }]);
   } catch (e) { handleError(e); }
 });
 
-const digestSelect = digestSection.querySelector<HTMLSelectElement>('#digest-select')!;
 digestSelect.addEventListener('change', () => {
   const menu = digestSection.querySelector('menu')!;
   const blockSize = menu.querySelector('#digest-block-size span')!;
   const method = menu.querySelector('#digest-method span')!;
   const specification = menu.querySelector('#digest-specification span')!;
 
-  selected = digestSelect.selectedOptions[0].dataset;
+  const selected = digestSelect.selectedOptions[0].dataset;
   blockSize.textContent = selected.bs || '';
   method.textContent = selected.method || '';
   specification.textContent = selected.spec || '';
