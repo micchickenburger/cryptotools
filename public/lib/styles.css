@@ -238,6 +238,8 @@ main p.subtitle { color: var(--sub-text); }
 main .subsection {
   width: fit-content;
   margin: 3rem auto 1.5rem;
+  border-radius: 5px;
+  background: var(--element);
 }
 main .subsection.full { width: 100%; }
 
@@ -253,20 +255,25 @@ main p {
  *
  */
 
-.operations-menu, .settings {
+.operations-menu, .settings, .tabs {
   margin: 0;
   padding: 0;
-  background: var(--element);
-  border-radius: 5px 5px 0 0;
   list-style: none;
   display: flex;
   font: 200 1rem 'Inconsolata', monospace;
   align-items: center;
 }
-#passwords .settings {
+.settings {
   background: var(--active-element);
   border-radius: 0 0 5px 5px;
 }
+
+.tabs li.active {
+  background: var(--active-element);
+  border-radius: 5px 5px 0 0;
+}
+
+.tabs li svg { color: var(--highlight); }
 
 .settings { display: none; }
 .settings.active, .settings.active .settings { display: flex; }
@@ -293,12 +300,16 @@ main p {
   border-radius: 5px 0 0 0;
 }
 
-.operations-menu > li {
+.operations-menu > li, .tabs li {
   position: relative;
   display: flex;
   height: 3rem;
   align-items: center;
   padding: 0 1rem;
+}
+
+.tabs li {
+  cursor: pointer;
 }
 
 #digest textarea {

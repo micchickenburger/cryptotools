@@ -10,3 +10,4 @@ import './components/digest';
 import './components/prng';
 import './components/passwords';
 import './lib/form';
+import './lib/tabs';

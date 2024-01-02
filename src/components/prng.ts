@@ -13,18 +13,7 @@
 
 import { handleError } from '../lib/error';
 import load from '../lib/loader';
-import { hideResults, showResults } from '../lib/result';
-
-const menuItems = document.querySelectorAll<HTMLLIElement>('#random .section-menu li');
-const sections = document.querySelectorAll<HTMLDivElement>('#random .subsection .settings');
-
-menuItems.forEach((item) => item.addEventListener('click', () => {
-  menuItems.forEach((i) => i.classList.remove('active'));
-  sections.forEach((i) => i.classList.remove('active'));
-  item.classList.add('active');
-  if (item.dataset.target) document.querySelector(`.${item.dataset.target}`)?.classList.add('active');
-  hideResults();
-}));
+import { showResults } from '../lib/result';
 
 const prngGenerateButton = document.querySelector<HTMLButtonElement>('#random button')!;
 prngGenerateButton.addEventListener('click', () => {
@@ -33,7 +22,7 @@ prngGenerateButton.addEventListener('click', () => {
   try {
     const prngByteLength = document.querySelector<HTMLInputElement>('#random .byte-length')!;
     const prngOutput = document.querySelector<HTMLSelectElement>('#random .output')!;
-    const op = document.querySelector<HTMLElement>('#random .section-menu li.active')!.dataset.target;
+    const op = document.querySelector<HTMLElement>('#random menu li.active')!.dataset.target;
 
     if (op === 'uuid') {
       showResults([{ label: 'UUID', value: window.crypto.randomUUID() }]);
