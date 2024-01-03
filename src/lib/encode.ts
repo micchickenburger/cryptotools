@@ -8,11 +8,14 @@
 import * as bcrypt from 'bcryptjs';
 
 enum ENCODING {
+  // Non-transformable encodings
   BOOLEAN = -1,
   UUID = -2,
-  BIGINT = -3, // we could decode to other formats but decimal is uncommon for data representation
+  BIGINT = -3,
+  JSON = -4,
   UNKNOWN = 0,
 
+  // Transformable encodings
   BINARY = 2,
   OCTAL = 8,
   HEXADECIMAL = 16,
@@ -129,6 +132,14 @@ const guessEncoding = (encodedData: string): ENCODING => {
 
   // Base64 crypt uses a dot instead of a plus, and has no padding or groupings
   if (/^[0-9a-zA-Z./]+$/.test(encodedData)) return ENCODING.BASE64_CRYPT;
+
+  // Since any javascript primitive in a string is valid JSON, let's be more restrictive
+  if (/{/.test(encodedData)) {
+    try {
+      JSON.parse(encodedData);
+      return ENCODING.JSON;
+    } catch (e) { /* do nothing */ }
+  }
 
   //
   // Password Hashing Formats

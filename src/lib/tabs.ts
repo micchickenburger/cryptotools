@@ -12,7 +12,7 @@ const tabsElements = document.querySelectorAll('.tabs');
 tabsElements.forEach((tabsElement) => {
   const tabs = Array.from(tabsElement.children) as HTMLElement[];
   const parent = tabsElement.parentElement!;
-  const sections = parent.querySelectorAll(':scope .settings');
+  const sections = parent.querySelectorAll(':scope > .settings');
 
   tabs.forEach((tab) => tab.addEventListener('click', () => {
     tabs.forEach((t) => t.classList.remove('active'));

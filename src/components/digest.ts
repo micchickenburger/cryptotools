@@ -19,7 +19,7 @@ import load from '../lib/loader';
 import { hideResults, showResults } from '../lib/result';
 
 const digestSection = document.querySelector('#digest')!;
-const digestSelect = digestSection.querySelector<HTMLSelectElement>('#digest-select')!;
+const digestSelect = digestSection.querySelector<HTMLSelectElement>('.digest-select')!;
 
 /**
  * Character count
@@ -54,9 +54,9 @@ button?.addEventListener('click', async () => {
 
 digestSelect.addEventListener('change', () => {
   const menu = digestSection.querySelector('menu')!;
-  const blockSize = menu.querySelector('#digest-block-size span')!;
-  const method = menu.querySelector('#digest-method span')!;
-  const specification = menu.querySelector('#digest-specification span')!;
+  const blockSize = menu.querySelector('.block-size span')!;
+  const method = menu.querySelector('.method span')!;
+  const specification = menu.querySelector('.specification span')!;
 
   const selected = digestSelect.selectedOptions[0].dataset;
   blockSize.textContent = selected.bs || '';

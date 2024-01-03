@@ -8,6 +8,7 @@
 import './components/mainMenu';
 import './components/digest';
 import './components/prng';
+import './components/encryption';
 import './components/passwords';
 import './lib/form';
 import './lib/tabs';
