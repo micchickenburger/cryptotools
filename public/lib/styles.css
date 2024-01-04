@@ -372,6 +372,27 @@ main p {
   left: 11px;
 }
 
+#encryption .list-keys ul {
+  text-align: left;
+  padding: 0;
+  margin: 1rem;
+  width: 100%;
+}
+
+#encryption .list-keys li {
+  display: flex;
+  padding: 1rem;
+  border-radius: 5px;
+  line-height: 1.5rem;
+}
+#encryption .list-keys li:nth-of-type(odd) { background: var(--border); }
+#encryption .list-keys li > svg { margin-right: 1rem; }
+#encryption .list-keys li div {
+  display: flex;
+  flex-direction: column;
+}
+#encryption .list-keys li span:first-child { font: 100 italic 1rem 'Lora', serif; }
+
 /**
  *
  * Error Section Styles

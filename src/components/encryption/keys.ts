@@ -5,7 +5,7 @@
  * @license GPL-3.0-or-later
  */
 
-import { SIGNPOST_SVG } from '../../lib/svg';
+import { KEYS_SVG, KEY_SVG } from '../../lib/svg';
 import { showResults } from '../../lib/result';
 
 /**
@@ -22,11 +22,30 @@ const updateKeyList = () => {
 
   Object.entries(keys).forEach(([k, v]) => {
     const li = document.createElement('li');
-    li.innerHTML = SIGNPOST_SVG;
-
+    const div = document.createElement('div');
     const name = document.createElement('span');
     name.textContent = k;
-    li.appendChild(name);
+    div.appendChild(name);
+
+    const meta = document.createElement('span');
+    let type: string;
+    let alg: string;
+    let usages: string;
+    if (v instanceof CryptoKey) {
+      li.innerHTML = KEY_SVG;
+      type = 'Symmetric Key';
+      alg = v.algorithm.name;
+      usages = v.usages.join(', ');
+    } else {
+      li.innerHTML = KEYS_SVG;
+      type = 'Asymmetric Key Pair';
+      alg = v.privateKey.algorithm.name;
+      usages = v.privateKey.usages.concat(v.publicKey.usages).join(', ');
+    }
+    meta.textContent = `${type} • ${alg} • ${usages}`;
+
+    div.appendChild(meta);
+    li.appendChild(div);
     list.appendChild(li);
   });
 };
