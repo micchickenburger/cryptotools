@@ -7,6 +7,7 @@
 
 import { KEYS_SVG, KEY_SVG } from '../../lib/svg';
 import { showResults } from '../../lib/result';
+import updateOpArea from './operationArea';
 
 /**
  * Dictionary of keys in ephemeral state
@@ -27,25 +28,36 @@ const updateKeyList = () => {
     name.textContent = k;
     div.appendChild(name);
 
+    const isSymmetric = v instanceof CryptoKey;
+
     const meta = document.createElement('span');
     let type: string;
     let alg: string;
-    let usages: string;
-    if (v instanceof CryptoKey) {
+    let usages: KeyUsage[];
+
+    if (isSymmetric) {
       li.innerHTML = KEY_SVG;
       type = 'Symmetric Key';
       alg = v.algorithm.name;
-      usages = v.usages.join(', ');
+      usages = v.usages;
     } else {
       li.innerHTML = KEYS_SVG;
       type = 'Asymmetric Key Pair';
       alg = v.privateKey.algorithm.name;
-      usages = v.privateKey.usages.concat(v.publicKey.usages).join(', ');
+      usages = v.privateKey.usages.concat(v.publicKey.usages);
     }
-    meta.textContent = `${type} • ${alg} • ${usages}`;
 
+    meta.textContent = `${type} • ${alg} • ${usages.join(', ')}`;
     div.appendChild(meta);
     li.appendChild(div);
+
+    usages.forEach((usage) => {
+      const button = document.createElement('button');
+      button.textContent = `${usage.charAt(0).toUpperCase()}${usage.slice(1)}`;
+      button.addEventListener('click', updateOpArea(usage, k, v));
+      li.appendChild(button);
+    });
+
     list.appendChild(li);
   });
 };
@@ -84,4 +96,12 @@ const addKey = (name: string, key: CryptoKey | CryptoKeyPair) => {
   showResults(results);
 };
 
-export { addKey, updateKeyList };
+/**
+ * Retrieve keys from dictionary
+ */
+const getKey = (name: string) => {
+  if (!keys[name]) throw new Error(`A key by the name of "${name}" does not exist.`);
+  return keys[name];
+};
+
+export { addKey, getKey, updateKeyList };

@@ -335,14 +335,19 @@ main p {
   cursor: pointer;
 }
 
-#digest textarea {
+#encryption .operation-area { display: none; }
+#encryption .operation-area.active { display: block; }
+#encryption .operation-area menu li { display: none; }
+#encryption .operation-area menu li.show { display: flex; }
+
+.operation-area textarea {
   width: calc(100% - 2rem);
   padding: 1rem;
   background: var(--active-element);
   position: relative; /* prevent outline from going under menu items in chrome */
 }
 
-#digest .footer {
+.operation-area .footer {
   background: var(--element);
   font: 200 1rem 'Inconsolata', monospace;
   display: flex;
@@ -351,9 +356,9 @@ main p {
   border-radius: 0 0 5px 5px;
   margin-top: -7px;
 }
-#digest .footer div { margin-left: 1rem; }
+.operation-area .footer div { padding: 0.5rem 1rem; }
 
-#digest .footer button {
+.operation-area .footer button {
   border-radius: 0 0 5px 0;
 }
 
@@ -381,6 +386,7 @@ main p {
 
 #encryption .list-keys li {
   display: flex;
+  flex-wrap: wrap;
   padding: 1rem;
   border-radius: 5px;
   line-height: 1.5rem;
@@ -392,6 +398,8 @@ main p {
   flex-direction: column;
 }
 #encryption .list-keys li span:first-child { font: 100 italic 1rem 'Lora', serif; }
+#encryption .list-keys li button { margin: 0 0 0 1rem; }
+#encryption .list-keys li button:first-of-type { margin-left: auto; }
 
 /**
  *
@@ -552,6 +560,8 @@ footer a, footer span { vertical-align: middle; }
     width: auto;
     margin: 2rem 1rem 0;
   }
+
+  #encryption .list-keys li button:last-of-type { margin-right: auto; }
 }
 
 @media (max-width: 660px) {

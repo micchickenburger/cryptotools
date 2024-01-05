@@ -20,17 +20,7 @@ import { hideResults, showResults } from '../lib/result';
 
 const digestSection = document.querySelector('#digest')!;
 const digestSelect = digestSection.querySelector<HTMLSelectElement>('.digest-select')!;
-
-/**
- * Character count
- */
 const textarea = digestSection.querySelector('textarea')!;
-textarea.addEventListener('input', () => {
-  const characterCount = digestSection.querySelector('.character-count')!;
-  const count = textarea.value.length;
-  if (count === 1) characterCount.textContent = '1 character';
-  else characterCount.textContent = `${count} characters`;
-});
 
 /**
  * Digest Generation
@@ -111,42 +101,6 @@ upload?.addEventListener('change', () => digestFiles(upload.files));
  * Drag-and-Drop File Uploads
  */
 
-const preventDefault = (event: Event) => {
-  event.stopPropagation();
-  event.preventDefault();
-};
-
-const classState = (add: boolean) => () => {
-  if (add) textarea.classList.add('dragover');
-  else textarea.classList.remove('dragover');
-};
-
-textarea.addEventListener('dragenter', preventDefault);
-textarea.addEventListener('dragenter', classState(true));
-textarea.addEventListener('dragover', preventDefault);
-textarea.addEventListener('dragover', classState(true));
-textarea.addEventListener('dragleave', classState(false));
-textarea.addEventListener('dragend', classState(false));
 textarea.addEventListener('drop', (event) => {
-  event.preventDefault();
-  event.stopPropagation();
-  classState(false)();
   digestFiles(event.dataTransfer?.files);
 });
-
-/**
- * Prevent drops outside of the textarea
- */
-
-const disallowDrop = (event: DragEvent) => {
-  const e = event;
-  if (e.target !== textarea && e.dataTransfer) {
-    e.preventDefault();
-    e.dataTransfer.effectAllowed = 'none';
-    e.dataTransfer.dropEffect = 'none';
-  }
-};
-
-window.addEventListener('dragover', disallowDrop);
-window.addEventListener('dragenter', disallowDrop);
-window.addEventListener('drop', disallowDrop);

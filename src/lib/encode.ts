@@ -12,7 +12,8 @@ enum ENCODING {
   BOOLEAN = -1,
   UUID = -2,
   BIGINT = -3,
-  JSON = -4,
+  INTEGER = -4,
+  JSON = -5,
   UNKNOWN = 0,
 
   // Transformable encodings

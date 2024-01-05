@@ -8,7 +8,7 @@
 import { hideResults } from '../lib/result';
 
 const menuItems = document.querySelectorAll<HTMLElement>('#main-menu li');
-const sections = document.querySelectorAll<HTMLElement>('main section');
+const sections = document.querySelectorAll<HTMLElement>('main > section');
 
 menuItems.forEach((item) => item.addEventListener('click', () => {
   menuItems.forEach((i) => i.classList.remove('active'));

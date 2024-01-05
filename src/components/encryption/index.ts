@@ -6,3 +6,4 @@
  */
 
 import './generate';
+import './encrypt';
