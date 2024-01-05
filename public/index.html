@@ -334,7 +334,7 @@
                 <input type="text" class="counter" placeholder="c2FsdA==">
               </label>
             </div>
-            <div class="settings aes-cbc aes-gcm">
+            <div class="settings aes-cbc">
               <label class="control iv" data-tooltip="IV value (leave blank to generate)">
                 <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M240 64v128a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16V64a16 16 0 0 1 16-16h192a16 16 0 0 1 16 16" opacity=".2"/><path d="M72 92a12 12 0 1 1-12-12a12 12 0 0 1 12 12m56-12a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 24a12 12 0 1 0-12-12a12 12 0 0 0 12 12M60 152a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12"/></g></svg>
                 <select class="input-encoding">
@@ -345,6 +345,35 @@
                 </select>
                 <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
                 <input type="text" class="iv" placeholder="c2FsdA==">
+              </label>
+            </div>
+            <div class="settings aes-gcm">
+              <label class="control additional-data">
+                <textarea rows="10" placeholder="Additional data to authenticate, but not encrypt"></textarea>
+              </label>
+              <label class="control iv" data-tooltip="IV value (leave blank to generate)">
+                <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M240 64v128a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16V64a16 16 0 0 1 16-16h192a16 16 0 0 1 16 16" opacity=".2"/><path d="M72 92a12 12 0 1 1-12-12a12 12 0 0 1 12 12m56-12a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 24a12 12 0 1 0-12-12a12 12 0 0 0 12 12M60 152a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12"/></g></svg>
+                <select class="input-encoding">
+                  <option value="2">Binary</option>
+                  <option value="8">Octal</option>
+                  <option value="16">Hexadecimal</option>
+                  <option value="64" selected>Base64</option>
+                </select>
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
+                <input type="text" class="iv" placeholder="c2FsdA==">
+              </label>
+              <label class="control tag-length" data-tooltip="Authentication Tag Length">
+                <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M229.66 90.34L90.34 229.66a8 8 0 0 1-11.31 0L26.34 177a8 8 0 0 1 0-11.31L165.66 26.34a8 8 0 0 1 11.31 0L229.66 79a8 8 0 0 1 0 11.34" opacity=".2"/><path d="m235.32 73.37l-52.69-52.68a16 16 0 0 0-22.63 0L20.68 160a16 16 0 0 0 0 22.63l52.69 52.68a16 16 0 0 0 22.63 0L235.32 96a16 16 0 0 0 0-22.63M84.68 224L32 171.31l32-32l26.34 26.35a8 8 0 0 0 11.32-11.32L75.31 128L96 107.31l26.34 26.35a8 8 0 0 0 11.32-11.32L107.31 96L128 75.31l26.34 26.35a8 8 0 0 0 11.32-11.32L139.31 64l32-32L224 84.69Z"/></g></svg>
+                <select class="tag-length">
+                  <option value="32">32 bits (weak)</option>
+                  <option value="64">64 bits (weak)</option>
+                  <option value="96">96 bits</option>
+                  <option value="104">104 bits</option>
+                  <option value="112">112 bits</option>
+                  <option value="120">120 bits</option>
+                  <option value="128" selected>128 bits</option>
+                </select>
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
               </label>
             </div>
             <div class="footer">

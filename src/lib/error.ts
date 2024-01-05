@@ -5,6 +5,8 @@
  * @license GPL-3.0-or-later
  */
 
+import load from './loader';
+
 const errorElement = document.querySelector('#error')!;
 const content = errorElement.querySelector('.content')!;
 
@@ -14,6 +16,7 @@ const handleError = (error: unknown) => {
   else err = error;
   errorElement.classList.add('active');
   content.textContent = err.message;
+  load(100);
 };
 
 const clearError = () => {

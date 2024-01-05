@@ -10,10 +10,11 @@ import * as bcrypt from 'bcryptjs';
 enum ENCODING {
   // Non-transformable encodings
   BOOLEAN = -1,
-  UUID = -2,
-  BIGINT = -3,
-  INTEGER = -4,
-  JSON = -5,
+  BIGINT = -2,
+  INTEGER = -3,
+  'UTF-8' = -4,
+  UUID = -5,
+  JSON = -6,
   UNKNOWN = 0,
 
   // Transformable encodings

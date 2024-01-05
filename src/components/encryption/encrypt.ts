@@ -7,7 +7,7 @@
 
 import { getKey } from './keys';
 import { handleError } from '../../lib/error';
-import { ENCODING } from '../../lib/encode';
+import { ENCODING, decode } from '../../lib/encode';
 import { Result, showResults } from '../../lib/result';
 
 const encryptionSection = document.querySelector<HTMLElement>('#encryption')!;
@@ -29,12 +29,18 @@ button?.addEventListener('click', async () => {
   const hashAlgorithm = opArea.querySelector<HTMLSelectElement>('.ecdsa select')?.selectedOptions[0].value;
 
   // AES-CTR
-  let counter = opArea.querySelector<HTMLInputElement>('.aes-ctr input.counter')?.value;
+  const counterValue = opArea.querySelector<HTMLInputElement>('.aes-ctr input.counter')?.value;
   const counterRadix = opArea.querySelector<HTMLSelectElement>('.aes-ctr select')?.selectedOptions[0].value;
 
-  // AES-CBC, AES-GCM
-  let iv = opArea.querySelector<HTMLInputElement>('.aes-gcm input.counter')?.value;
-  const ivRadix = opArea.querySelector<HTMLSelectElement>('.aes-gcm select')?.selectedOptions[0].value;
+  // AES-CBC
+  const cbcIv = opArea.querySelector<HTMLInputElement>('.aes-cbc .iv input')?.value;
+  const cbcIvRadix = opArea.querySelector<HTMLSelectElement>('.aes-cbc .iv select')?.selectedOptions[0].value;
+
+  // AES-GCM
+  const gcmIv = opArea.querySelector<HTMLInputElement>('.aes-gcm .iv input')?.value;
+  const gcmIvRadix = opArea.querySelector<HTMLSelectElement>('.aes-gcm .iv select')?.selectedOptions[0].value;
+  const authenticatedDataTextArea = opArea.querySelector<HTMLTextAreaElement>('.aes-gcm .additional-data textarea');
+  const tagLength = opArea.querySelector<HTMLSelectElement>('.aes-gcm .tag-length select')?.selectedOptions[0].value;
 
   const results: Result[] = [];
 
@@ -52,11 +58,80 @@ button?.addEventListener('click', async () => {
         };
 
         if (key.algorithm.name === 'AES-CTR') {
-          // TODO
+          // Counter must be exactly 16 bytes long, the AES block size.  Here we let the
+          // implementation handle throwing the error for a counter of wrong size.
+          //
+          // The length is the number of bits in the counter block used for the counter
+          // (as opposed to the nonce).  The total number of blocks in the message must be
+          // less than or equal to 2^n, where n is this counter length in bits.
+
+          let counter: ArrayBuffer;
+          if (counterValue) {
+            const radix = Number(counterRadix);
+            counter = decode(counterValue, radix);
+            if (counter.byteLength !== 16) throw new Error('Counter length must be exactly 16 bytes.');
+          } else counter = crypto.getRandomValues(new Uint8Array(16)).buffer; // per SP800-38A
+
+          algorithm.counter = counter;
+          algorithm.length = 64; // NIST recommends length half of the counter block size (bits)
+
+          results.push({
+            label: 'Counter • Needed to decrypt',
+            value: counter,
+            defaultEncoding: ENCODING.BASE64,
+          }, {
+            label: 'Counter Length • Needed to decrypt',
+            value: algorithm.length,
+            defaultEncoding: ENCODING.INTEGER,
+          });
         }
 
-        if (key.algorithm.name === 'AES-CBC' || key.algorithm.name === 'AES-GCM') {
-          // TODO
+        if (key.algorithm.name === 'AES-CBC') {
+          // Initialization Vector must be random and unique for every encryption operation
+          let iv: ArrayBuffer;
+          if (cbcIv) {
+            const radix = Number(cbcIvRadix);
+            iv = decode(cbcIv, radix);
+            if (iv.byteLength !== 16) throw new Error('IV length must be exactly 16 bytes.');
+          } else iv = crypto.getRandomValues(new Uint8Array(16)).buffer; // MUST be 16 bytes
+
+          algorithm.iv = iv;
+
+          results.push({
+            label: 'Initialization Vector (IV) • Needed to decrypt • Not Secret',
+            value: iv,
+            defaultEncoding: ENCODING.BASE64,
+          });
+        }
+
+        if (key.algorithm.name === 'AES-GCM') {
+          algorithm.tagLength = Number(tagLength) || 128; // 128 bits is implementation default
+
+          // Initialization Vector must be random and unique for every encryption operation
+          let iv: ArrayBuffer;
+          if (gcmIv) {
+            const radix = Number(gcmIvRadix);
+            iv = decode(gcmIv, radix);
+          } else iv = crypto.getRandomValues(new Uint8Array(12)).buffer; // NIST recommends 96 bits
+
+          algorithm.iv = iv;
+
+          results.unshift({
+            label: 'Initialization Vector (IV) • Needed to decrypt • Not Secret',
+            value: iv,
+            defaultEncoding: ENCODING.BASE64,
+          });
+
+          // Additional data can be authenticated and not encrypted
+          if (authenticatedDataTextArea?.value.length) {
+            const additionalData = (new TextEncoder()).encode(authenticatedDataTextArea?.value);
+            algorithm.additionalData = additionalData;
+            results.push({
+              label: 'Authenticated but Unencrypted Data • Needed to decrypt',
+              value: authenticatedDataTextArea.value,
+              defaultEncoding: ENCODING['UTF-8'],
+            });
+          }
         }
 
         const ciphertext = await window.crypto.subtle.encrypt(algorithm, key, data);
@@ -85,7 +160,7 @@ button?.addEventListener('click', async () => {
           algorithm.saltLength = saltLength === '' ? byteLength : Number(saltLength);
 
           results.push({
-            label: 'RSA-PSS Salt Length (required for signature verification)',
+            label: 'RSA-PSS Salt Length • Needed for signature verification',
             value: String(algorithm.saltLength),
             defaultEncoding: ENCODING.INTEGER,
           });
