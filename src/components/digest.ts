@@ -84,7 +84,7 @@ const digestFiles = (files?: FileList | null) => {
         return;
       }
 
-      const label = `${algorithm} Digest of ${file.name} (${file.size.toLocaleString()} bytes; ${file.type || 'uknown type'})`;
+      const label = `${algorithm} Digest of ${file.name} • ${file.size.toLocaleString()} bytes • ${file.type || 'Unknown type'}`;
       digests.push({ label, value: await crypto.subtle.digest(algorithm, event.target.result) });
 
       if (digests.length === files.length) showResults(digests);

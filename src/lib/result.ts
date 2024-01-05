@@ -16,7 +16,7 @@ import {
 } from './encode';
 import {
   DONE_SVG, COPY_SVG, TEXT_SVG, RULER_SVG, CODE_SVG, DOUBLE_CHEVRON_SVG,
-  DOWNLOAD_SVG, DOWNLOAD_SIMPLE_SVG, CHEVRON_SVG,
+  DOWNLOAD_SVG, DOWNLOAD_BINARY_SVG, CHEVRON_SVG,
 } from './svg';
 
 const resultElement = document.querySelector<HTMLElement>('#results')!;
@@ -94,15 +94,18 @@ const buildResultElement = (
     actionItems.unshift({
       tooltip: 'Download Raw Data',
       tooltipAfter: 'Downloaded!',
-      icon: DOWNLOAD_SIMPLE_SVG,
+      icon: DOWNLOAD_BINARY_SVG,
       callback: downloadEvent(rawData),
     });
 
     // Then add encoding transformation control
     const formLabel = document.createElement('label');
+    const fieldLabel = document.createElement('span');
     formLabel.classList.add('control');
-    formLabel.dataset.tooltip = 'Encoding';
+    fieldLabel.classList.add('label');
+    fieldLabel.textContent = 'Encoding';
     formLabel.innerHTML = CODE_SVG;
+    formLabel.insertBefore(fieldLabel, formLabel.firstChild);
 
     const select = document.createElement('select');
 

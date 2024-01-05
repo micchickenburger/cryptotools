@@ -90,6 +90,7 @@ menu > li span {
   text-overflow: ellipsis;
   display: inline-block;
   vertical-align: middle;
+  line-height: 18px;
 }
 
 /**
@@ -105,7 +106,14 @@ input, select, textarea {
   border-radius: 0;
   font: 200 1rem 'Inconsolata', monospace;
   color: var(--text);
+  width: 100%;
 }
+
+input {
+  padding: 0.5rem 0 0.5rem 0.5rem;
+  margin-right: 5px;
+}
+
 input[type="checkbox"] {
   appearance: auto;
   padding: 0;
@@ -122,15 +130,24 @@ input[type="file"] {
   clip: rect(1px 1px 1px 1px);
 }
 
-/* Dragover/dragenter style for textareas that receive files */
-textarea.dragover {
-  outline: dashed 2px var(--highlight);
+textarea {
+  background: var(--active-element);
+  width: calc(100% - 2rem - 4px);
+  padding: 1rem;
+  border: 2px solid transparent;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+}
+label:focus-within, textarea:focus, textarea.dragover {
+  border: 2px solid var(--highlight);
 }
 
 select {
   padding: 0.5rem 0;
-  cursor: pointer;
   padding-right: calc(18px + 0.5rem); /* spacing for down arrow svg */
+  cursor: pointer;
 }
 
 /* Position drop-down arrow over select to trigger open on click */
@@ -139,16 +156,6 @@ select + svg {
   pointer-events: none;
 }
 .control select + svg { color: var(--text); }
-
-input {
-  padding: 0.5rem 0 0.5rem 0.5rem;
-  margin-right: 5px;
-  width: 100%;
-}
-
-input:focus, textarea:focus {
-  outline: dashed 2px var(--highlight);
-}
 
 button {
   background: var(--highlight);
@@ -162,13 +169,35 @@ button {
   outline: 0;
 }
 
+/* Form field labels */
+label {
+  position: relative;
+  padding: 0.2rem 0.5rem;
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  margin: 1rem;
+}
+label > span.label {
+  background: var(--active-element);
+  font: 100 italic 0.7rem 'Lora', serif;
+  position: absolute;
+  top: -0.5rem;
+  left: 0.5rem;
+  padding: 0 0.1rem;
+}
+
 .control {
   display: flex;
   align-items: center;
-  margin: 0.3rem;
   border-bottom: 2px solid var(--border);
   cursor: pointer;
 }
+.footer .control { border: none; }
+.footer span {
+  line-height: 18px;
+  vertical-align: middle;
+}
+.multi.control select { width: fit-content; }
 
 .control svg { color: var(--highlight); }
 
@@ -177,7 +206,6 @@ button {
   border-bottom: none;
 }
 
-.settings label { margin: 1rem; }
 .settings label.grow { flex-grow: 1; }
 
 .menu-control {
@@ -292,8 +320,10 @@ main p {
 }
 .settings {
   background: var(--active-element);
+  width: 100%;
   border-radius: 0 0 5px 5px;
 }
+form.settings { padding: 1rem 0; }
 
 .tabs li.active {
   background: var(--active-element);
@@ -326,10 +356,11 @@ main p {
 .operations-menu > li, .tabs li {
   position: relative;
   display: flex;
-  height: 3rem;
+  min-height: 3rem;
   align-items: center;
   padding: 0 1rem;
 }
+.operations-menu > li label { margin: 1rem 0 0.25rem; }
 
 .tabs li {
   cursor: pointer;
@@ -339,13 +370,6 @@ main p {
 #encryption .operation-area.active { display: block; }
 #encryption .operation-area menu li { display: none; }
 #encryption .operation-area menu li.show { display: flex; }
-
-.operation-area textarea {
-  width: calc(100% - 2rem);
-  padding: 1rem;
-  background: var(--active-element);
-  position: relative; /* prevent outline from going under menu items in chrome */
-}
 
 .operation-area .footer {
   background: var(--element);
@@ -469,9 +493,10 @@ main p {
   font-size: 1rem;
   border-radius: 0 0 5px 5px;
   align-items: center;
-  height: 3rem;
+  min-height: 3rem;
   width: 100%;
 }
+.stats label span.label { background-color: var(--element); }
 
 .stats > div { padding: 0.5rem 1rem; }
 .stats > label { margin-left: 1rem; }
@@ -489,25 +514,23 @@ main p {
 
 [data-tooltip]:hover::before {
   content: attr(data-tooltip);
+  white-space: normal; /* allow text wrapping, even in stats areas */
+  font: 100 italic 1rem/normal 'Lora', serif;
+  color: var(--text);
+  background: var(--border);
   position: absolute;
-  background: var(--active-element);
+  bottom: calc(100% + 1rem);
+  left: 0;
   padding: 0.5rem;
   border-radius: 5px;
-  top: -2.3rem;
-  left: calc(50% - 2rem); /* TODO: figure out a better way */
-  width: max-content;
   z-index: 1;
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 1rem;
-  line-height: normal;
 }
 
 [data-tooltip]:hover::after {
   content: '';
   position: absolute;
-  top: -2px;
-  left: 50%;
+  top: -1rem;
+  left: 1rem;
   border-width: 5px;
   border-style: solid;
   border-color: var(--border) transparent transparent transparent;
@@ -562,11 +585,15 @@ footer a, footer span { vertical-align: middle; }
   }
 
   #encryption .list-keys li button:last-of-type { margin-right: auto; }
+
+  /* Don't show tooltips on mobile */
+  /* [data-tooltip]:hover::before, [data-tooltip]:hover::after { display: none; } */
 }
 
 @media (max-width: 660px) {
   #main-menu li { justify-content: center; }
   #main-menu li span { display: none; }
+  #main-menu li svg { margin-right: 0; }
   .operations-menu li.datum { display: none; }
 
   main { min-height: auto; }

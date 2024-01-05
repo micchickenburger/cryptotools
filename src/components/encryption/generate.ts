@@ -25,7 +25,7 @@ const updateStats = () => {
   const integrity = generateElement.querySelector<HTMLSpanElement>('.stats .integrity')!;
 
   // Show appropriate settings for current algorithm
-  const sections = generateElement.querySelectorAll<HTMLElement>('.settings');
+  const sections = generateElement.querySelectorAll<HTMLElement>('div.settings');
   sections.forEach((section) => {
     if (!section.classList.contains('algorithm')) {
       section.classList.remove('active');
@@ -34,7 +34,7 @@ const updateStats = () => {
   generateElement.querySelector(`.settings.${currentAglorithm.dataset.target}`)?.classList.add('active');
 
   // Update statistics
-  algorithmSelect.parentElement!.dataset.tooltip = `Algorithm: ${currentAglorithm.dataset.mode}`;
+  algorithmSelect.parentElement!.querySelector('.label')!.textContent = `Algorithm • ${currentAglorithm.dataset.mode}`;
   type.textContent = currentAglorithm.dataset.type || '';
   method.textContent = currentAglorithm.dataset.method || '';
   spec.textContent = currentAglorithm.dataset.spec || '';

@@ -67,8 +67,8 @@ button.addEventListener('click', async () => {
     );
 
     showResults([
-      { label: 'Salt (store in user record)', value: salt.toString(), defaultEncoding: ENCODING.BIGINT },
-      { label: 'Verifier (store in user record)', value: verifier.toString(), defaultEncoding: ENCODING.BIGINT },
+      { label: 'Salt • Store in user record', value: salt.toString(), defaultEncoding: ENCODING.BIGINT },
+      { label: 'Verifier • Store in user record', value: verifier.toString(), defaultEncoding: ENCODING.BIGINT },
       { label: 'Prime', value: SRPParameters.PrimeGroup[primeGroup].N.toString(), defaultEncoding: ENCODING.BIGINT },
     ]);
   } catch (e) { handleError(e); }
