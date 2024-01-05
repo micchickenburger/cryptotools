@@ -37,14 +37,10 @@ const updateHashView = () => {
   const hash = hashSelect.selectedOptions[0].dataset.alg;
   const target = document.querySelector(`#passwords #${operation}-${hash}`);
 
-  const settings = document.querySelectorAll('#passwords .settings');
+  const settings = document.querySelectorAll('#passwords .subsection > .settings');
   settings.forEach((setting) => setting.classList.remove('active'));
   target?.classList.add('active');
 };
-
-document.addEventListener('DOMContentLoaded', () => {
-  hashSelect.dispatchEvent(new Event('change'));
-});
 
 hashOperation.addEventListener('change', updateHashView);
 hashSelect.addEventListener('change', updateHashView);

@@ -241,4 +241,4 @@ const hideResults = () => {
   clearError();
 };
 
-export { showResults, hideResults };
+export { showResults, hideResults, Result };

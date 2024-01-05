@@ -63,7 +63,9 @@ svg {
   width: 18px;
   min-width: 18px;
   vertical-align: middle;
-  margin-right: 0.5rem;
+}
+svg + span, svg + select, svg + input {
+  margin-left: 0.5rem;
 }
 
 menu > li {
@@ -74,6 +76,20 @@ menu > li {
 menu > li span {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.stats .datum {
+  white-space: nowrap;
+  min-width: 0; /* needed for flex children */
+  text-overflow: ellipsis;
+}
+
+.stats .datum span {
+  max-width: calc(100% - 18px - 0.5rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /**
@@ -119,7 +135,6 @@ select {
 
 /* Position drop-down arrow over select to trigger open on click */
 select + svg {
-  margin-right: 0;
   margin-left: -18px;
   pointer-events: none;
 }
@@ -167,8 +182,20 @@ button {
 
 .menu-control {
   background: var(--active-element);
+  min-width: fit-content;
 }
 .menu-control:first-child { border-radius: 5px 0 0 0; }
+
+.flex { /* TODO: this is only used by #encryption .subsection > .settings > form */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+}
+.flex > *, .flex label {
+  flex-grow: 1;
+  flex-basis: auto;
+}
 
 /**
  *
@@ -238,6 +265,8 @@ main p.subtitle { color: var(--sub-text); }
 main .subsection {
   width: fit-content;
   margin: 3rem auto 1.5rem;
+  border-radius: 5px;
+  background: var(--element);
 }
 main .subsection.full { width: 100%; }
 
@@ -253,25 +282,31 @@ main p {
  *
  */
 
-.operations-menu, .settings {
+.operations-menu, .settings, .tabs {
   margin: 0;
   padding: 0;
-  background: var(--element);
-  border-radius: 5px 5px 0 0;
   list-style: none;
   display: flex;
   font: 200 1rem 'Inconsolata', monospace;
   align-items: center;
 }
-#passwords .settings {
+.settings {
   background: var(--active-element);
   border-radius: 0 0 5px 5px;
 }
 
-.settings { display: none; }
-.settings.active, .settings.active .settings { display: flex; }
+.tabs li.active {
+  background: var(--active-element);
+  border-radius: 5px 5px 0 0;
+}
 
-.settings button { margin-right: 1rem; }
+.tabs li svg { color: var(--highlight); }
+
+.settings { display: none; }
+.settings.active { display: flex; }
+.settings.column { flex-direction: column; }
+
+.settings button { margin: 1rem; }
 
 /* Two rows of settings */
 .multi-row.active { display: block; }
@@ -288,12 +323,7 @@ main p {
   border-right: 1px solid var(--border);
 }
 
-.operations-menu > li:first-child {
-  background: var(--active-element);
-  border-radius: 5px 0 0 0;
-}
-
-.operations-menu > li {
+.operations-menu > li, .tabs li {
   position: relative;
   display: flex;
   height: 3rem;
@@ -301,14 +331,23 @@ main p {
   padding: 0 1rem;
 }
 
-#digest textarea {
+.tabs li {
+  cursor: pointer;
+}
+
+#encryption .operation-area { display: none; }
+#encryption .operation-area.active { display: block; }
+#encryption .operation-area menu li { display: none; }
+#encryption .operation-area menu li.show { display: flex; }
+
+.operation-area textarea {
   width: calc(100% - 2rem);
   padding: 1rem;
   background: var(--active-element);
   position: relative; /* prevent outline from going under menu items in chrome */
 }
 
-#digest .footer {
+.operation-area .footer {
   background: var(--element);
   font: 200 1rem 'Inconsolata', monospace;
   display: flex;
@@ -317,11 +356,50 @@ main p {
   border-radius: 0 0 5px 5px;
   margin-top: -7px;
 }
-#digest .footer div { margin-left: 1rem; }
+.operation-area .footer div { padding: 0.5rem 1rem; }
 
-#digest .footer button {
+.operation-area .footer button {
   border-radius: 0 0 5px 0;
 }
+
+#encryption .datum.confidentiality svg:last-of-type,
+#encryption .datum.integrity svg:last-of-type {
+  display: none;
+}
+
+#encryption .datum.confidentiality.no svg:last-of-type,
+#encryption .datum.integrity.no svg:last-of-type {
+  color: var(--error);
+  display: initial;
+  width: 28px;
+  position: absolute;
+  top: 4px;
+  left: 11px;
+}
+
+#encryption .list-keys ul {
+  text-align: left;
+  padding: 0;
+  margin: 1rem;
+  width: 100%;
+}
+
+#encryption .list-keys li {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem;
+  border-radius: 5px;
+  line-height: 1.5rem;
+}
+#encryption .list-keys li:nth-of-type(odd) { background: var(--border); }
+#encryption .list-keys li > svg { margin-right: 1rem; }
+#encryption .list-keys li div {
+  display: flex;
+  flex-direction: column;
+}
+#encryption .list-keys li span:first-child { font: 100 italic 1rem 'Lora', serif; }
+#encryption .list-keys li button { margin: 0 0 0 1rem; }
+#encryption .list-keys li button:first-of-type { margin-left: auto; }
 
 /**
  *
@@ -345,6 +423,7 @@ main p {
 #error svg {
   min-width: 30px;
   color: var(--error);
+  margin-right: 1rem;
 }
 
 /**
@@ -361,10 +440,7 @@ main p {
 }
 
 /* Double chevron */
-#results > svg {
-  width: 3rem;
-  margin: 0;
-}
+#results > svg { width: 3rem; }
 
 #results .result {
   background: var(--active-element);
@@ -381,24 +457,27 @@ main p {
 }
 
 #results .result .content {
+  white-space: pre-wrap;
   word-break: break-all;
   margin: 2rem;
+  text-align: left;
 }
 
-#results .result .stats {
+.stats {
   background: var(--element);
   display: flex;
   font-size: 1rem;
   border-radius: 0 0 5px 5px;
   align-items: center;
   height: 3rem;
+  width: 100%;
 }
 
-#results .result .stats > div { padding: 0.5rem 1rem; }
-#results .result .stats > label { margin-left: 1rem; }
-#results .stats .links { margin-left: auto; }
-#results .stats a { padding: 0.5rem; }
-#results .stats a svg { width: 24px; }
+.stats > div { padding: 0.5rem 1rem; }
+.stats > label { margin-left: 1rem; }
+.stats .links { margin-left: auto; }
+.stats a { padding: 0.5rem; }
+.stats a svg { width: 24px; }
 
 /**
  *
@@ -481,22 +560,16 @@ footer a, footer span { vertical-align: middle; }
     width: auto;
     margin: 2rem 1rem 0;
   }
+
+  #encryption .list-keys li button:last-of-type { margin-right: auto; }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 660px) {
   #main-menu li { justify-content: center; }
-  #main-menu li svg { margin: 0; }
   #main-menu li span { display: none; }
   .operations-menu li.datum { display: none; }
 
   main { min-height: auto; }
-
-  .settings {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .settings label { width: calc(100% - 2rem); }
-  .settings button { width: 100%; }
 
   /* move result icons to top right of results box */
   .result { position: relative; }
@@ -507,10 +580,9 @@ footer a, footer span { vertical-align: middle; }
     right: 0;
     margin-top: 0.4rem;
   }
-  .links a:last-child svg { margin-right: 0; }
 
   /* Result stats get squished, so show as column instead */
-  #results .result .stats {
+  .stats {
     flex-direction: column;
     height: auto;
     align-items: flex-start;
