@@ -14,7 +14,7 @@
  */
 
 import { handleError } from '../lib/error';
-import { ENCODING } from '../lib/encode';
+import { ENCODING, decode } from '../lib/encode';
 import load from '../lib/loader';
 import { hideResults, showResults } from '../lib/result';
 
@@ -26,7 +26,8 @@ const textarea = digestSection.querySelector('textarea')!;
  * Digest Generation
  */
 async function digestMessage(message: string, algorithm: string) {
-  const data = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
+  const encoding = Number(digestSection.querySelector<HTMLSelectElement>('.encoding select')?.selectedOptions[0].value);
+  const data = decode(message, encoding);
   const digest = await crypto.subtle.digest(algorithm, data); // hash the message
   return digest;
 }

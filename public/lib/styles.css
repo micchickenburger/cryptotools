@@ -135,6 +135,7 @@ textarea {
   width: calc(100% - 2rem - 4px);
   padding: 1rem;
   border: 2px solid transparent;
+  margin-bottom: -7px; /* TODO: I have no idea why this gap appears */
 }
 
 input:focus, textarea:focus, select:focus {
@@ -142,6 +143,11 @@ input:focus, textarea:focus, select:focus {
 }
 label:focus-within, textarea:focus, textarea.dragover {
   border: 2px solid var(--highlight);
+}
+label textarea, label textarea:focus {
+  border: none;
+  margin: 0;
+  width: 100%;
 }
 
 select {
@@ -192,7 +198,7 @@ label > span.label {
   border-bottom: 2px solid var(--border);
   cursor: pointer;
 }
-.footer .control { border: none; }
+.control.icon { border: none; }
 .footer span {
   line-height: 18px;
   vertical-align: middle;
@@ -214,7 +220,7 @@ label > span.label {
 }
 .menu-control:first-child { border-radius: 5px 0 0 0; }
 
-.flex { /* TODO: this is only used by #encryption .subsection > .settings > form */
+.flex { /* TODO: this is only used by #encryption settings sections */
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -370,6 +376,14 @@ form.settings { padding: 1rem 0; }
 #encryption .operation-area.active { display: block; }
 #encryption .operation-area menu li { display: none; }
 #encryption .operation-area menu li.show { display: flex; }
+#encryption .operation-area .settings > label.additional-data { width: 100%; }
+
+/* Advanced Settings */
+details { width: 100%; }
+details summary {
+  padding: 1rem;
+  cursor: pointer;
+}
 
 .operation-area .footer {
   background: var(--element);
@@ -378,12 +392,12 @@ form.settings { padding: 1rem 0; }
   justify-content: space-between;
   align-items: center;
   border-radius: 0 0 5px 5px;
-  margin-top: -7px;
 }
 .operation-area .footer div { padding: 0.5rem 1rem; }
 
 .operation-area .footer button {
   border-radius: 0 0 5px 0;
+  height: 75px;
 }
 
 #encryption .datum.confidentiality svg:last-of-type,
@@ -496,7 +510,7 @@ form.settings { padding: 1rem 0; }
   min-height: 3rem;
   width: 100%;
 }
-.stats label span.label { background-color: var(--element); }
+.stats label span.label, .footer label span.label { background-color: var(--element); }
 
 .stats > div { padding: 0.5rem 1rem; }
 .stats > label { margin-left: 1rem; }

@@ -19,28 +19,8 @@ button?.addEventListener('click', async () => {
   const cryptoKey = getKey(opArea.dataset.key || '');
   const isSymmetric = cryptoKey instanceof CryptoKey;
 
-  const textarea = opArea.querySelector<HTMLTextAreaElement>('textarea')!;
-  const data = (new TextEncoder()).encode(textarea.value);
-
-  // RSA-PSS
-  const saltLength = opArea.querySelector<HTMLInputElement>('.rsa-pss input.salt-length')?.value;
-
-  // ECDSA
-  const hashAlgorithm = opArea.querySelector<HTMLSelectElement>('.ecdsa select')?.selectedOptions[0].value;
-
-  // AES-CTR
-  const counterValue = opArea.querySelector<HTMLInputElement>('.aes-ctr input.counter')?.value;
-  const counterRadix = opArea.querySelector<HTMLSelectElement>('.aes-ctr select')?.selectedOptions[0].value;
-
-  // AES-CBC
-  const cbcIv = opArea.querySelector<HTMLInputElement>('.aes-cbc .iv input')?.value;
-  const cbcIvRadix = opArea.querySelector<HTMLSelectElement>('.aes-cbc .iv select')?.selectedOptions[0].value;
-
-  // AES-GCM
-  const gcmIv = opArea.querySelector<HTMLInputElement>('.aes-gcm .iv input')?.value;
-  const gcmIvRadix = opArea.querySelector<HTMLSelectElement>('.aes-gcm .iv select')?.selectedOptions[0].value;
-  const authenticatedDataTextArea = opArea.querySelector<HTMLTextAreaElement>('.aes-gcm .additional-data textarea');
-  const tagLength = opArea.querySelector<HTMLSelectElement>('.aes-gcm .tag-length select')?.selectedOptions[0].value;
+  const textarea = opArea.querySelector<HTMLTextAreaElement>('textarea.input')!;
+  const encoding = Number(opArea.querySelector<HTMLSelectElement>('.encoding select')?.selectedOptions[0].value);
 
   const results: Result[] = [];
 
@@ -52,12 +32,16 @@ button?.addEventListener('click', async () => {
       // }
       case 'encrypt': {
         const key = isSymmetric ? cryptoKey : cryptoKey.publicKey;
+        const data = decode(textarea.value, encoding);
 
         const algorithm: any = { // TODO: typing this properly throw errors when adding params
           name: key.algorithm.name,
         };
 
         if (key.algorithm.name === 'AES-CTR') {
+          const counterValue = opArea.querySelector<HTMLInputElement>('.aes-ctr.encrypt input.counter')?.value;
+          const counterRadix = opArea.querySelector<HTMLSelectElement>('.aes-ctr.encrypt select')?.selectedOptions[0].value;
+
           // Counter must be exactly 16 bytes long, the AES block size.  Here we let the
           // implementation handle throwing the error for a counter of wrong size.
           //
@@ -87,6 +71,9 @@ button?.addEventListener('click', async () => {
         }
 
         if (key.algorithm.name === 'AES-CBC') {
+          const cbcIv = opArea.querySelector<HTMLInputElement>('.aes-cbc.encrypt .iv input')?.value;
+          const cbcIvRadix = opArea.querySelector<HTMLSelectElement>('.aes-cbc.encrypt .iv select')?.selectedOptions[0].value;
+
           // Initialization Vector must be random and unique for every encryption operation
           let iv: ArrayBuffer;
           if (cbcIv) {
@@ -105,6 +92,11 @@ button?.addEventListener('click', async () => {
         }
 
         if (key.algorithm.name === 'AES-GCM') {
+          const gcmIv = opArea.querySelector<HTMLInputElement>('.aes-gcm.encrypt .iv input')?.value;
+          const gcmIvRadix = opArea.querySelector<HTMLSelectElement>('.aes-gcm.encrypt .iv select')?.selectedOptions[0].value;
+          const authenticatedDataTextArea = opArea.querySelector<HTMLTextAreaElement>('.aes-gcm.encrypt textarea');
+          const tagLength = opArea.querySelector<HTMLSelectElement>('.aes-gcm.encrypt .tag-length select')?.selectedOptions[0].value;
+
           algorithm.tagLength = Number(tagLength) || 128; // 128 bits is implementation default
 
           // Initialization Vector must be random and unique for every encryption operation
@@ -144,11 +136,15 @@ button?.addEventListener('click', async () => {
       }
       case 'sign': {
         const key = isSymmetric ? cryptoKey : cryptoKey.privateKey;
+        const data = decode(textarea.value, encoding);
+
         const algorithm: any = { // TODO: typing this properly throw errors when adding params
           name: key.algorithm.name,
         };
 
         if (key.algorithm.name === 'RSA-PSS') {
+          const saltLength = opArea.querySelector<HTMLInputElement>('.rsa-pss.sign input.salt-length')?.value;
+
           let byteLength: number;
           switch ((key.algorithm as any).hash.name) { // TODO: hash doesn't exist in type
             case 'SHA-1': byteLength = 160 / 8; break;
@@ -173,6 +169,7 @@ button?.addEventListener('click', async () => {
         }
 
         if (key.algorithm.name === 'ECDSA') {
+          const hashAlgorithm = opArea.querySelector<HTMLSelectElement>('.ecdsa.sign select')?.selectedOptions[0].value;
           algorithm.hash = hashAlgorithm;
         }
 
@@ -184,10 +181,84 @@ button?.addEventListener('click', async () => {
         });
         break;
       }
-      // case 'decrypt': {
-      //   const key = isSymmetric ? cryptoKey : cryptoKey.privateKey;
-      //   break;
-      // }
+      case 'decrypt': {
+        const key = isSymmetric ? cryptoKey : cryptoKey.privateKey;
+        const data = decode(textarea.value, encoding);
+
+        const algorithm: any = { // TODO: typing this properly throw errors when adding params
+          name: key.algorithm.name,
+        };
+
+        if (key.algorithm.name === 'AES-CTR') {
+          const counterValue = opArea.querySelector<HTMLInputElement>('.aes-ctr.decrypt input.counter')?.value;
+          const counterRadix = opArea.querySelector<HTMLSelectElement>('.aes-ctr.decrypt select')?.selectedOptions[0].value;
+
+          // Counter must be exactly 16 bytes long, the AES block size.  Here we let the
+          // implementation handle throwing the error for a counter of wrong size.
+          //
+          // The length is the number of bits in the counter block used for the counter
+          // (as opposed to the nonce).  The total number of blocks in the message must be
+          // less than or equal to 2^n, where n is this counter length in bits.
+
+          let counter: ArrayBuffer;
+          if (counterValue) {
+            const radix = Number(counterRadix);
+            counter = decode(counterValue, radix);
+            if (counter.byteLength !== 16) throw new Error('Counter length must be exactly 16 bytes.');
+          } else throw new Error('AES-CTR requires the initial counter value in order to decrypt the ciphertext.');
+
+          algorithm.counter = counter;
+          algorithm.length = 64; // NIST recommends length half of the counter block size (bits)
+        }
+
+        if (key.algorithm.name === 'AES-CBC') {
+          const cbcIv = opArea.querySelector<HTMLInputElement>('.aes-cbc.decrypt .iv input')?.value;
+          const cbcIvRadix = opArea.querySelector<HTMLSelectElement>('.aes-cbc.decrypt .iv select')?.selectedOptions[0].value;
+
+          // Initialization Vector must be the same used for encryption
+          let iv: ArrayBuffer;
+          if (cbcIv) {
+            const radix = Number(cbcIvRadix);
+            iv = decode(cbcIv, radix);
+            if (iv.byteLength !== 16) throw new Error('IV length must be exactly 16 bytes.');
+          } else throw new Error('AES-CBC requires the Initialization Vector (IV) in order to decrypt the ciphertext.');
+
+          algorithm.iv = iv;
+        }
+
+        if (key.algorithm.name === 'AES-GCM') {
+          const gcmIv = opArea.querySelector<HTMLInputElement>('.aes-gcm.decrypt .iv input')?.value;
+          const gcmIvRadix = opArea.querySelector<HTMLSelectElement>('.aes-gcm.decrypt .iv select')?.selectedOptions[0].value;
+          const authenticatedDataTextArea = opArea.querySelector<HTMLTextAreaElement>('.aes-gcm.decrypt textarea');
+          const tagLength = opArea.querySelector<HTMLSelectElement>('.aes-gcm.decrypt .tag-length select')?.selectedOptions[0].value;
+
+          algorithm.tagLength = Number(tagLength) || 128; // 128 bits is implementation default
+
+          // Initialization Vector must be random and unique for every encryption operation
+          let iv: ArrayBuffer;
+          if (gcmIv) {
+            const radix = Number(gcmIvRadix);
+            iv = decode(gcmIv, radix);
+          } else throw new Error('AES-GCM requires the Initialization Vector (IV) in order to decrypt the ciphertext.');
+
+          algorithm.iv = iv;
+
+          // Additional data can be authenticated and not encrypted
+          if (authenticatedDataTextArea?.value.length) {
+            const additionalData = (new TextEncoder()).encode(authenticatedDataTextArea?.value);
+            algorithm.additionalData = additionalData;
+          }
+        }
+
+        const plaintext = await window.crypto.subtle.decrypt(algorithm, key, data);
+        results.unshift({
+          label: 'Plaintext',
+          value: plaintext,
+          defaultEncoding: ENCODING['UTF-8'],
+        });
+
+        break;
+      }
       default:
         throw new Error(`Operation ${operation} is not implemented.`);
     }

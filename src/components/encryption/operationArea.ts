@@ -36,7 +36,7 @@ const updateLowerArea = (op: KeyUsage, alg: string) => {
 
   // Display appropriate encryption/signature settings
   opArea?.querySelectorAll<HTMLElement>('form > .settings').forEach((elem) => elem.classList.remove('active'));
-  opArea?.querySelector<HTMLElement>(`.settings.${alg}`)?.classList.add('active');
+  opArea?.querySelector<HTMLElement>(`.settings.${alg}.${op}`)?.classList.add('active');
 
   // Capitalize operation for button text
   if (button) button.textContent = `${op.charAt(0).toUpperCase()}${op.slice(1)}`;
