@@ -149,6 +149,7 @@ const buildResultElement = (
 
   statsItems.forEach(({ icon, tooltip, statValue }) => {
     const stat = document.createElement('div');
+    stat.classList.add('datum');
     if (tooltip) stat.dataset.tooltip = tooltip;
     stat.innerHTML = icon;
 
@@ -223,7 +224,7 @@ const showResults = (results: Result[]) => {
         byteLength = decode(value, encoding).byteLength;
       } catch (e) {
         // eslint-disable-next-line no-console
-        console.warn(`While calculating output length, tried to decode as \`${ENCODING[encoding].toLowerCase()}\` but an error occurred. Assuming utf-8 encoded text instead.`, `Value: ${content}`, e);
+        console.warn(`Cannot calculate raw data byte length for "${label}" because no decoder has been implemented for \`${ENCODING[encoding].toLowerCase()}\`. Assuming utf-8 encoded text instead.`);
         byteLength = (new TextEncoder()).encode(value).byteLength; // assume utf-8 encoded text
       }
     }

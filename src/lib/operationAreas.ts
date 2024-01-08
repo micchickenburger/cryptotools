@@ -9,7 +9,31 @@
  * cryptographic operations.
  */
 
+import { guessEncoding } from './encode';
+
 const opAreas = document.querySelectorAll<HTMLElement>('.operation-area');
+
+/**
+ * Guess encoding of textarea content
+ */
+const checkEncoding = (textarea: HTMLTextAreaElement, opArea: HTMLElement) => () => {
+  const encodingSelect = opArea.querySelector('.encoding select');
+  const encoding = guessEncoding(textarea.value);
+
+  if (encoding) { // UNKNOWN is radix 0, a falsey value
+    encodingSelect?.childNodes.forEach((op) => {
+      const option = op as HTMLOptionElement;
+      if (Number(option.value) === encoding) option.selected = true;
+    });
+  }
+};
+
+opAreas.forEach((opArea) => {
+  const textarea = opArea.querySelector<HTMLTextAreaElement>('textarea');
+  // If user is typing, it's probably plain text, so let's just check onpaste
+  // We use setTimeout to allow the paste to complete before evaluating the whole textarea contents
+  textarea?.addEventListener('paste', () => setTimeout(checkEncoding(textarea, opArea), 0));
+});
 
 /**
  * Drag and Drop operations for textareas

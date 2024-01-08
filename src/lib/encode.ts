@@ -12,14 +12,14 @@ enum ENCODING {
   BOOLEAN = -1,
   BIGINT = -2,
   INTEGER = -3,
-  'UTF-8' = -4,
-  UUID = -5,
-  JSON = -6,
+  UUID = -4,
+  JSON = -5,
   UNKNOWN = 0,
 
   // Transformable encodings
   BINARY = 2,
   OCTAL = 8,
+  'UTF-8' = 100,
   HEXADECIMAL = 16,
   BASE64 = 64, // RFC 4648
   BASE64_CRYPT = 640, // Nonstandard OpenBSD alphabet used by crypt, bcrypt
@@ -47,6 +47,8 @@ const encode = (rawData: ArrayBuffer, radix: ENCODING): string => {
   if (radix === ENCODING.BASE64_CRYPT) {
     return bcrypt.encodeBase64(array, array.length);
   }
+
+  if (radix === ENCODING['UTF-8']) return (new TextDecoder()).decode(rawData);
 
   let padding: number = 0;
   if (radix === ENCODING.BINARY) padding = 8;
@@ -101,6 +103,8 @@ const decode = (encodedData: string, radix: ENCODING): ArrayBuffer => {
     data.match(/.{1,2}/g)?.forEach((byte, i) => { array[i] = parseInt(byte, 16); });
     return array.buffer;
   }
+
+  if (radix === ENCODING['UTF-8']) return (new TextEncoder()).encode(encodedData);
 
   let separator: number = 0;
   if (radix === ENCODING.BINARY) separator = 8;
