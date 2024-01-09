@@ -91,6 +91,7 @@ const intToArray = (num: number): Uint8Array => {
  */
 const button = generateElement.querySelector('button');
 button?.addEventListener('click', async () => {
+  button.disabled = true;
   load(0);
 
   const nameElement = generateElement.querySelector<HTMLInputElement>('.name input')!;
@@ -152,14 +153,17 @@ button?.addEventListener('click', async () => {
         throw new Error('No algorithm selected.');
     }
 
-    // Reset form
-    generateElement.querySelector<HTMLFormElement>('form')?.reset();
+    const key = await window.crypto.subtle.generateKey(params, false, keyUsage);
+    addKey(name, key);
+  } catch (e) {
+    handleError(e);
+    button.disabled = false;
+    return;
+  }
 
-    // Prevent safari from throwing error while trying to focus on an element in the form
-    // that is no longer visible
-    setTimeout(async () => {
-      const key = await window.crypto.subtle.generateKey(params, false, keyUsage);
-      addKey(name, key);
-    }, 0);
-  } catch (e) { handleError(e); }
+  // Reset form
+  generateElement.querySelector<HTMLFormElement>('form')?.reset();
+  const event = new Event('change');
+  purposeElement.dispatchEvent(event);
+  button.disabled = false;
 });

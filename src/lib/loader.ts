@@ -16,6 +16,8 @@ const loader = document.querySelector<HTMLElement>('#loader');
  */
 const load = (pct: number) => {
   if (loader && pct >= 0 && pct <= 100) loader.style.width = `${pct}%`;
+  if (pct === 0) loader?.classList.remove('animate');
+  else loader?.classList.add('animate');
 };
 
 export default load;

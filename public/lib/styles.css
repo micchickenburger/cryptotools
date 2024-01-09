@@ -239,9 +239,9 @@ label > span.label {
   left: 0;
   width: 100%;
   height: 1rem;
-  transition: width 250ms ease-in-out;
   background: var(--highlight);
 }
+#loader.animate { transition: width 250ms ease-in-out; }
 
 #main-menu, .section-menu {
   list-style: none;
