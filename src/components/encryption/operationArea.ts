@@ -6,6 +6,8 @@
  */
 
 import { KEY_SVG } from '../../lib/svg';
+// eslint-disable-next-line import/no-cycle
+import { getKey } from './keys';
 
 const encryptionSection = document.querySelector<HTMLElement>('#encryption')!;
 const opArea = encryptionSection.querySelector<HTMLElement>('.operation-area');
@@ -55,6 +57,10 @@ const updateOpArea = (
   cryptoKey: CryptoKey | CryptoKeyPair,
 ) => () => {
   opArea?.classList.add('active');
+  opArea?.scrollIntoView({
+    block: 'center',
+    behavior: 'smooth',
+  });
 
   const isSymmetric = cryptoKey instanceof CryptoKey;
 
@@ -112,8 +118,9 @@ const updateOpArea = (
 tabs?.forEach((tab) => {
   const op = tab.dataset.op as KeyUsage;
   tab.addEventListener('click', () => {
-    const algorithm = opArea!.dataset.alg;
-    updateLowerArea(op, algorithm!);
+    const keyName = opArea!.dataset.key || '';
+    const key = getKey(keyName);
+    updateOpArea(op, keyName, key)();
   });
 });
 

@@ -5,8 +5,9 @@
  * @license GPL-3.0-or-later
  */
 
+import load from '../../lib/loader';
 import { KEYS_SVG, KEY_SVG } from '../../lib/svg';
-import { showResults } from '../../lib/result';
+// eslint-disable-next-line import/no-cycle
 import updateOpArea from './operationArea';
 
 /**
@@ -23,54 +24,61 @@ const updateKeyList = () => {
 
   Object.entries(keys).forEach(([k, v]) => {
     const li = document.createElement('li');
-    const div = document.createElement('div');
+
+    const container = document.createElement('div');
+    const icon = document.createElement('span');
+    const meta = document.createElement('div');
+    container.classList.add('container');
+    meta.classList.add('meta');
+
     const name = document.createElement('span');
     name.textContent = k;
-    div.appendChild(name);
+    meta.appendChild(name);
 
     const isSymmetric = v instanceof CryptoKey;
 
-    const meta = document.createElement('span');
+    const attributes = document.createElement('span');
     let type: string;
     let alg: string;
     let usages: KeyUsage[];
 
     if (isSymmetric) {
-      li.innerHTML = KEY_SVG;
+      icon.innerHTML = KEY_SVG;
       type = 'Symmetric Key';
       alg = v.algorithm.name;
       usages = v.usages;
     } else {
-      li.innerHTML = KEYS_SVG;
+      icon.innerHTML = KEYS_SVG;
       type = 'Asymmetric Key Pair';
       alg = v.privateKey.algorithm.name;
       usages = v.privateKey.usages.concat(v.publicKey.usages);
     }
 
-    meta.textContent = `${type} • ${alg} • ${usages.join(', ')}`;
-    div.appendChild(meta);
-    li.appendChild(div);
+    attributes.textContent = `${type} • ${alg} • ${usages.join(', ')}`;
+    meta.appendChild(attributes);
 
+    container.appendChild(icon);
+    container.appendChild(meta);
+    li.appendChild(container);
+
+    const actions = document.createElement('div');
+    actions.classList.add('actions');
     usages.forEach((usage) => {
       const button = document.createElement('button');
       button.textContent = `${usage.charAt(0).toUpperCase()}${usage.slice(1)}`;
       button.addEventListener('click', updateOpArea(usage, k, v));
-      li.appendChild(button);
+      actions.appendChild(button);
     });
+    li.appendChild(actions);
 
     list.appendChild(li);
   });
 };
 
 /**
- * Stringify results for prettier display
+ * Show key list
  */
-const stringify = (key: CryptoKey) => JSON.stringify({
-  type: key.type,
-  extractable: key.extractable,
-  algorithm: key.algorithm,
-  usages: key.usages,
-}, null, 2);
+const showKeys = () => document.querySelector<HTMLElement>('#encryption li[data-target="list-keys"]')?.click();
 
 /**
  * Add keys to dictionary
@@ -79,21 +87,9 @@ const addKey = (name: string, key: CryptoKey | CryptoKeyPair) => {
   if (keys[name]) throw new Error(`A key by the name of "${name}" already exists.`);
   keys[name] = key;
 
-  const results = [];
-  if (key instanceof CryptoKey) {
-    results.push({
-      label: name,
-      value: stringify(key),
-    });
-  } else {
-    Object.entries(key).forEach(([k, v]) => results.push({
-      label: `${name} ${k}`,
-      value: stringify(v),
-    }));
-  }
-
   updateKeyList();
-  showResults(results);
+  showKeys();
+  load(100);
 };
 
 /**

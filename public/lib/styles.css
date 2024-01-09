@@ -185,9 +185,9 @@ label {
 }
 label > span.label {
   background: var(--active-element);
-  font: 100 italic 0.7rem 'Lora', serif;
+  font: 100 italic 0.8rem 'Lora', serif;
   position: absolute;
-  top: -0.5rem;
+  top: -0.7rem;
   left: 0.5rem;
   padding: 0 0.1rem;
 }
@@ -206,11 +206,6 @@ label > span.label {
 .multi.control select { width: fit-content; }
 
 .control svg { color: var(--highlight); }
-
-.control.upload {
-  margin: 0.3rem 1rem 0.3rem auto;
-  border-bottom: none;
-}
 
 .settings label.grow { flex-grow: 1; }
 
@@ -329,7 +324,8 @@ main p {
   width: 100%;
   border-radius: 0 0 5px 5px;
 }
-form.settings { padding: 1rem 0; }
+form.settings { padding: 1rem 0 0; }
+#verify-PBKDF2, #verify-SRP { padding-bottom: 1rem; } /* TODO: may not be needed after password op overhaul */
 
 .tabs li.active {
   background: var(--active-element);
@@ -372,6 +368,8 @@ form.settings { padding: 1rem 0; }
   cursor: pointer;
 }
 
+.operation-area { position: relative; }
+.operation-area .footer .links { margin: 0 1rem 0 auto; }
 #encryption .operation-area { display: none; }
 #encryption .operation-area.active { display: block; }
 #encryption .operation-area menu li { display: none; }
@@ -379,11 +377,25 @@ form.settings { padding: 1rem 0; }
 #encryption .operation-area .settings > label.additional-data { width: 100%; }
 
 /* Advanced Settings */
-details { width: 100%; }
-details summary {
-  padding: 1rem;
-  cursor: pointer;
+details {
+  width: 100%;
+  border-top: 1px solid var(--border);
+  margin-top: 1.5rem;
 }
+details summary {
+  background: var(--active-element);
+  font: 100 italic 1rem 'Lora', serif;
+  width: fit-content;
+  padding: 0 1rem 1rem;
+  margin: -11px auto 0 1rem;
+  cursor: pointer;
+  list-style: none;
+}
+details span.opened { display: none; }
+details[open] span.opened { display: initial; }
+details[open] span.closed { display: none; }
+details svg { color: var(--highlight); }
+summary::-webkit-details-marker { display: none; }
 
 .operation-area .footer {
   background: var(--element);
@@ -393,7 +405,12 @@ details summary {
   align-items: center;
   border-radius: 0 0 5px 5px;
 }
-.operation-area .footer div { padding: 0.5rem 1rem; }
+.operation-area .footer div { margin: 0.5rem 1rem; }
+
+/* We may use javascript to create these elements, which causes
+  "automatic" spacing between the svg and span elements.  Using
+  flexbox removes this */
+.operation-area .footer div, .stats .datum { display: flex; }
 
 .operation-area .footer button {
   border-radius: 0 0 5px 0;
@@ -430,14 +447,19 @@ details summary {
   line-height: 1.5rem;
 }
 #encryption .list-keys li:nth-of-type(odd) { background: var(--border); }
-#encryption .list-keys li > svg { margin-right: 1rem; }
-#encryption .list-keys li div {
+#encryption .list-keys li .container {
+  display: flex;
+  align-items: center;
+}
+#encryption .list-keys li .meta {
   display: flex;
   flex-direction: column;
+  margin-left: 1rem;
 }
 #encryption .list-keys li span:first-child { font: 100 italic 1rem 'Lora', serif; }
+#encryption .list-keys li .actions { margin: 0 0 0 auto; }
 #encryption .list-keys li button { margin: 0 0 0 1rem; }
-#encryption .list-keys li button:first-of-type { margin-left: auto; }
+#encryption .list-keys li button:first-child { margin-left: 0; }
 
 /**
  *
@@ -516,7 +538,7 @@ details summary {
 .stats > label { margin-left: 1rem; }
 .stats .links { margin-left: auto; }
 .stats a { padding: 0.5rem; }
-.stats a svg { width: 24px; }
+.links svg { width: 24px; }
 
 /**
  *
@@ -621,6 +643,7 @@ footer a, footer span { vertical-align: middle; }
     right: 0;
     margin-top: 0.4rem;
   }
+  .links .upload { margin-right: 0; }
 
   /* Result stats get squished, so show as column instead */
   .stats {
@@ -629,6 +652,26 @@ footer a, footer span { vertical-align: middle; }
     align-items: flex-start;
     padding: 1rem 0;
   }
+
+  .operation-area .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 1rem;
+  }
+  .operation-area .footer label.encoding, #results .stats > label {
+    /* 100% less margin, padding, border */
+    width: calc(100% - 3rem - 4px);
+    margin-bottom: 0.75rem;
+  }
+  .operation-area .footer button {
+    width: 100%;
+    height: 3rem;
+    border-radius: 0 0 5px 5px;
+    margin-top: 1rem;
+  }
+
+  #encryption .list-keys li .actions { margin: 1rem auto 0; }
+  #encryption .operation-area .footer label.upload { margin: 0.5rem 0; }
 
   footer {
     flex-direction: column;

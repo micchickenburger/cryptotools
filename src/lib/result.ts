@@ -205,6 +205,10 @@ interface Result {
 const showResults = (results: Result[]) => {
   resultElement.innerHTML = DOUBLE_CHEVRON_SVG; // remove any previous results
   clearError(); // as well as any previous error
+  resultElement.scrollIntoView({
+    block: 'start',
+    behavior: 'smooth',
+  });
 
   results.forEach(({ label, value, defaultEncoding }) => {
     let encoding: ENCODING;

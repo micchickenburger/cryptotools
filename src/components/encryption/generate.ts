@@ -93,12 +93,13 @@ const button = generateElement.querySelector('button');
 button?.addEventListener('click', async () => {
   load(0);
 
-  const name = generateElement.querySelector<HTMLInputElement>('.name input')!;
+  const nameElement = generateElement.querySelector<HTMLInputElement>('.name input')!;
+  const name = nameElement.value;
   const algorithmSelect = generateElement.querySelector<HTMLSelectElement>('.settings.algorithm.active select')!;
   const currentAglorithm = algorithmSelect.selectedOptions[0];
 
   try {
-    if (!name.value) throw new Error('A key name is required.');
+    if (!name) throw new Error('A key name is required.');
 
     let params: RsaHashedKeyGenParams | EcKeyGenParams | HmacKeyGenParams | AesKeyGenParams;
     const keyUsage: KeyUsage[] = purposeElement.value === 'encryption'
@@ -151,10 +152,14 @@ button?.addEventListener('click', async () => {
         throw new Error('No algorithm selected.');
     }
 
-    const key = await window.crypto.subtle.generateKey(params, false, keyUsage);
-    addKey(name.value, key);
-
     // Reset form
-    name.value = '';
+    generateElement.querySelector<HTMLFormElement>('form')?.reset();
+
+    // Prevent safari from throwing error while trying to focus on an element in the form
+    // that is no longer visible
+    setTimeout(async () => {
+      const key = await window.crypto.subtle.generateKey(params, false, keyUsage);
+      addKey(name, key);
+    }, 0);
   } catch (e) { handleError(e); }
 });
