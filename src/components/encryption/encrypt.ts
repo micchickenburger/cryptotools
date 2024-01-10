@@ -19,17 +19,42 @@ button?.addEventListener('click', async () => {
   const cryptoKey = getKey(opArea.dataset.key || '');
   const isSymmetric = cryptoKey instanceof CryptoKey;
 
-  const textarea = opArea.querySelector<HTMLTextAreaElement>('textarea.input')!;
-  const encoding = Number(opArea.querySelector<HTMLSelectElement>('.encoding select')?.selectedOptions[0].value);
+  const textarea = opArea.querySelector<HTMLTextAreaElement>('.input textarea')!;
+  const encoding = Number(opArea.querySelector<HTMLSelectElement>('.input .encoding select')?.selectedOptions[0].value);
 
   const results: Result[] = [];
 
   try {
     switch (operation) {
-      // case 'verify': {
-      //   const key = isSymmetric ? cryptoKey : cryptoKey.publicKey;
-      //   break;
-      // }
+      case 'verify': {
+        const key = isSymmetric ? cryptoKey : cryptoKey.publicKey;
+        const data = decode(textarea.value, encoding);
+
+        const signatureTextarea = opArea.querySelector<HTMLTextAreaElement>('.signature textarea')!;
+        const signatureEncoding = Number(opArea.querySelector<HTMLSelectElement>('.signature .encoding select')?.selectedOptions[0].value);
+        const signature = decode(signatureTextarea.value, signatureEncoding);
+
+        const algorithm: any = { // TODO: typing this properly throw errors when adding params
+          name: key.algorithm.name,
+        };
+
+        if (key.algorithm.name === 'RSA-PSS') {
+          const saltLength = opArea.querySelector<HTMLInputElement>('.rsa-pss.verify input.salt-length')?.value;
+          algorithm.saltLength = saltLength ? Number(saltLength) : 32;
+        }
+
+        if (key.algorithm.name === 'ECDSA') {
+          const hashAlgorithm = opArea.querySelector<HTMLSelectElement>('.ecdsa.verify select')?.selectedOptions[0].value;
+          algorithm.hash = hashAlgorithm;
+        }
+
+        const verification = await window.crypto.subtle.verify(algorithm, key, signature, data);
+        results.unshift({
+          label: 'Signature verifies data?',
+          value: String(verification),
+        });
+        break;
+      }
       case 'encrypt': {
         const key = isSymmetric ? cryptoKey : cryptoKey.publicKey;
         const data = decode(textarea.value, encoding);
@@ -165,12 +190,18 @@ button?.addEventListener('click', async () => {
           // the ceiling seems to actually be the SHA output size in bytes, at least in Safari.
           // @link https://developer.mozilla.org/en-US/docs/Web/API/RsaPssParams#saltlength
           const keySizeInBits = (key.algorithm as any).modulusLength;
-          console.debug('Limit:', Math.ceil((keySizeInBits - 1) / 8) - byteLength - 2);
+          console.debug('Limit', Math.ceil((keySizeInBits - 1) / 8) - byteLength - 2);
         }
 
         if (key.algorithm.name === 'ECDSA') {
           const hashAlgorithm = opArea.querySelector<HTMLSelectElement>('.ecdsa.sign select')?.selectedOptions[0].value;
           algorithm.hash = hashAlgorithm;
+
+          results.push({
+            label: 'Hash Function • Needed for signature verification',
+            value: String(hashAlgorithm),
+            defaultEncoding: ENCODING['UTF-8'],
+          });
         }
 
         const signature = await window.crypto.subtle.sign(algorithm, key, data);

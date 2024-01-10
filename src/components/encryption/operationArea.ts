@@ -24,6 +24,7 @@ encryptionSection.querySelectorAll<HTMLLIElement>('.keys menu li')
  */
 const updateLowerArea = (op: KeyUsage, alg: string) => {
   const textarea = opArea?.querySelector<HTMLTextAreaElement>('textarea');
+  const signature = opArea?.querySelector<HTMLElement>('.signature');
   const button = opArea?.querySelector<HTMLButtonElement>('button');
 
   let placeholder: string = '';
@@ -37,8 +38,10 @@ const updateLowerArea = (op: KeyUsage, alg: string) => {
   if (textarea) textarea.placeholder = placeholder;
 
   // Display appropriate encryption/signature settings
-  opArea?.querySelectorAll<HTMLElement>('form > .settings').forEach((elem) => elem.classList.remove('active'));
+  opArea?.querySelectorAll<HTMLElement>('.input > .settings').forEach((elem) => elem.classList.remove('active'));
   opArea?.querySelector<HTMLElement>(`.settings.${alg}.${op}`)?.classList.add('active');
+  if (op === 'verify') signature?.classList.add('active');
+  else signature?.classList.remove('active');
 
   // Capitalize operation for button text
   if (button) button.textContent = `${op.charAt(0).toUpperCase()}${op.slice(1)}`;

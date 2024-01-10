@@ -16,8 +16,8 @@ const opAreas = document.querySelectorAll<HTMLElement>('.operation-area');
 /**
  * Guess encoding of textarea content
  */
-const checkEncoding = (textarea: HTMLTextAreaElement, opArea: HTMLElement) => () => {
-  const encodingSelect = opArea.querySelector('.encoding select');
+const checkEncoding = (textarea: HTMLTextAreaElement) => () => {
+  const encodingSelect = textarea.parentElement!.querySelector('.encoding select');
   const encoding = guessEncoding(textarea.value);
 
   if (encoding) { // UNKNOWN is radix 0, a falsey value
@@ -29,10 +29,10 @@ const checkEncoding = (textarea: HTMLTextAreaElement, opArea: HTMLElement) => ()
 };
 
 opAreas.forEach((opArea) => {
-  const textarea = opArea.querySelector<HTMLTextAreaElement>('textarea');
+  const textareas = opArea.querySelectorAll<HTMLTextAreaElement>('textarea');
   // If user is typing, it's probably plain text, so let's just check onpaste
   // We use setTimeout to allow the paste to complete before evaluating the whole textarea contents
-  textarea?.addEventListener('paste', () => setTimeout(checkEncoding(textarea, opArea), 0));
+  textareas.forEach((textarea) => textarea.addEventListener('paste', () => setTimeout(checkEncoding(textarea), 0)));
 });
 
 /**
@@ -50,24 +50,26 @@ const classState = (element: HTMLElement, add: boolean) => () => {
 };
 
 opAreas.forEach((opArea) => {
-  const textarea = opArea.querySelector<HTMLTextAreaElement>('textarea');
+  const textareas = opArea.querySelectorAll<HTMLTextAreaElement>('textarea');
 
-  // Drag-and-drop
-  textarea?.addEventListener('dragenter', preventDefault);
-  textarea?.addEventListener('dragenter', classState(textarea, true));
-  textarea?.addEventListener('dragover', preventDefault);
-  textarea?.addEventListener('dragover', classState(textarea, true));
-  textarea?.addEventListener('dragleave', classState(textarea, false));
-  textarea?.addEventListener('dragend', classState(textarea, false));
-  textarea?.addEventListener('drop', preventDefault);
-  textarea?.addEventListener('drop', classState(textarea, false));
+  textareas.forEach((textarea) => {
+    // Drag-and-drop
+    textarea?.addEventListener('dragenter', preventDefault);
+    textarea?.addEventListener('dragenter', classState(textarea, true));
+    textarea?.addEventListener('dragover', preventDefault);
+    textarea?.addEventListener('dragover', classState(textarea, true));
+    textarea?.addEventListener('dragleave', classState(textarea, false));
+    textarea?.addEventListener('dragend', classState(textarea, false));
+    textarea?.addEventListener('drop', preventDefault);
+    textarea?.addEventListener('drop', classState(textarea, false));
 
-  // Character Count
-  textarea?.addEventListener('input', () => {
-    const characterCount = opArea.querySelector('.character-count')!;
-    const count = textarea.value.length;
-    if (count === 1) characterCount.textContent = '1 character';
-    else characterCount.textContent = `${count} characters`;
+    // Character Count
+    textarea?.addEventListener('input', () => {
+      const characterCount = textarea.parentElement!.querySelector('.character-count')!;
+      const count = textarea.value.length;
+      if (count === 1) characterCount.textContent = '1 character';
+      else characterCount.textContent = `${count} characters`;
+    });
   });
 });
 

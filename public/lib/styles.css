@@ -370,11 +370,18 @@ form.settings { padding: 1rem 0 0; }
 
 .operation-area { position: relative; }
 .operation-area .footer .links { margin: 0 1rem 0 auto; }
-#encryption .operation-area { display: none; }
-#encryption .operation-area.active { display: block; }
+#encryption .operation-area, #encryption .operation-area div.signature {
+  display: none;
+  border-top: 1rem solid var(--background);
+}
+#encryption .operation-area.active, #encryption .operation-area div.signature.active { display: block; }
 #encryption .operation-area menu li { display: none; }
 #encryption .operation-area menu li.show { display: flex; }
 #encryption .operation-area .settings > label.additional-data { width: 100%; }
+#encryption .operation-area button {
+  width: 100%;
+  border-radius: 0 0 5px 5px;
+}
 
 /* Advanced Settings */
 details {
