@@ -16,15 +16,15 @@ const button = opArea.querySelector<HTMLButtonElement>('button');
 
 button?.addEventListener('click', async () => {
   const operation = opArea.querySelector<HTMLLIElement>('menu li.active')?.dataset.op;
-  const cryptoKey = getKey(opArea.dataset.key || '');
-  const isSymmetric = cryptoKey instanceof CryptoKey;
-
   const textarea = opArea.querySelector<HTMLTextAreaElement>('.input textarea')!;
   const encoding = Number(opArea.querySelector<HTMLSelectElement>('.input .encoding select')?.selectedOptions[0].value);
 
   const results: Result[] = [];
 
   try {
+    const cryptoKey = getKey(opArea.dataset.key || '').key;
+    const isSymmetric = cryptoKey instanceof CryptoKey;
+
     switch (operation) {
       case 'verify': {
         const key = isSymmetric ? cryptoKey : cryptoKey.publicKey;

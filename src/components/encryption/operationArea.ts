@@ -136,7 +136,7 @@ tabs?.forEach((tab) => {
   const op = tab.dataset.op as KeyUsage;
   tab.addEventListener('click', () => {
     const keyName = opArea!.dataset.key || '';
-    const key = getKey(keyName);
+    const { key } = getKey(keyName);
     updateOpArea(keyName, key, op)();
   });
 });

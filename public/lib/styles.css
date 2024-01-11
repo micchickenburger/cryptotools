@@ -210,10 +210,16 @@ label > span.label.required::after {
   line-height: 18px;
   vertical-align: middle;
 }
+
+/* Special case where two form elements are in the same control */
 .multi.control select { width: fit-content; }
+.multi.control select + svg {
+  padding-right: 0.5rem;
+  border-right: 1px solid var(--border);
+}
 
 .control svg { color: var(--secondary); }
-menu .control svg { color: var(--primary); }
+menu .control svg:first-of-type { color: var(--primary); }
 
 .settings label.grow { flex-grow: 1; }
 
@@ -356,12 +362,6 @@ form.settings { padding: 1rem 0 0; }
   border-radius: 0 0 5px 5px;
 }
 
-/* Special case where two form elements are in the same control */
-#passwords #hash-PBKDF2 .salt select + svg {
-  padding-right: 0.5rem;
-  border-right: 1px solid var(--border);
-}
-
 .operations-menu > li, .tabs li {
   position: relative;
   display: flex;
@@ -460,11 +460,12 @@ summary::-webkit-details-marker { display: none; }
   cursor: pointer;
 }
 #encryption .list-keys li:first-child { border-top: none; }
-#encryption .list-keys li:hover {
+/* Hover effect prevents tooltip visibility */
+/* #encryption .list-keys li:hover {
   background: var(--border);
   border-radius: 5px;
 }
-#encryption .list-keys li:hover + li { border-top-color: transparent; }
+#encryption .list-keys li:hover + li { border-top-color: transparent; } */
 #encryption .list-keys li .container svg { color: var(--primary); }
 #encryption .list-keys li .container {
   display: flex;
@@ -479,7 +480,17 @@ summary::-webkit-details-marker { display: none; }
   font: 100 italic 1rem 'Lora', serif;
   color: var(--primary);
 }
-#encryption .list-keys li .actions { margin: 0 0 0 auto; }
+#encryption .list-keys li .saved svg {
+  color: var(--text);
+  vertical-align: text-top;
+  margin-left: 0.5rem;
+}
+#encryption .list-keys li .actions {
+  display: flex;
+  align-items: center;
+  margin: 0 0 0 auto;
+}
+#encryption .list-keys li .actions a:first-child { color: var(--error); }
 
 /**
  *
@@ -570,8 +581,10 @@ summary::-webkit-details-marker { display: none; }
 
 [data-tooltip]:hover::before {
   content: attr(data-tooltip);
+  min-width: 5rem;
   white-space: normal; /* allow text wrapping, even in stats areas */
   font: 100 italic 1rem/normal 'Lora', serif;
+  text-align: center;
   color: var(--text);
   background: var(--border);
   position: absolute;
@@ -591,6 +604,16 @@ summary::-webkit-details-marker { display: none; }
   border-style: solid;
   border-color: var(--border) transparent transparent transparent;
   z-index: 1;
+}
+
+/* Assume tooltips for action links can be right-aligned */
+.actions [data-tooltip]:hover::before, .links [data-tooltip]:hover::before {
+  left: unset;
+  right: 0;
+}
+.actions [data-tooltip]:hover::after, .links [data-tooltip]:hover::after {
+  left: unset;
+  right: 1rem;
 }
 
 /**
@@ -621,6 +644,65 @@ footer svg {
 }
 
 footer a, footer span { vertical-align: middle; }
+
+/**
+ *
+ * Modal Styles
+ *
+ */
+
+.modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  width: fit-content;
+  background: var(--element);
+  border-radius: 5px;
+  height: fit-content;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.modal .container {
+  display: flex;
+  background: var(--active-element);
+  padding: 2rem;
+  border-radius: 5px 5px 0 0;
+}
+
+.modal .container svg {
+  width: 24px;
+  color: var(--error);
+}
+
+.modal .container .content { margin-left: 1rem; }
+.modal .container .content span { font-style: italic; }
+.modal .container .content p {
+  font-size: 1rem;
+  color: var(--sub-text);
+  margin-bottom: 0;
+}
+
+.modal .actions {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-evenly;
+}
+.modal .actions .cancel {
+  background: transparent;
+  color: var(--sub-text);
+  border: 2px solid var(--sub-text);
+}
 
 /**
  *
@@ -690,7 +772,7 @@ footer a, footer span { vertical-align: middle; }
     margin-top: 1rem;
   }
 
-  #encryption .list-keys li .actions { margin: 1rem auto 0; }
+  #encryption .operation-area button { margin-top: 1rem; }
   #encryption .operation-area .footer label.upload { margin: 0.5rem 0; }
 
   footer {
