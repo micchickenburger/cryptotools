@@ -1,20 +1,25 @@
 /**
  * @file Contains functionality for encoding and decoding raw data
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  */
 
 import * as bcrypt from 'bcryptjs';
 
 enum ENCODING {
+  // Non-transformable encodings
   BOOLEAN = -1,
-  UUID = -2,
-  BIGINT = -3, // we could decode to other formats but decimal is uncommon for data representation
+  BIGINT = -2,
+  INTEGER = -3,
+  UUID = -4,
+  JSON = -5,
   UNKNOWN = 0,
 
+  // Transformable encodings
   BINARY = 2,
   OCTAL = 8,
+  'UTF-8' = 100,
   HEXADECIMAL = 16,
   BASE64 = 64, // RFC 4648
   BASE64_CRYPT = 640, // Nonstandard OpenBSD alphabet used by crypt, bcrypt
@@ -42,6 +47,8 @@ const encode = (rawData: ArrayBuffer, radix: ENCODING): string => {
   if (radix === ENCODING.BASE64_CRYPT) {
     return bcrypt.encodeBase64(array, array.length);
   }
+
+  if (radix === ENCODING['UTF-8']) return (new TextDecoder()).decode(rawData);
 
   let padding: number = 0;
   if (radix === ENCODING.BINARY) padding = 8;
@@ -97,6 +104,8 @@ const decode = (encodedData: string, radix: ENCODING): ArrayBuffer => {
     return array.buffer;
   }
 
+  if (radix === ENCODING['UTF-8']) return (new TextEncoder()).encode(encodedData);
+
   let separator: number = 0;
   if (radix === ENCODING.BINARY) separator = 8;
   if (radix === ENCODING.OCTAL) separator = 3;
@@ -129,6 +138,14 @@ const guessEncoding = (encodedData: string): ENCODING => {
 
   // Base64 crypt uses a dot instead of a plus, and has no padding or groupings
   if (/^[0-9a-zA-Z./]+$/.test(encodedData)) return ENCODING.BASE64_CRYPT;
+
+  // Since any javascript primitive in a string is valid JSON, let's be more restrictive
+  if (/{/.test(encodedData)) {
+    try {
+      JSON.parse(encodedData);
+      return ENCODING.JSON;
+    } catch (e) { /* do nothing */ }
+  }
 
   //
   // Password Hashing Formats

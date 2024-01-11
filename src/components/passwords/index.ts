@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality for hashing and verification of passwords
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * Due to their pervasive and high-value nature, passwords require special
  * application of digest functions to reduce abuse.  In particular, they
@@ -37,14 +37,10 @@ const updateHashView = () => {
   const hash = hashSelect.selectedOptions[0].dataset.alg;
   const target = document.querySelector(`#passwords #${operation}-${hash}`);
 
-  const settings = document.querySelectorAll('#passwords .settings');
+  const settings = document.querySelectorAll('#passwords .subsection > .settings');
   settings.forEach((setting) => setting.classList.remove('active'));
   target?.classList.add('active');
 };
-
-document.addEventListener('DOMContentLoaded', () => {
-  hashSelect.dispatchEvent(new Event('change'));
-});
 
 hashOperation.addEventListener('change', updateHashView);
 hashSelect.addEventListener('change', updateHashView);

@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality for the Secure Remote Password (SRP) Protocol
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * The Secure Remote Password (SRP) Protocol is a Password-Authenticated Key
  * Exchange (PAKE) protocol, and enables a user and a server to authenticate
@@ -67,8 +67,8 @@ button.addEventListener('click', async () => {
     );
 
     showResults([
-      { label: 'Salt (store in user record)', value: salt.toString(), defaultEncoding: ENCODING.BIGINT },
-      { label: 'Verifier (store in user record)', value: verifier.toString(), defaultEncoding: ENCODING.BIGINT },
+      { label: 'Salt • Store in user record', value: salt.toString(), defaultEncoding: ENCODING.BIGINT },
+      { label: 'Verifier • Store in user record', value: verifier.toString(), defaultEncoding: ENCODING.BIGINT },
       { label: 'Prime', value: SRPParameters.PrimeGroup[primeGroup].N.toString(), defaultEncoding: ENCODING.BIGINT },
     ]);
   } catch (e) { handleError(e); }

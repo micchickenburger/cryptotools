@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality for secure generation of random data
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * The Web Crypto API lets us generate random data suitable for cryptographic
  * operations using a native Pseudo Random Number Generator.  We enable
@@ -15,8 +15,9 @@ import { handleError } from '../lib/error';
 import load from '../lib/loader';
 import { hideResults, showResults } from '../lib/result';
 
-const menuItems = document.querySelectorAll<HTMLLIElement>('#random .section-menu li');
-const sections = document.querySelectorAll<HTMLDivElement>('#random .subsection .settings');
+const randomElement = document.querySelector<HTMLElement>('#random')!;
+const menuItems = randomElement.querySelectorAll<HTMLLIElement>('menu li');
+const sections = randomElement.querySelectorAll<HTMLDivElement>('.settings');
 
 menuItems.forEach((item) => item.addEventListener('click', () => {
   menuItems.forEach((i) => i.classList.remove('active'));
@@ -26,14 +27,14 @@ menuItems.forEach((item) => item.addEventListener('click', () => {
   hideResults();
 }));
 
-const prngGenerateButton = document.querySelector<HTMLButtonElement>('#random button')!;
+const prngGenerateButton = randomElement.querySelector<HTMLButtonElement>('button')!;
 prngGenerateButton.addEventListener('click', () => {
   load(0);
 
   try {
-    const prngByteLength = document.querySelector<HTMLInputElement>('#random .byte-length')!;
-    const prngOutput = document.querySelector<HTMLSelectElement>('#random .output')!;
-    const op = document.querySelector<HTMLElement>('#random .section-menu li.active')!.dataset.target;
+    const prngByteLength = randomElement.querySelector<HTMLInputElement>('.byte-length')!;
+    const prngOutput = randomElement.querySelector<HTMLSelectElement>('.output')!;
+    const op = randomElement.querySelector<HTMLElement>('menu li.active')!.dataset.target;
 
     if (op === 'uuid') {
       showResults([{ label: 'UUID', value: window.crypto.randomUUID() }]);

@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality for showing operation results
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * The result element is separate from functionality-specific sections
  * and intends to display the output of some operation in a fixed-width
@@ -16,7 +16,7 @@ import {
 } from './encode';
 import {
   DONE_SVG, COPY_SVG, TEXT_SVG, RULER_SVG, CODE_SVG, DOUBLE_CHEVRON_SVG,
-  DOWNLOAD_SVG, DOWNLOAD_SIMPLE_SVG, CHEVRON_SVG,
+  DOWNLOAD_SVG, DOWNLOAD_BINARY_SVG, CHEVRON_SVG,
 } from './svg';
 
 const resultElement = document.querySelector<HTMLElement>('#results')!;
@@ -60,7 +60,7 @@ const buildResultElement = (
 
   const content = document.createElement('div');
   content.classList.add('content');
-  content.textContent = value;
+  content.textContent = `${value.substring(0, 1000)}${value.length > 1000 ? '…' : ''}`;
   container.appendChild(content);
 
   const stats = document.createElement('div');
@@ -69,11 +69,11 @@ const buildResultElement = (
   const statsItems = [{
     icon: TEXT_SVG,
     tooltip: 'Character length',
-    statValue: `${value.length} characters`,
+    statValue: `${value.length.toLocaleString()} characters`,
   }, {
     icon: RULER_SVG,
     tooltip: 'Output length',
-    statValue: `${bitLength} bits`,
+    statValue: `${bitLength.toLocaleString()} bits`,
   }];
 
   const actionItems = [{
@@ -94,15 +94,18 @@ const buildResultElement = (
     actionItems.unshift({
       tooltip: 'Download Raw Data',
       tooltipAfter: 'Downloaded!',
-      icon: DOWNLOAD_SIMPLE_SVG,
+      icon: DOWNLOAD_BINARY_SVG,
       callback: downloadEvent(rawData),
     });
 
     // Then add encoding transformation control
     const formLabel = document.createElement('label');
+    const fieldLabel = document.createElement('span');
     formLabel.classList.add('control');
-    formLabel.dataset.tooltip = 'Encoding';
+    fieldLabel.classList.add('label');
+    fieldLabel.textContent = 'Encoding';
     formLabel.innerHTML = CODE_SVG;
+    formLabel.insertBefore(fieldLabel, formLabel.firstChild);
 
     const select = document.createElement('select');
 
@@ -146,6 +149,7 @@ const buildResultElement = (
 
   statsItems.forEach(({ icon, tooltip, statValue }) => {
     const stat = document.createElement('div');
+    stat.classList.add('datum');
     if (tooltip) stat.dataset.tooltip = tooltip;
     stat.innerHTML = icon;
 
@@ -201,6 +205,10 @@ interface Result {
 const showResults = (results: Result[]) => {
   resultElement.innerHTML = DOUBLE_CHEVRON_SVG; // remove any previous results
   clearError(); // as well as any previous error
+  resultElement.scrollIntoView({
+    block: 'start',
+    behavior: 'smooth',
+  });
 
   results.forEach(({ label, value, defaultEncoding }) => {
     let encoding: ENCODING;
@@ -220,7 +228,7 @@ const showResults = (results: Result[]) => {
         byteLength = decode(value, encoding).byteLength;
       } catch (e) {
         // eslint-disable-next-line no-console
-        console.warn(`While calculating output length, tried to decode as \`${ENCODING[encoding].toLowerCase()}\` but an error occurred. Assuming utf-8 encoded text instead.`, `Value: ${content}`, e);
+        console.warn(`Cannot calculate raw data byte length for "${label}" because no decoder has been implemented for \`${ENCODING[encoding].toLowerCase()}\`. Assuming utf-8 encoded text instead.`);
         byteLength = (new TextEncoder()).encode(value).byteLength; // assume utf-8 encoded text
       }
     }
@@ -241,4 +249,4 @@ const hideResults = () => {
   clearError();
 };
 
-export { showResults, hideResults };
+export { showResults, hideResults, Result };

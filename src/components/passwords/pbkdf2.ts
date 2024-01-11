@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality for PBKDF2 hashing and verification
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * Web Crypto API includes native support for the Password-Based Key
  * Derivation Function 2 (PBKDF2).

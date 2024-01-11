@@ -1,14 +1,14 @@
 /**
  * @file Contains functionality for the main menu
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  */
 
 import { hideResults } from '../lib/result';
 
 const menuItems = document.querySelectorAll<HTMLElement>('#main-menu li');
-const sections = document.querySelectorAll<HTMLElement>('main section');
+const sections = document.querySelectorAll<HTMLElement>('main > section');
 
 menuItems.forEach((item) => item.addEventListener('click', () => {
   menuItems.forEach((i) => i.classList.remove('active'));

@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality for bcrypt hashing and verification
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * Web Crypto API does not include bcrypt support; however, the bcrypt.js
  * library runs in the browser and uses Web Crypto API's PRNG for secure
@@ -17,12 +17,12 @@ import load from '../../lib/loader';
 import { handleError } from '../../lib/error';
 
 // Update bcrypt cost iterations count
-const bcryptControl = document.querySelector<HTMLDivElement>('#hash-bcrypt .control.cost')!;
+const bcryptControl = document.querySelector<HTMLDivElement>('#hash-bcrypt .control.cost span:first-child')!;
 const bcryptCost = document.querySelector<HTMLInputElement>('#hash-bcrypt input.cost')!;
 
 bcryptCost.addEventListener('change', () => {
   const value = parseInt(bcryptCost.value, 10);
-  bcryptControl.dataset.title = `Cost: 2^${value} = ${(2 ** value).toLocaleString()} iterations`;
+  bcryptControl.textContent = `Cost • ${(2 ** value).toLocaleString()} iterations`;
 });
 
 // Bcrypt finish and progress functions
