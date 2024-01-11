@@ -60,7 +60,7 @@ const buildResultElement = (
 
   const content = document.createElement('div');
   content.classList.add('content');
-  content.textContent = value;
+  content.textContent = `${value.substring(0, 1000)}${value.length > 1000 ? '…' : ''}`;
   container.appendChild(content);
 
   const stats = document.createElement('div');
@@ -69,11 +69,11 @@ const buildResultElement = (
   const statsItems = [{
     icon: TEXT_SVG,
     tooltip: 'Character length',
-    statValue: `${value.length} characters`,
+    statValue: `${value.length.toLocaleString()} characters`,
   }, {
     icon: RULER_SVG,
     tooltip: 'Output length',
-    statValue: `${bitLength} bits`,
+    statValue: `${bitLength.toLocaleString()} bits`,
   }];
 
   const actionItems = [{

@@ -29,10 +29,11 @@ const updateLowerArea = (op: KeyUsage, alg: string) => {
 
   let placeholder: string = '';
   switch (op) {
-    case 'encrypt': placeholder = 'Paste plain text or drop files...'; break;
-    case 'decrypt': placeholder = 'Paste ciphertext or drop files...'; break;
-    case 'sign': placeholder = 'Paste plain text or drop files...'; break;
-    case 'verify': placeholder = 'Paste plain text or drop file...'; break;
+    // TODO: Support multiple files
+    case 'encrypt': placeholder = 'Paste plain text or drop a file...'; break;
+    case 'decrypt': placeholder = 'Paste ciphertext or drop a file...'; break;
+    case 'sign': placeholder = 'Paste plain text or drop a file...'; break;
+    case 'verify': placeholder = 'Paste plain text or drop a file...'; break;
     default:
   }
   if (textarea) textarea.placeholder = placeholder;
