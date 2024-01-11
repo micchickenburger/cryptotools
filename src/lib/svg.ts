@@ -1,8 +1,8 @@
 /**
  * @file Contains HTML SVG elements for dynamical element creation
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * All icons are from Phosphor, except the chevrons which are from
  * Material Design.

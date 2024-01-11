@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality for showing operation results
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * The result element is separate from functionality-specific sections
  * and intends to display the output of some operation in a fixed-width

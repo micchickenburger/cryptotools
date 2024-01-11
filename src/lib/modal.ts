@@ -1,8 +1,8 @@
 /**
  * @file Contains features for confirmation modals
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  */
 
 const removeModal = (background: HTMLElement) => (event: Event) => {

@@ -1,7 +1,7 @@
 /**
- * @file CryptoTools entry point
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
+ * CryptoTools
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
  * @license GPL-3.0-or-later
  */
 

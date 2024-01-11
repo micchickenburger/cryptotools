@@ -1,8 +1,8 @@
 /**
  * @file Handles encryption, decryption, signing, and verifying
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  */
 
 import { getKey } from './keys';

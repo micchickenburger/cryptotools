@@ -1,8 +1,8 @@
 /**
  * @file Handles functionality for "Operation Areas"
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * Operation Areas are used in sections like Digest and Encryption,
  * and consume content and produce statistics to aid the user in

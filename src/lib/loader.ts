@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality for the animated loader
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * The loader is a 1 rem thick bar at the top of the page which
  * means to convey a sense of progress for long operations.

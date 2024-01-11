@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality for cryptographic digests
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * Input data of aribtrary length can be passed through a one-way
  * cryptographic function to produce a digest, or hash of the data.

@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality for secure generation of random data
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * The Web Crypto API lets us generate random data suitable for cryptographic
  * operations using a native Pseudo Random Number Generator.  We enable

@@ -1,8 +1,8 @@
 /**
  * @file Establishes a persistent key storage via IndexedDB
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  */
 
 const DATABASE_NAME = 'cryptotools';

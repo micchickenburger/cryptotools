@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality for the Secure Remote Password (SRP) Protocol
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * The Secure Remote Password (SRP) Protocol is a Password-Authenticated Key
  * Exchange (PAKE) protocol, and enables a user and a server to authenticate

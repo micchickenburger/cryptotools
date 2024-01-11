@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality for hashing and verification of passwords
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  *
  * Due to their pervasive and high-value nature, passwords require special
  * application of digest functions to reduce abuse.  In particular, they

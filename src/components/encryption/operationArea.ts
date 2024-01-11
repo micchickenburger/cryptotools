@@ -1,8 +1,8 @@
 /**
  * @file Handles UI changes to Encryption Operation Area
- * @author Micah Henning
- * @copyright (C) 2023 Micah Henning
- * @license GPL-3.0-or-later
+ * @author Micah Henning <hello@micah.soy>
+ * @copyright (C) 2024 Micah Henning
+ * license GPL-3.0-or-later
  */
 
 import { KEY_SVG } from '../../lib/svg';
