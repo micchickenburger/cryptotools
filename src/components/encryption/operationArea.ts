@@ -32,7 +32,7 @@ const updateLowerArea = (op: KeyUsage, alg: string) => {
     case 'encrypt': placeholder = 'Paste plain text or drop files...'; break;
     case 'decrypt': placeholder = 'Paste ciphertext or drop files...'; break;
     case 'sign': placeholder = 'Paste plain text or drop files...'; break;
-    case 'verify': placeholder = 'Paste plain text with signature or drop files...'; break;
+    case 'verify': placeholder = 'Paste plain text or drop file...'; break;
     default:
   }
   if (textarea) textarea.placeholder = placeholder;
@@ -49,15 +49,14 @@ const updateLowerArea = (op: KeyUsage, alg: string) => {
 
 /**
  * Handle Key List item button clicks and update operation area
- * @param op Requested key usage
  * @param keyName Key Dictionary key
  * @param key The Crypto Key
  * @returns function Event Handler
  */
 const updateOpArea = (
-  op: KeyUsage,
   keyName: string,
   cryptoKey: CryptoKey | CryptoKeyPair,
+  operation?: KeyUsage,
 ) => () => {
   opArea?.classList.add('active');
   opArea?.scrollIntoView({
@@ -66,6 +65,7 @@ const updateOpArea = (
   });
 
   const isSymmetric = cryptoKey instanceof CryptoKey;
+  let op = operation;
 
   let friendlyName = keyName;
   let key: CryptoKey;
@@ -74,8 +74,22 @@ const updateOpArea = (
   if (isSymmetric) {
     key = cryptoKey;
     usages = key.usages;
+
+    // Prefer "Encrypt" and "Sign" tabs
+    if (!op) {
+      if (usages.includes('encrypt')) op = 'encrypt';
+      else if (usages.includes('sign')) op = 'sign';
+      else [op] = usages;
+    }
   } else {
     usages = cryptoKey.privateKey.usages.concat(cryptoKey.publicKey.usages);
+
+    // Prefer "Encrypt" and "Sign" tabs
+    if (!op) {
+      if (usages.includes('encrypt')) op = 'encrypt';
+      else if (usages.includes('sign')) op = 'sign';
+      else [op] = usages;
+    }
 
     let whichKey: string = '';
     switch (op) {
@@ -123,7 +137,7 @@ tabs?.forEach((tab) => {
   tab.addEventListener('click', () => {
     const keyName = opArea!.dataset.key || '';
     const key = getKey(keyName);
-    updateOpArea(op, keyName, key)();
+    updateOpArea(keyName, key, op)();
   });
 });
 

@@ -194,6 +194,12 @@
                 </select>
                 <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
               </label>
+              <label class="control save">
+                <span class="label">Persist</span>
+                <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 91.31V208a8 8 0 0 1-8 8h-32v-64a8 8 0 0 0-8-8H88a8 8 0 0 0-8 8v64H48a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8h116.69a8 8 0 0 1 5.65 2.34l43.32 43.31a8 8 0 0 1 2.34 5.66" opacity=".2"/><path d="M219.31 80L176 36.69A15.86 15.86 0 0 0 164.69 32H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V91.31A15.86 15.86 0 0 0 219.31 80M168 208H88v-56h80Zm40 0h-24v-56a16 16 0 0 0-16-16H88a16 16 0 0 0-16 16v56H48V48h116.69L208 91.31ZM160 72a8 8 0 0 1-8 8H96a8 8 0 0 1 0-16h56a8 8 0 0 1 8 8"/></g></svg>
+                <span>Save Locally</span>
+                <input type="checkbox">
+              </label>
               <div class="settings algorithm encryption active">
                 <label class="control algorithm encryption">
                   <span class="label">Algorithm • AES Galois Counter Mode</span>
@@ -421,7 +427,7 @@
               </div>
               <div class="settings decrypt flex aes-ctr">
                 <label class="control counter">
-                  <span class="label">Counter Value</span>
+                  <span class="label required">Counter Value</span>
                   <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M240 64v128a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16V64a16 16 0 0 1 16-16h192a16 16 0 0 1 16 16" opacity=".2"/><path d="M72 92a12 12 0 1 1-12-12a12 12 0 0 1 12 12m56-12a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 24a12 12 0 1 0-12-12a12 12 0 0 0 12 12M60 152a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12"/></g></svg>
                   <select class="input-encoding">
                     <option value="2">Binary</option>
@@ -460,7 +466,7 @@
               </div>
               <div class="settings decrypt flex aes-cbc">
                 <label class="multi control iv">
-                  <span class="label">IV Value</span>
+                  <span class="label required">IV Value</span>
                   <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M240 64v128a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16V64a16 16 0 0 1 16-16h192a16 16 0 0 1 16 16" opacity=".2"/><path d="M72 92a12 12 0 1 1-12-12a12 12 0 0 1 12 12m56-12a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 24a12 12 0 1 0-12-12a12 12 0 0 0 12 12M60 152a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12"/></g></svg>
                   <select class="input-encoding">
                     <option value="2">Binary</option>
@@ -521,7 +527,7 @@
                   <textarea rows="10" placeholder="Paste text..."></textarea>
                 </label>
                 <label class="multi control iv">
-                  <span class="label">IV Value</span>
+                  <span class="label required">IV Value</span>
                   <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M240 64v128a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16V64a16 16 0 0 1 16-16h192a16 16 0 0 1 16 16" opacity=".2"/><path d="M72 92a12 12 0 1 1-12-12a12 12 0 0 1 12 12m56-12a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 24a12 12 0 1 0-12-12a12 12 0 0 0 12 12M60 152a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12"/></g></svg>
                   <select class="input-encoding">
                     <option value="2">Binary</option>

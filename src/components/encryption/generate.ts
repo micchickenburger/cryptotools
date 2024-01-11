@@ -154,7 +154,8 @@ button?.addEventListener('click', async () => {
     }
 
     const key = await window.crypto.subtle.generateKey(params, false, keyUsage);
-    addKey(name, key);
+    const persist = generateElement.querySelector<HTMLInputElement>('.save input')?.checked;
+    addKey(name, key, persist);
   } catch (e) {
     handleError(e);
     button.disabled = false;

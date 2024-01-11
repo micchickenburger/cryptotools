@@ -5,8 +5,10 @@
  * @license GPL-3.0-or-later
  */
 
+import { handleError } from '../../lib/error';
 import load from '../../lib/loader';
 import { KEYS_SVG, KEY_SVG } from '../../lib/svg';
+import { getKeys, openDatabase, storeKey } from './database';
 // eslint-disable-next-line import/no-cycle
 import updateOpArea from './operationArea';
 
@@ -24,6 +26,7 @@ const updateKeyList = () => {
 
   Object.entries(keys).forEach(([k, v]) => {
     const li = document.createElement('li');
+    li.addEventListener('click', updateOpArea(k, v));
 
     const container = document.createElement('div');
     const icon = document.createElement('span');
@@ -63,12 +66,6 @@ const updateKeyList = () => {
 
     const actions = document.createElement('div');
     actions.classList.add('actions');
-    usages.forEach((usage) => {
-      const button = document.createElement('button');
-      button.textContent = `${usage.charAt(0).toUpperCase()}${usage.slice(1)}`;
-      button.addEventListener('click', updateOpArea(usage, k, v));
-      actions.appendChild(button);
-    });
     li.appendChild(actions);
 
     list.appendChild(li);
@@ -83,9 +80,11 @@ const showKeys = () => document.querySelector<HTMLElement>('#encryption li[data-
 /**
  * Add keys to dictionary
  */
-const addKey = (name: string, key: CryptoKey | CryptoKeyPair) => {
+const addKey = (name: string, key: CryptoKey | CryptoKeyPair, save: boolean = false) => {
   if (keys[name]) throw new Error(`A key by the name of "${name}" already exists.`);
   keys[name] = key;
+
+  if (save) storeKey(name, key);
 
   updateKeyList();
   showKeys();
@@ -99,5 +98,17 @@ const getKey = (name: string) => {
   if (!keys[name]) throw new Error(`A key by the name of "${name}" does not exist.`);
   return keys[name];
 };
+
+// Start by opening the Keys database
+(async () => {
+  try {
+    await openDatabase();
+
+    // Populate the keys dictionary
+    const k = await getKeys();
+    k.forEach(({ name, key }) => { keys[name] = key; });
+    updateKeyList();
+  } catch (e) { handleError(e); }
+})();
 
 export { addKey, getKey, updateKeyList };
