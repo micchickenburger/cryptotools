@@ -47,7 +47,7 @@ const register = async (
   return { salt, verifier };
 };
 
-const srpSettings = document.querySelector<HTMLElement>('#hash-SRP')!;
+const srpSettings = document.querySelector<HTMLElement>('#registration-SRP')!;
 const button = srpSettings.querySelector<HTMLButtonElement>('button')!;
 
 button.addEventListener('click', async () => {
