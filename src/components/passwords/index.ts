@@ -46,7 +46,7 @@ const updateStats = () => {
     const option = document.createElement('option');
     if (i === 0) option.selected = true;
     option.value = op;
-    option.textContent = `${op[0].toUpperCase()}${op.substring(1)}`;
+    option.textContent = `${op[0].toUpperCase()}${op.substring(1).replace('-', ' ')}`;
     operation.appendChild(option);
   });
 

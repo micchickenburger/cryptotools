@@ -346,7 +346,7 @@ main p {
   flex-wrap: wrap;
 }
 form.settings { padding: 1rem 0 0; }
-#verify-PBKDF2, #authentication-SRP { padding-bottom: 1rem; } /* TODO: may not be needed after password op overhaul */
+#verify-PBKDF2 { padding-bottom: 1rem; } /* TODO: may not be needed after password op overhaul */
 
 .tabs li.active, .tabs li:hover {
   background: var(--active-element);
