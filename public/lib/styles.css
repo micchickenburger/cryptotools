@@ -192,6 +192,12 @@ label > span.label {
   top: -0.7rem;
   left: 0.5rem;
   padding: 0 0.1rem;
+
+  /* on mobile long labels could wrap and cover the field */
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 1rem);
+  overflow: hidden;
 }
 label > span.label.required::after {
   content: '*';
@@ -337,9 +343,10 @@ main p {
   background: var(--active-element);
   width: 100%;
   border-radius: 0 0 5px 5px;
+  flex-wrap: wrap;
 }
 form.settings { padding: 1rem 0 0; }
-#verify-PBKDF2, #verify-SRP { padding-bottom: 1rem; } /* TODO: may not be needed after password op overhaul */
+#verify-PBKDF2 { padding-bottom: 1rem; } /* TODO: may not be needed after password op overhaul */
 
 .tabs li.active, .tabs li:hover {
   background: var(--active-element);
@@ -352,6 +359,15 @@ form.settings { padding: 1rem 0 0; }
 .settings.column { flex-direction: column; }
 
 .settings button { margin: 1rem; }
+
+/* Headers in settings */
+.settings h2 {
+  color: var(--sub-text);
+  font: 100 italic 1rem 'Lora', serif;
+  text-align: left;
+  align-self: flex-start;
+  margin: .5rem 1rem 0.25rem;
+}
 
 /* Two rows of settings */
 .multi-row.active { display: block; }
