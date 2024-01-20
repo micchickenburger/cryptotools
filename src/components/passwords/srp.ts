@@ -158,10 +158,10 @@ authenticateButton.addEventListener('click', async () => {
   const hashAlgorithm = String(authenticateSection.querySelector<HTMLSelectElement>('select.hash-algorithm')!.selectedOptions[0].dataset.alg);
   const username = authenticateSection.querySelector<HTMLInputElement>('input.identity')?.value || '';
   const password = authenticateSection.querySelector<HTMLInputElement>('input[type="password"]')?.value || '';
-  const salt = BigInt(authenticateSection.querySelector<HTMLTextAreaElement>('.salt textarea')?.value || '');
-  const verifier = BigInt(authenticateSection.querySelector<HTMLTextAreaElement>('.verifier textarea')?.value || '');
 
   try {
+    const salt = BigInt(authenticateSection.querySelector<HTMLTextAreaElement>('.salt textarea')?.value || '');
+    const verifier = BigInt(authenticateSection.querySelector<HTMLTextAreaElement>('.verifier textarea')?.value || '');
     const routines = getSRPRoutines({ strict, primeGroup, hashAlgorithm });
     const results: Result[] = [];
 
@@ -186,10 +186,10 @@ proveIdentityButton.addEventListener('click', async () => {
   const hashAlgorithm = String(proveIdentitySection.querySelector<HTMLSelectElement>('select.hash-algorithm')!.selectedOptions[0].dataset.alg);
   const username = proveIdentitySection.querySelector<HTMLInputElement>('input.identity')?.value || '';
   const password = proveIdentitySection.querySelector<HTMLInputElement>('input[type="password"]')?.value || '';
-  const salt = BigInt(proveIdentitySection.querySelector<HTMLTextAreaElement>('.salt textarea')?.value || '');
   const publicKey = proveIdentitySection.querySelector<HTMLTextAreaElement>('.public-key textarea')?.value || '';
 
   try {
+    const salt = BigInt(proveIdentitySection.querySelector<HTMLTextAreaElement>('.salt textarea')?.value || '');
     const routines = getSRPRoutines({ strict, primeGroup, hashAlgorithm });
     const results: Result[] = [];
 
