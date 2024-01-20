@@ -68,6 +68,17 @@ const encode = (rawData: ArrayBuffer, radix: ENCODING): string => {
 const decode = (encodedData: string, radix: ENCODING): ArrayBuffer => {
   let array: Uint8Array;
 
+  if (radix === ENCODING.BOOLEAN) {
+    // This operation will always return a length of 1 byte, which is the
+    // minimum length of a boolean value since 1 byte is the standard
+    // minimum addressable memory size in modern CPU architectures
+    array = new Uint8Array(1);
+
+    // we want an exception if the encoded data is not stringified boolean
+    array[0] = Number(JSON.parse(encodedData)); // 1 or 0
+    return array.buffer;
+  }
+
   if (radix === ENCODING.BASE64) {
     const str = atob(encodedData);
     array = new Uint8Array(str.length);
