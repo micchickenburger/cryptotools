@@ -14,13 +14,23 @@
  */
 
 import { handleError } from '../lib/error';
-import { ENCODING, decode } from '../lib/encode';
+import { ENCODING, decode, encode } from '../lib/encode';
 import load from '../lib/loader';
 import { hideResults, showResults } from '../lib/result';
 
 const digestSection = document.querySelector('#digest')!;
 const digestSelect = digestSection.querySelector<HTMLSelectElement>('.digest-select')!;
 const textarea = digestSection.querySelector('textarea')!;
+const details = digestSection.querySelector('details');
+const button = digestSection.querySelector('button')!;
+
+/**
+ * Digest Verification UI changes
+ */
+details?.addEventListener('toggle', () => {
+  if (details.open) button.textContent = 'Verify Digest';
+  else button.textContent = 'Generate Digest';
+});
 
 /**
  * Digest Generation
@@ -32,14 +42,29 @@ async function digestMessage(message: string, algorithm: string) {
   return digest;
 }
 
-const button = digestSection.querySelector('button');
-button?.addEventListener('click', async () => {
+button.addEventListener('click', async () => {
   load(0);
+
   const algorithm = digestSelect.selectedOptions[0].dataset.alg!;
   const text = textarea.value;
+
   try {
     const digest = await digestMessage(text, algorithm);
-    showResults([{ label: `${algorithm} Digest`, value: digest, defaultEncoding: ENCODING.HEXADECIMAL }]);
+
+    // If the details element is open, we are verifying a digest
+    if (details?.open) {
+      const encoding = Number(details.querySelector<HTMLSelectElement>('select.input-encoding')?.selectedOptions[0].value);
+      const value = details.querySelector<HTMLInputElement>('input.hash')?.value || '';
+      const comparedDigest = decode(value, encoding);
+      showResults([{
+        label: `${algorithm} Digest Verified?`,
+        value: String(
+          encode(digest, ENCODING.HEXADECIMAL) === encode(comparedDigest, ENCODING.HEXADECIMAL),
+        ),
+      }]);
+    } else {
+      showResults([{ label: `${algorithm} Digest`, value: digest, defaultEncoding: ENCODING.HEXADECIMAL }]);
+    }
   } catch (e) { handleError(e); }
 });
 
