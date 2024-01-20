@@ -30,8 +30,7 @@ enum ENCODING {
 }
 
 /**
- * Encode raw binary data into a string of binary, octal, hexadecimal, or
- * Base 64 text.
+ * Encode raw binary data into a string
  *
  * @param rawData Source data to encode
  * @param radix The base representation of the encoding
@@ -60,8 +59,7 @@ const encode = (rawData: ArrayBuffer, radix: ENCODING): string => {
 };
 
 /**
- * Decode a string of binary, octal, hexadecimal, or Base 64 text into raw
- * binary data.
+ * Decode a string into raw binary data
  *
  * @param encodedData Source data to decode
  * @param radix The base representation of the encoding
@@ -123,8 +121,9 @@ const decode = (encodedData: string, radix: ENCODING): ArrayBuffer => {
 
 /**
  * Guess the encoding of a string based on character groupings
+ *
  * @param encodedData Source data
- * @returns number
+ * @returns encoding radix
  */
 const guessEncoding = (encodedData: string): ENCODING => {
   // Start with more restrictive/confident character sets and work our way down
