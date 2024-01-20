@@ -72,7 +72,7 @@ const classState = (element: HTMLElement, add: boolean) => () => {
 };
 
 opAreas.forEach((opArea) => {
-  const textareas = opArea.querySelectorAll<HTMLTextAreaElement>('textarea');
+  const textareas = opArea.querySelectorAll<HTMLTextAreaElement>('.input > textarea');
 
   textareas.forEach((textarea) => {
     // Drag-and-drop
@@ -87,7 +87,7 @@ opAreas.forEach((opArea) => {
 
     // Character Count
     textarea?.addEventListener('input', () => {
-      const characterCount = textarea.parentElement!.querySelector('.character-count')!;
+      const characterCount = textarea.parentElement!.parentElement!.querySelector('.character-count')!;
       const count = textarea.value.length;
       if (count === 1) characterCount.textContent = '1 character';
       else characterCount.textContent = `${count} characters`;
