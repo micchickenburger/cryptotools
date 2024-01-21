@@ -30,8 +30,7 @@ enum ENCODING {
 }
 
 /**
- * Encode raw binary data into a string of binary, octal, hexadecimal, or
- * Base 64 text.
+ * Encode raw binary data into a string
  *
  * @param rawData Source data to encode
  * @param radix The base representation of the encoding
@@ -60,8 +59,7 @@ const encode = (rawData: ArrayBuffer, radix: ENCODING): string => {
 };
 
 /**
- * Decode a string of binary, octal, hexadecimal, or Base 64 text into raw
- * binary data.
+ * Decode a string into raw binary data
  *
  * @param encodedData Source data to decode
  * @param radix The base representation of the encoding
@@ -69,6 +67,17 @@ const encode = (rawData: ArrayBuffer, radix: ENCODING): string => {
  */
 const decode = (encodedData: string, radix: ENCODING): ArrayBuffer => {
   let array: Uint8Array;
+
+  if (radix === ENCODING.BOOLEAN) {
+    // This operation will always return a length of 1 byte, which is the
+    // minimum length of a boolean value since 1 byte is the standard
+    // minimum addressable memory size in modern CPU architectures
+    array = new Uint8Array(1);
+
+    // we want an exception if the encoded data is not stringified boolean
+    array[0] = Number(JSON.parse(encodedData)); // 1 or 0
+    return array.buffer;
+  }
 
   if (radix === ENCODING.BASE64) {
     const str = atob(encodedData);
@@ -123,8 +132,9 @@ const decode = (encodedData: string, radix: ENCODING): ArrayBuffer => {
 
 /**
  * Guess the encoding of a string based on character groupings
+ *
  * @param encodedData Source data
- * @returns number
+ * @returns encoding radix
  */
 const guessEncoding = (encodedData: string): ENCODING => {
   // Start with more restrictive/confident character sets and work our way down

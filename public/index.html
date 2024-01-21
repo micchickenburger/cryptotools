@@ -95,7 +95,34 @@
                 <span>FIPS 180-4 &sect; 6.2</span>
               </li>
             </menu>
-            <textarea rows="10" placeholder="Paste text or drop files..." spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+            <div class="input">
+              <textarea rows="10" placeholder="Paste text or drop files..." spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+              <div class="settings active flex">
+                <details>
+                  <summary>
+                    <span>Verify Digest</span>
+                    <span class="closed">
+                      <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 48v160a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8h160a8 8 0 0 1 8 8" opacity=".2"/><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8"/></g></svg>
+                    </span>
+                    <span class="opened">
+                      <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 48v160a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8h160a8 8 0 0 1 8 8" opacity=".2"/><path d="M224 128a8 8 0 0 1-8 8H40a8 8 0 0 1 0-16h176a8 8 0 0 1 8 8"/></g></svg>
+                    </span>
+                  </summary>
+                  <label class="multi control verify">
+                    <span class="label">Digest</span>
+                    <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M240 64v128a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16V64a16 16 0 0 1 16-16h192a16 16 0 0 1 16 16" opacity=".2"/><path d="M72 92a12 12 0 1 1-12-12a12 12 0 0 1 12 12m56-12a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 24a12 12 0 1 0-12-12a12 12 0 0 0 12 12M60 152a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12"/></g></svg>
+                    <select class="input-encoding">
+                      <option value="2">Binary</option>
+                      <option value="8">Octal</option>
+                      <option value="16" selected>Hexadecimal</option>
+                      <option value="64">Base64</option>
+                    </select>
+                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
+                    <input type="text" class="hash" placeholder="da39a3ee5e6b4b0d3255bfef95601890afd80709">
+                  </label>
+                </details>
+              </div>
+            </div>
             <div class="footer">
               <label class="control encoding">
                 <span class="label">Encoding</span>
@@ -411,7 +438,7 @@
                       <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 48v160a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8h160a8 8 0 0 1 8 8" opacity=".2"/><path d="M224 128a8 8 0 0 1-8 8H40a8 8 0 0 1 0-16h176a8 8 0 0 1 8 8"/></g></svg>
                     </span>
                   </summary>
-                  <label class="control counter">
+                  <label class="multi control counter">
                     <span class="label">Counter Value • Leave blank to generate</span>
                     <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M240 64v128a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16V64a16 16 0 0 1 16-16h192a16 16 0 0 1 16 16" opacity=".2"/><path d="M72 92a12 12 0 1 1-12-12a12 12 0 0 1 12 12m56-12a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 24a12 12 0 1 0-12-12a12 12 0 0 0 12 12M60 152a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12"/></g></svg>
                     <select class="input-encoding">
@@ -426,7 +453,7 @@
                 </details>
               </div>
               <div class="settings decrypt flex aes-ctr">
-                <label class="control counter">
+                <label class="multi control counter">
                   <span class="label required">Counter Value</span>
                   <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M240 64v128a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16V64a16 16 0 0 1 16-16h192a16 16 0 0 1 16 16" opacity=".2"/><path d="M72 92a12 12 0 1 1-12-12a12 12 0 0 1 12 12m56-12a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 24a12 12 0 1 0-12-12a12 12 0 0 0 12 12M60 152a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12m68 0a12 12 0 1 0 12 12a12 12 0 0 0-12-12"/></g></svg>
                   <select class="input-encoding">
