@@ -514,7 +514,7 @@ summary::-webkit-details-marker { display: none; }
  *
  */
 
-#error {
+#error, .warning {
   font-size: 1rem;
   background: var(--element);
   display: none;
@@ -525,13 +525,18 @@ summary::-webkit-details-marker { display: none; }
   border-radius: 5px;
   margin: 0 auto;
 }
-#error.active { display: flex; }
+#error.active, #warning.active, noscript .warning { display: flex; }
+.warning {
+  border-color: var(--secondary);
+  margin-bottom: 1rem;
+}
 
-#error svg {
+#error svg, .warning svg {
   min-width: 30px;
   color: var(--error);
   margin-right: 1rem;
 }
+.warning svg { color: var(--secondary); }
 
 /**
  *
