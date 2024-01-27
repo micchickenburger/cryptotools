@@ -1,0 +1,216 @@
+.operations-menu, .settings, .tabs
+  margin: 0
+  padding: 0
+  list-style: none
+  display: flex
+  font: 200 1rem 'Inconsolata', monospace
+  align-items: center
+
+.settings
+  background: $active-element
+  width: 100%
+  border-radius: 0 0 5px 5px
+  flex-wrap: wrap
+
+form.settings
+  padding: 1rem 0 0
+
+#verify-PBKDF2
+  padding-bottom: 1rem // TODO: may not be needed after password op overhaul
+
+.tabs li.active, .tabs li:hover
+  background: $active-element
+  border-radius: 5px 5px 0 0
+
+.tabs li svg
+  color: $primary
+
+.settings
+  display: none
+
+  // Headers in settings 
+  button
+    margin: 1rem
+
+  h2
+    color: $sub-text
+    font: 100 italic 1rem 'Lora', serif
+    text-align: left
+    align-self: flex-start
+    margin: .5rem 1rem 0.25rem
+
+.settings.active
+  display: flex
+
+.settings.column
+  flex-direction: column
+
+// Two rows of settings 
+.multi-row.active
+  display: block
+
+// Hidden settings 
+#random .subsection button
+  width: 100%
+  border-radius: 0 0 5px 5px
+
+.operations-menu > li, .tabs li
+  position: relative
+  display: flex
+  min-height: 3rem
+  align-items: center
+  padding: 0 1rem
+
+.operations-menu > li label
+  margin: 1rem 0 0.25rem
+
+.tabs li
+  cursor: pointer
+
+.operation-area
+  position: relative
+
+  .footer .links
+    margin: 0 1rem 0 auto
+
+#encryption
+  .operation-area, .operation-area div.signature
+    display: none
+
+  .operation-area div.signature
+    border-top: 1rem solid $background
+
+  .operation-area.active, .operation-area div.signature.active
+    display: block
+
+  .operation-area menu li
+    display: none
+
+  .operation-area menu li.show
+    display: flex
+
+  .operation-area .settings > label.additional-data
+    width: 100%
+
+  .operation-area button
+    width: 100%
+    border-radius: 0 0 5px 5px
+
+  .datum.confidentiality svg:last-of-type,
+  .datum.integrity svg:last-of-type
+    display: none
+
+  .datum.confidentiality.no svg:last-of-type,
+  .datum.integrity.no svg:last-of-type
+    color: $error
+    display: initial
+    width: 28px
+    position: absolute
+    top: 4px
+    left: 11px
+
+  .list-keys ul
+    text-align: left
+    padding: 0
+    margin: 1rem
+    width: 100%
+
+  .list-keys li
+    display: flex
+    flex-wrap: wrap
+    line-height: 1.5rem
+    padding: 1rem
+    border-top: 2px solid $border
+    cursor: pointer
+
+  .list-keys li:first-child
+    border-top: none
+
+  // Hover effect prevents tooltip visibility 
+  // .list-keys li:hover
+    // background: $border
+    // border-radius: 5px
+  // .list-keys li:hover + li
+  //   border-top-color: transparent
+
+  .list-keys li .container svg
+    color: $primary
+
+  .list-keys li .container
+    display: flex
+    align-items: center
+
+  .list-keys li .meta
+    display: flex
+    flex-direction: column
+    margin-left: 1rem
+
+  .list-keys li span:first-child
+    font: 100 italic 1rem 'Lora', serif
+    color: $primary
+
+  .list-keys li .saved svg
+    color: $text
+    vertical-align: text-top
+    margin-left: 0.5rem
+
+  .list-keys li .actions
+    display: flex
+    align-items: center
+    margin: 0 0 0 auto
+
+  .list-keys li .actions a:first-child
+    color: $error
+
+// Advanced Settings 
+details
+  width: 100%
+  border-top: 1px solid $border
+  margin-top: 1.5rem
+
+  summary
+    background: $active-element
+    font: 100 italic 1rem 'Lora', serif
+    width: fit-content
+    padding: 0 1rem 1rem
+    margin: -11px auto 0 1rem
+    cursor: pointer
+    list-style: none
+
+  span.opened
+    display: none
+
+  svg
+    color: $secondary
+
+details[open]
+  span.opened
+    display: initial
+
+  span.closed
+    display: none
+
+summary::-webkit-details-marker
+  display: none
+
+.operation-area
+  .footer
+    background: $element
+    font: 200 1rem 'Inconsolata', monospace
+    display: flex
+    justify-content: space-between
+    align-items: center
+    border-radius: 0 0 5px 5px
+
+  .footer div
+    margin: 0.5rem 1rem
+
+  // We may use javascript to create these elements, which causes
+  // "automatic" spacing between the svg and span elements.  Using
+  // flexbox removes this
+  .footer div, .stats .datum
+    display: flex
+
+  .footer button
+    border-radius: 0 0 5px 0
+    height: 75px

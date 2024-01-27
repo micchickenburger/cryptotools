@@ -1,0 +1,77 @@
+@import colors
+
+#loader
+  position: fixed
+  z-index: 1
+  top: 0
+  left: 0
+  width: 100%
+  height: 1rem
+  background: $primary
+
+#loader.animate
+  transition: width 250ms ease-in-out
+
+#main-menu, .section-menu
+  list-style: none
+  display: flex
+  font-size: 1rem
+  margin: 0 auto
+  background: $element
+  border-radius: 5px 5px 0 0
+  width: fit-content
+  padding: 0
+
+#main-menu
+  border-radius: 5px
+  margin-top: max(3rem, 5vh)
+
+#main-menu > li, .section-menu li
+  padding: 1rem
+  border-radius: 5px
+  cursor: pointer
+  margin: 0.3rem
+  display: flex
+  align-items: center
+
+#main-menu > li svg, .section-menu > li svg
+  width: 30px
+  margin-right: 10px
+  color: $primary
+
+#main-menu > li.active, #main-menu > li:hover, .section-menu > li.active, .section-menu > li:hover
+  background: $active-element
+
+main
+  width: 80vw
+  min-height: 80vh
+  max-width: 1200px
+  margin: 0 auto
+  margin-top: max(2rem, 3vh)
+  text-align: center
+
+  section
+    display: none
+
+  section.active
+    display: block
+
+  h1
+    margin: 0 0 1rem
+
+  p.subtitle
+    color: $sub-text
+
+  .subsection
+    width: fit-content
+    margin: 3rem auto 1.5rem
+    border-radius: 5px
+    background: $element
+
+  // Readability
+  .subsection.full
+    width: 100%
+
+  p
+    margin: 0 auto
+    max-width: 800px

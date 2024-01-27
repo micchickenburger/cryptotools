@@ -1,0 +1,27 @@
+@import ../colors
+  
+#error, .warning
+  font-size: 1rem
+  background: $element
+  display: none
+  align-items: center
+  width: fit-content
+  padding: 1rem
+  border: 2px solid $error
+  border-radius: 5px
+  margin: 0 auto
+
+#error.active, #warning.active, noscript .warning
+  display: flex
+
+.warning
+  border-color: $secondary
+  margin-bottom: 1rem
+
+#error svg, .warning svg
+  min-width: 30px
+  color: $error
+  margin-right: 1rem
+
+.warning svg
+  color: $secondary

@@ -1,0 +1,57 @@
+@import ../colors
+
+#results
+  color: $text
+  font-family: 'Inconsolata', monospace
+  opacity: 0
+  transition: opacity 250ms ease-in-out
+
+  // Double chevron 
+  > svg
+    width: 3rem
+
+  .result
+    background: $active-element
+    margin: 1.5rem 0
+    border-radius: 5px
+
+  .result h2
+    font: 100 italic 1rem 'Lora', serif
+    color: $sub-text
+    text-align: left
+    padding-top: 1rem
+    margin: 0 0 0 1rem
+
+  .result .content
+    white-space: pre-wrap
+    word-break: break-all
+    margin: 2rem
+    text-align: left
+
+.stats
+  background: $element
+  display: flex
+  font-size: 1rem
+  border-radius: 0 0 5px 5px
+  align-items: center
+  min-height: 3rem
+  width: 100%
+
+.stats label span.label, .footer label span.label
+  background-color: $element
+
+.stats
+  > div
+    padding: 0.5rem 1rem
+
+  > label
+    margin-left: 1rem
+
+  .links
+    margin-left: auto
+
+  a
+    padding: 0.5rem
+
+  svg
+    width: 24px
