@@ -1,0 +1,52 @@
+@import ../colors
+
+.modal-background
+  position: fixed
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  -webkit-backdrop-filter: blur(4px)
+  backdrop-filter: blur(4px)
+  z-index: 1
+  display: flex
+  align-items: center
+  justify-content: center
+
+.modal
+  width: fit-content
+  background: $element
+  border-radius: 5px
+  height: fit-content
+  border: 1px solid rgba(255,255,255,0.1)
+
+  .container
+    display: flex
+    background: $active-element
+    padding: 2rem
+    border-radius: 5px 5px 0 0
+
+    svg
+      width: 24px
+      color: $error
+
+    .content
+      margin-left: 1rem
+
+      span
+        font-style: italic
+
+      p
+        font-size: 1rem
+        color: $sub-text
+        margin-bottom: 0
+
+  .actions
+    padding: 1rem
+    display: flex
+    justify-content: space-evenly
+
+    .cancel
+      background: transparent
+      color: $sub-text
+      border: 2px solid $sub-text

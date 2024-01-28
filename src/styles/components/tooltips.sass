@@ -1,0 +1,39 @@
+@import ../colors
+
+[data-tooltip]
+  position: relative
+
+[data-tooltip]:hover::before
+  content: attr(data-tooltip)
+  min-width: 5rem
+  // allow text wrapping, even in stats areas 
+  white-space: normal
+  font: 100 italic 1rem/normal 'Lora', serif
+  text-align: center
+  color: $text
+  background: $border
+  position: absolute
+  bottom: calc(100% + 1rem)
+  left: 0
+  padding: 0.5rem
+  border-radius: 5px
+  z-index: 1
+
+[data-tooltip]:hover::after
+  content: ''
+  position: absolute
+  top: -1rem
+  left: 1rem
+  border-width: 5px
+  border-style: solid
+  border-color: $border transparent transparent transparent
+  z-index: 1
+
+// Assume tooltips for action links can be right-aligned 
+.actions [data-tooltip]:hover::before, .links [data-tooltip]:hover::before
+  left: unset
+  right: 0
+
+.actions [data-tooltip]:hover::after, .links [data-tooltip]:hover::after
+  left: unset
+  right: 1rem
