@@ -153,7 +153,8 @@ button?.addEventListener('click', async () => {
         throw new Error('No algorithm selected.');
     }
 
-    const key = await window.crypto.subtle.generateKey(params, false, keyUsage);
+    const extractable = generateElement.querySelector<HTMLInputElement>('.extractable input')?.checked || false;
+    const key = await window.crypto.subtle.generateKey(params, extractable, keyUsage);
     const persist = generateElement.querySelector<HTMLInputElement>('.save input')?.checked;
     addKey(name, key, persist);
   } catch (e) {
