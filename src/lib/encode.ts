@@ -14,6 +14,7 @@ enum ENCODING {
   INTEGER = -3,
   UUID = -4,
   JSON = -5,
+  PEM = -6,
   UNKNOWN = 0,
 
   // Transformable encodings
@@ -145,6 +146,7 @@ const guessEncoding = (encodedData: string): ENCODING => {
   if (/^([0-7]{3})+$/.test(encodedData)) return ENCODING.OCTAL;
   if (/^([0-9a-f]{2})+$|^([0-9A-F]{2})+$/.test(encodedData)) return ENCODING.HEXADECIMAL;
   if (/^([0-9a-zA-Z+/]{4})*[0-9a-zA-Z+/]{2}[0-9a-zA-Z+/=]{2}$/.test(encodedData)) return ENCODING.BASE64;
+  if (/^-{5}BEGIN .+-{5}(\r\n?|\n)([0-9a-zA-Z+/]{4})*[0-9a-zA-Z+/]{2}[0-9a-zA-Z+/=]{2}(\r\n?|\n)-{5}END .+-{5}(\r\n?|\n)?$/.test(encodedData)) return ENCODING.PEM;
 
   // Base64 crypt uses a dot instead of a plus, and has no padding or groupings
   if (/^[0-9a-zA-Z./]+$/.test(encodedData)) return ENCODING.BASE64_CRYPT;
