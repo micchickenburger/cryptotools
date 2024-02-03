@@ -127,7 +127,7 @@ const updateKeyList = () => {
                 defaultEncoding: ENCODING.BASE64,
               }, {
                 label: `Public Key "${k}" in Subject Public Key Info (SPKI) Format, PEM-Encoded`,
-                value: `-----BEGIN PUBLIC KEY-----\n${encode(spki, ENCODING.BASE64)}\n-----END PUBLIC KEY-----`,
+                value: `-----BEGIN PUBLIC KEY-----\n${encode(spki, ENCODING.BASE64)}\n-----END PUBLIC KEY-----\n`,
               });
               break;
             }
@@ -188,7 +188,7 @@ const updateKeyList = () => {
                 defaultEncoding: ENCODING.BASE64,
               }, {
                 label: `Private Key "${k}" in PKCS#8 Format, PEM-Encoded`,
-                value: `-----BEGIN PRIVATE KEY-----\n${encode(pkcs8, ENCODING.BASE64)}\n-----END PRIVATE KEY-----`,
+                value: `-----BEGIN PRIVATE KEY-----\n${encode(pkcs8, ENCODING.BASE64)}\n-----END PRIVATE KEY-----\n`,
               });
               break;
             }
