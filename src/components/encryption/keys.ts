@@ -115,6 +115,7 @@ const updateKeyList = () => {
         event.stopPropagation(); // prevent li click from registering
 
         const key = keyStructure.publicKey;
+        const filename = k.replace(/\s/, '-');
         const results: Result[] = [];
 
         try {
@@ -125,9 +126,13 @@ const updateKeyList = () => {
                 label: `Public Key "${k}" in Subject Public Key Info (SPKI) Format, DER-Encoded`,
                 value: spki,
                 defaultEncoding: ENCODING.BASE64,
+                filename,
+                extension: 'der',
               }, {
                 label: `Public Key "${k}" in Subject Public Key Info (SPKI) Format, PEM-Encoded`,
                 value: `-----BEGIN PUBLIC KEY-----\n${encode(spki, ENCODING.BASE64)}\n-----END PUBLIC KEY-----\n`,
+                filename,
+                extension: 'pem',
               });
               break;
             }
@@ -141,6 +146,7 @@ const updateKeyList = () => {
               label: `Public Key "${k}" in Raw Format`,
               value: await exportKey(key, 'raw')() as ArrayBuffer,
               defaultEncoding: ENCODING.BASE64,
+              filename,
             });
           }
 
@@ -148,6 +154,7 @@ const updateKeyList = () => {
           results.push({
             label: `Public Key "${k}" in JSON Web Key (JWK) Format`,
             value: JSON.stringify(await exportKey(key, 'jwk')() as JsonWebKey, null, 2),
+            filename,
           });
 
           showResults(results);
@@ -170,6 +177,7 @@ const updateKeyList = () => {
         event.stopPropagation(); // prevent li click from registering
 
         const key = isSymmetric ? keyStructure : keyStructure.privateKey;
+        const filename = k.replace(/\s/, '-');
         const results: Result[] = [];
 
         try {
@@ -178,6 +186,8 @@ const updateKeyList = () => {
               results.push({
                 label: `Secret Key "${k}" in Raw Format`,
                 value: await exportKey(key, 'raw')() as ArrayBuffer,
+                filename,
+                extension: 'key',
               });
               break;
             case 'RSASSA-PKCS1-v1_5': case 'RSA-PSS': case 'RSA-OAEP': case 'ECDSA': {
@@ -186,9 +196,13 @@ const updateKeyList = () => {
                 label: `Private Key "${k}" in PKCS#8 Format, DER-Encoded`,
                 value: pkcs8,
                 defaultEncoding: ENCODING.BASE64,
+                filename,
+                extension: 'der',
               }, {
                 label: `Private Key "${k}" in PKCS#8 Format, PEM-Encoded`,
                 value: `-----BEGIN PRIVATE KEY-----\n${encode(pkcs8, ENCODING.BASE64)}\n-----END PRIVATE KEY-----\n`,
+                filename,
+                extension: 'key',
               });
               break;
             }
@@ -200,6 +214,7 @@ const updateKeyList = () => {
           results.push({
             label: `${isSymmetric ? 'Secret' : 'Private'} Key "${k}" in JSON Web Key (JWK) Format`,
             value: JSON.stringify(await exportKey(key, 'jwk')() as JsonWebKey, null, 2),
+            filename,
           });
 
           showResults(results);
