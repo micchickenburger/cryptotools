@@ -50,7 +50,21 @@ opAreas.forEach((opArea) => {
 
   // If user is typing, it's probably plain text, so let's just check onpaste
   // We use setTimeout to allow the paste to complete before evaluating the whole textarea contents
-  textareas.forEach((textarea) => textarea.addEventListener('paste', () => setTimeout(checkTextareaEncoding(textarea), 0)));
+  textareas.forEach((textarea) => {
+    textarea.addEventListener('paste', () => setTimeout(checkTextareaEncoding(textarea), 0));
+
+    // Character Count
+    textarea.addEventListener('input', () => {
+      const characterCount = textarea.parentElement!.querySelector('.character-count') || textarea.parentElement!.parentElement!.querySelector('.character-count');
+
+      if (characterCount) {
+        const count = textarea.value.length;
+        if (count === 1) characterCount.textContent = '1 character';
+        else characterCount.textContent = `${count} characters`;
+      }
+    });
+  });
+
   selects.forEach((select) => {
     const input = select.parentElement!.querySelector('input');
     input?.addEventListener('paste', () => setTimeout(checkInputEncoding(select, input), 0));
@@ -84,14 +98,6 @@ opAreas.forEach((opArea) => {
     textarea?.addEventListener('dragend', classState(textarea, false));
     textarea?.addEventListener('drop', preventDefault);
     textarea?.addEventListener('drop', classState(textarea, false));
-
-    // Character Count
-    textarea?.addEventListener('input', () => {
-      const characterCount = textarea.parentElement!.parentElement!.querySelector('.character-count')!;
-      const count = textarea.value.length;
-      if (count === 1) characterCount.textContent = '1 character';
-      else characterCount.textContent = `${count} characters`;
-    });
   });
 });
 
