@@ -115,7 +115,7 @@ const updateKeyList = () => {
         event.stopPropagation(); // prevent li click from registering
 
         const key = keyStructure.publicKey;
-        const filename = k.replace(/\s/g, '-');
+        const filename = `${k.replace(/\s/g, '-')}.public`;
         const results: Result[] = [];
 
         try {
@@ -177,7 +177,7 @@ const updateKeyList = () => {
         event.stopPropagation(); // prevent li click from registering
 
         const key = isSymmetric ? keyStructure : keyStructure.privateKey;
-        const filename = k.replace(/\s/g, '-');
+        const filename = `${k.replace(/\s/g, '-')}.${isSymmetric ? 'secret' : 'private'}`;
         const results: Result[] = [];
 
         try {
