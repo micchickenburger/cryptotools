@@ -28,25 +28,8 @@ const checkTextareaEncoding = (textarea: HTMLTextAreaElement) => () => {
   }
 };
 
-/**
- * Guess encoding of input-encoding fields, used by any control that should
- * accept an input of arbitrary encoding, such as digest verification,
- * encryption IVs and counters, or salt values.
- */
-const checkInputEncoding = (encodingSelect: HTMLSelectElement, input: HTMLInputElement) => () => {
-  const encoding = guessEncoding(input.value);
-
-  if (encoding) { // UNKNOWN is radix 0, a falsey value
-    encodingSelect.childNodes.forEach((op) => {
-      const option = op as HTMLOptionElement;
-      if (Number(option.value) === encoding) option.selected = true;
-    });
-  }
-};
-
 opAreas.forEach((opArea) => {
   const textareas = opArea.querySelectorAll<HTMLTextAreaElement>('textarea');
-  const selects = opArea.querySelectorAll<HTMLSelectElement>('select.input-encoding');
 
   // If user is typing, it's probably plain text, so let's just check onpaste
   // We use setTimeout to allow the paste to complete before evaluating the whole textarea contents
@@ -63,11 +46,6 @@ opAreas.forEach((opArea) => {
         else characterCount.textContent = `${count} characters`;
       }
     });
-  });
-
-  selects.forEach((select) => {
-    const input = select.parentElement!.querySelector('input');
-    input?.addEventListener('paste', () => setTimeout(checkInputEncoding(select, input), 0));
   });
 });
 

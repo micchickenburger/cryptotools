@@ -39,7 +39,7 @@ const updateKeyList = () => {
   opArea?.classList.remove('active');
   hideResults();
 
-  const list = document.querySelector<HTMLElement>('#encryption .list-keys ul')!;
+  const list = document.querySelector<HTMLElement>('#encryption [data-tab="list-keys"] ul')!;
   list.textContent = ''; // reset list
 
   const array = Object.entries(keys);

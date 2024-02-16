@@ -9,7 +9,7 @@ import load from '../../lib/loader';
 import { handleError } from '../../lib/error';
 import { addKey } from './keys';
 
-const generateElement = document.querySelector('#encryption .generate-key')!;
+const generateElement = document.querySelector('#encryption [data-tab="generate-key"]')!;
 const purposeElement = generateElement.querySelector<HTMLSelectElement>('.control.purpose select')!;
 
 /**

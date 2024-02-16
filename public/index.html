@@ -209,13 +209,17 @@
               <svg viewBox="0 0 256 256"><path fill="currentColor" d="M208 128a80 80 0 1 1-80-80a80 80 0 0 1 80 80" opacity=".2"/><path fill="currentColor" d="M232 120h-16.37a87.27 87.27 0 0 0-7.74-28.88l14.18-8.19a8 8 0 0 0-8-13.86l-14.2 8.2a88.78 88.78 0 0 0-21.14-21.14l8.2-14.2a8 8 0 0 0-13.86-8l-8.19 14.18A87.27 87.27 0 0 0 136 40.37V24a8 8 0 0 0-16 0v16.37a87.27 87.27 0 0 0-28.88 7.74l-8.19-14.18a8 8 0 0 0-13.86 8l8.2 14.2a88.78 88.78 0 0 0-21.14 21.14l-14.2-8.2a8 8 0 0 0-8 13.86l14.18 8.19A87.27 87.27 0 0 0 40.37 120H24a8 8 0 0 0 0 16h16.37a87.27 87.27 0 0 0 7.74 28.88l-14.18 8.19a8 8 0 0 0 4 14.93a7.92 7.92 0 0 0 4-1.07l14.2-8.2a88.78 88.78 0 0 0 21.14 21.14l-8.2 14.2a8 8 0 0 0 13.86 8l8.19-14.18a87.27 87.27 0 0 0 28.88 7.74V232a8 8 0 0 0 16 0v-16.37a87.27 87.27 0 0 0 28.88-7.74l8.19 14.18a8 8 0 0 0 13.86-8l-8.2-14.2a88.78 88.78 0 0 0 21.14-21.14l14.2 8.2A8 8 0 0 0 225 184a8 8 0 0 0-2.92-10.93l-14.18-8.19a87.27 87.27 0 0 0 7.73-28.88H232a8 8 0 0 0 0-16M85.31 185.94a71.92 71.92 0 0 1 0-115.88L118.76 128ZM128 200a71.58 71.58 0 0 1-28.84-6l33.46-58h66.92A72.08 72.08 0 0 1 128 200m4.62-80L99.16 62.05a71.94 71.94 0 0 1 100.38 58Z"/></svg>
               <span>Generate Key</span>
             </li>
+            <li data-target="import-keys">
+              <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M168 80H88l40-40Z" opacity=".2"/><path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0M80.61 83.06a8 8 0 0 1 1.73-8.72l40-40a8 8 0 0 1 11.32 0l40 40A8 8 0 0 1 168 88h-32v64a8 8 0 0 1-16 0V88H88a8 8 0 0 1-7.39-4.94M107.31 72h41.38L128 51.31Z"/></g></svg>
+              <span>Import Keys</span>
+            </li>
           </menu>
-          <section class="list-keys settings active">
+          <section class="settings active" data-tab="list-keys">
             <ul>
               <li>No Keys.  Generate a key to get started.</li>
             </ul>
           </section>
-          <section class="generate-key settings column">
+          <section class="settings column" data-tab="generate-key">
             <form class="flex settings active" autocomplete="off">
               <label class="control name">
                 <span class="label required">Key Name</span>
@@ -356,8 +360,40 @@
               </div>
             </div>
           </section>
+          <section data-tab="import-keys" class="operation-area">
+            <form autocomplete="off">
+              <div class="input">
+                <textarea rows="10" placeholder="Paste text or drop key files..." spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+              </div>
+              <div class="footer">
+                <label class="control encoding">
+                  <span class="label">Encoding</span>
+                  <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M240 128c-64 0 0 88-64 88H80c-64 0 0-88-64-88c64 0 0-88 64-88h96c64 0 0 88 64 88" opacity=".2"/><path d="M43.18 128a29.78 29.78 0 0 1 8 10.26c4.8 9.9 4.8 22 4.8 33.74c0 24.31 1 36 24 36a8 8 0 0 1 0 16c-17.48 0-29.32-6.14-35.2-18.26c-4.8-9.9-4.8-22-4.8-33.74c0-24.31-1-36-24-36a8 8 0 0 1 0-16c23 0 24-11.69 24-36c0-11.72 0-23.84 4.8-33.74C50.68 38.14 62.52 32 80 32a8 8 0 0 1 0 16c-23 0-24 11.69-24 36c0 11.72 0 23.84-4.8 33.74A29.78 29.78 0 0 1 43.18 128M240 120c-23 0-24-11.69-24-36c0-11.72 0-23.84-4.8-33.74C205.32 38.14 193.48 32 176 32a8 8 0 0 0 0 16c23 0 24 11.69 24 36c0 11.72 0 23.84 4.8 33.74a29.78 29.78 0 0 0 8 10.26a29.78 29.78 0 0 0-8 10.26c-4.8 9.9-4.8 22-4.8 33.74c0 24.31-1 36-24 36a8 8 0 0 0 0 16c17.48 0 29.32-6.14 35.2-18.26c4.8-9.9 4.8-22 4.8-33.74c0-24.31 1-36 24-36a8 8 0 0 0 0-16"/></g></svg>
+                  <select>
+                    <option value="2">binary</option>
+                    <option value="8">octal</option>
+                    <option value="16">hexadecimal</option>
+                    <option value="64">base64</option>
+                    <option value="100" selected>utf-8</option>
+                  </select>
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
+                </label>
+                <div>
+                  <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M200 56v136a8 8 0 0 1-8 8H64a8 8 0 0 1-8-8V56Z" opacity=".2"/><path d="M208 56v32a8 8 0 0 1-16 0V64h-56v128h24a8 8 0 0 1 0 16H96a8 8 0 0 1 0-16h24V64H64v24a8 8 0 0 1-16 0V56a8 8 0 0 1 8-8h144a8 8 0 0 1 8 8"/></g></svg>
+                  <span class="character-count">0 characters</span>
+                </div>
+                <div class="links">
+                  <label class="control upload icon" data-tooltip="Upload one or more key files...">
+                    <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M232 136v64a8 8 0 0 1-8 8H32a8 8 0 0 1-8-8v-64a8 8 0 0 1 8-8h192a8 8 0 0 1 8 8" opacity=".2"/><path d="M240 136v64a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16v-64a16 16 0 0 1 16-16h48a8 8 0 0 1 0 16H32v64h192v-64h-48a8 8 0 0 1 0-16h48a16 16 0 0 1 16 16M85.66 77.66L120 43.31V128a8 8 0 0 0 16 0V43.31l34.34 34.35a8 8 0 0 0 11.32-11.32l-48-48a8 8 0 0 0-11.32 0l-48 48a8 8 0 0 0 11.32 11.32M200 168a12 12 0 1 0-12 12a12 12 0 0 0 12-12"/></g></svg>
+                    <input type="file" multiple>
+                  </label>
+                </div>
+                <button>Import Key</button>
+              </div>
+            </form>
+          </section>
         </div>
-        <div class="subsection full encrypt operation-area">
+        <div class="subsection full encrypt operation-area crypto-operations">
           <form autocomplete="off">
             <menu class="tabs">
               <li data-op="encrypt" class="active show">
@@ -690,7 +726,7 @@
               <span>Provos N, Maziéres D (10 June 1999)</span>
             </li>
           </menu>
-          <form id="hash-bcrypt" class="settings active flex operation-area" autocomplete="off">
+          <form id="hash-bcrypt" class="settings active flex" autocomplete="off">
             <label class="control cost">
               <span class="label">Cost • 1,024 iterations</span>
               <svg viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M13 35H7v6m34 0h-6v-6m0-22h6V7M7 7h6v6"/><path d="M13 7.294C7.578 10.871 4 17.018 4 24c0 1.02.076 2.021.223 3M27 43.777A20.16 20.16 0 0 1 24 44c-6.982 0-13.129-3.578-16.706-9m36.483-14c.147.979.223 1.98.223 3c0 6.982-3.578 13.129-9 16.706M21 4.224A20.16 20.16 0 0 1 24 4c6.982 0 13.129 3.578 16.706 9"/></g></svg>
@@ -704,7 +740,7 @@
             </label>
             <button>Hash Password</button>
           </form>
-          <form id="verify-bcrypt" class="settings flex operation-area" autocomplete="off">
+          <form id="verify-bcrypt" class="settings flex" autocomplete="off">
             <label class="control password grow" data-tooltip="Only the first 64 bytes are used">
               <span class="label">Passphrase</span>
               <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M232 96a72 72 0 0 1-98.83 66.83L120 176H96v24H72v24H32v-40l61.17-61.17A72 72 0 1 1 232 96" opacity=".2"/><path d="M160 16a80.07 80.07 0 0 0-76.09 104.78l-57.57 57.56A8 8 0 0 0 24 184v40a8 8 0 0 0 8 8h40a8 8 0 0 0 8-8v-16h16a8 8 0 0 0 8-8v-16h16a8 8 0 0 0 5.66-2.34l9.56-9.57A80 80 0 1 0 160 16m0 144a63.7 63.7 0 0 1-23.65-4.51a8 8 0 0 0-8.84 1.68L116.69 168H96a8 8 0 0 0-8 8v16H72a8 8 0 0 0-8 8v16H40v-28.69l58.83-58.82a8 8 0 0 0 1.68-8.84A64 64 0 1 1 160 160m32-84a12 12 0 1 1-12-12a12 12 0 0 1 12 12"/></g></svg>
@@ -717,7 +753,7 @@
             </label>
             <button>Verify Password</button>
           </form>
-          <form id="hash-PBKDF2" class="settings flex operation-area" autocomplete="off">
+          <form id="hash-PBKDF2" class="settings flex" autocomplete="off">
             <label class="control prf-function">
               <span class="label">Pseudorandom Function</span>
               <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M224 128a96 96 0 1 1-96-96a96 96 0 0 1 96 96" opacity=".2"/><path d="M72 128a134.63 134.63 0 0 1-14.16 60.47a8 8 0 1 1-14.32-7.12A118.8 118.8 0 0 0 56 128a71.73 71.73 0 0 1 27-56.2a8 8 0 1 1 10 12.49A55.76 55.76 0 0 0 72 128m56-8a8 8 0 0 0-8 8a184.12 184.12 0 0 1-23 89.1a8 8 0 0 0 14 7.76A200.19 200.19 0 0 0 136 128a8 8 0 0 0-8-8m0-32a40 40 0 0 0-40 40a8 8 0 0 0 16 0a24 24 0 0 1 48 0a214.09 214.09 0 0 1-20.51 92a8 8 0 1 0 14.51 6.83A230 230 0 0 0 168 128a40 40 0 0 0-40-40m0-64A104.11 104.11 0 0 0 24 128a87.76 87.76 0 0 1-5 29.33a8 8 0 0 0 15.09 5.33A103.9 103.9 0 0 0 40 128a88 88 0 0 1 176 0a282.24 282.24 0 0 1-5.29 54.45a8 8 0 0 0 6.3 9.4a8.22 8.22 0 0 0 1.55.15a8 8 0 0 0 7.84-6.45A298.37 298.37 0 0 0 232 128A104.12 104.12 0 0 0 128 24M94.4 152.17a8 8 0 0 0-9.4 6.25a151 151 0 0 1-17.21 45.44a8 8 0 0 0 13.86 8a166.67 166.67 0 0 0 19-50.25a8 8 0 0 0-6.25-9.44M128 56a72.85 72.85 0 0 0-9 .56a8 8 0 0 0 2 15.87A56.08 56.08 0 0 1 184 128a252.12 252.12 0 0 1-1.92 31a8 8 0 0 0 6.92 9a8.39 8.39 0 0 0 1 .06a8 8 0 0 0 7.92-7a266.48 266.48 0 0 0 2-33A72.08 72.08 0 0 0 128 56m57.93 128.25a8 8 0 0 0-9.75 5.75c-1.46 5.69-3.15 11.4-5 17a8 8 0 0 0 5 10.13a7.88 7.88 0 0 0 2.55.42a8 8 0 0 0 7.58-5.46c2-5.92 3.79-12 5.35-18.05a8 8 0 0 0-5.72-9.78Z"/></g></svg>
@@ -758,10 +794,10 @@
             </label>
             <button>Hash Password</button>
           </form>
-          <form id="verify-PBKDF2" class="settings flex operation-area" autocomplete="off">
+          <form id="verify-PBKDF2" class="settings flex" autocomplete="off">
             <p>Verification not yet implemented</p>
           </form>
-          <form id="register-SRP" class="settings flex operation-area" autocomplete="off">
+          <form id="register-SRP" class="settings flex" autocomplete="off">
             <label class="control strict" data-tooltip="Includes identity in verifier generation">
               <span class="label">RFC Compliance</span>
               <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 56v58.77c0 84.18-71.31 112.07-85.54 116.8a7.54 7.54 0 0 1-4.92 0C111.31 226.86 40 199 40 114.79V56a8 8 0 0 1 8-8h160a8 8 0 0 1 8 8" opacity=".2"/><path d="M80.57 117A8 8 0 0 1 91 112.57l29 11.61V96a8 8 0 0 1 16 0v28.18l29-11.61a8 8 0 1 1 6 14.86l-30.31 12.12l17.71 23.65a8 8 0 1 1-12.8 9.6L128 149.33l-17.6 23.47a8 8 0 1 1-12.8-9.6l17.74-23.65L85 127.43A8 8 0 0 1 80.57 117M224 56v58.77c0 89.62-75.82 119.34-91 124.39a15.44 15.44 0 0 1-10 0c-15.2-5-91-34.76-91-124.38V56a16 16 0 0 1 16-16h160a16 16 0 0 1 16 16m-16 0H48v58.79c0 78.5 66.47 104.68 80 109.18c13.66-4.56 80-30.76 80-109.18Z"/></g></svg>
@@ -804,7 +840,7 @@
             </label>
             <button>Initiate Registration</button>
           </form>
-          <form id="authenticate-SRP" class="settings flex column operation-area" autocomplete="off">
+          <form id="authenticate-SRP" class="settings flex column" autocomplete="off">
             <h2>Settings used by Client &amp; Server</h2>
             <section class="defaults settings active">
               <label class="control strict" data-tooltip="Includes identity in verifier generation">
@@ -864,7 +900,7 @@
             </section>
             <button>Initiate Authentication</button>
           </form>
-          <form id="prove-identity-SRP" class="settings flex column operation-area" autocomplete="off">
+          <form id="prove-identity-SRP" class="settings flex column" autocomplete="off">
             <h2>Settings used by Client &amp; Server</h2>
             <section class="defaults settings active">
               <label class="control strict" data-tooltip="Includes identity in verifier generation">

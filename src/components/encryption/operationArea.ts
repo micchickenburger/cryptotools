@@ -10,7 +10,7 @@ import { KEY_SVG } from '../../lib/svg';
 import { getKey } from './keys';
 
 const encryptionSection = document.querySelector<HTMLElement>('#encryption')!;
-const opArea = encryptionSection.querySelector<HTMLElement>('.operation-area');
+const opArea = encryptionSection.querySelector<HTMLElement>('.crypto-operations');
 const tabs = opArea?.querySelectorAll<HTMLLIElement>('menu li');
 
 // Hide operation area when switching main tabs
