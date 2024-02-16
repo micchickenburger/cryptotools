@@ -30,10 +30,10 @@ const resultElement = document.querySelector<HTMLElement>('#results')!;
 const downloadEvent = (
   data: string | ArrayBuffer,
   filename?: string,
-  extension?: string,
+  extension?: string | null,
 ) => async () => {
   let array: ArrayBuffer;
-  let ext = extension || 'bin';
+  let ext = extension === null ? '' : (extension || 'bin');
 
   if (typeof data === 'string') {
     array = (new TextEncoder()).encode(data);
@@ -53,7 +53,8 @@ const downloadEvent = (
 
   const a = document.createElement('a');
   a.href = uri;
-  a.download = filename ? `${filename}.${ext}` : `cryptotools-result.${ext}`;
+  const suffix = ext ? `.${ext}` : '';
+  a.download = filename ? `${filename}${suffix}` : `cryptotools-result${suffix}`;
   document.body.appendChild(a);
   a.click();
 
@@ -69,7 +70,7 @@ type BuildResultData = {
   bitLength: number,
   rawData: string | ArrayBuffer,
   filename?: string,
-  extension?: string,
+  extension?: string | null,
 };
 
 /**
@@ -239,7 +240,7 @@ interface Result {
   defaultEncoding?: ENCODING;
   value: ArrayBuffer | string;
   filename?: string;
-  extension?: string;
+  extension?: string | null;
 }
 
 const showResults = (results: Result[]) => {
