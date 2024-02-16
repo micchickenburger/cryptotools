@@ -17,7 +17,7 @@ const opAreas = document.querySelectorAll<HTMLElement>('.operation-area');
  * Guess encoding of textarea content
  */
 const checkTextareaEncoding = (textarea: HTMLTextAreaElement) => () => {
-  const encodingSelect = textarea.parentElement!.parentElement!.querySelector('.encoding select');
+  const encodingSelect = textarea.parentElement!.querySelector('.encoding select') || textarea.parentElement!.parentElement!.querySelector('.encoding select');
   const encoding = guessEncoding(textarea.value);
 
   if (encoding) { // UNKNOWN is radix 0, a falsey value
