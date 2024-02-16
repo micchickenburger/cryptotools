@@ -70,11 +70,13 @@ button?.addEventListener('click', async () => {
     const b64Hash = toB64(encode(derivation, ENCODING.BASE64));
     const hashString = `$pbkdf2$prf=hmac-${hash!.toLowerCase()},c=${iterations},dklen=${length}$${b64Salt}$${b64Hash}`;
 
-    showResults([
-      { label: 'PBKDF2 String in PHC String Format (recommended by author)', value: hashString },
-      { label: 'Hash', value: derivation, defaultEncoding: ENCODING.BASE64 },
-      { label: 'Salt', value: salt, defaultEncoding: ENCODING.BASE64 },
-    ]);
+    showResults([{
+      label: 'PBKDF2 String in PHC String Format (recommended by author)', value: hashString, filename: 'pbkdf2-string',
+    }, {
+      label: 'Hash', value: derivation, defaultEncoding: ENCODING.BASE64, filename: 'pbkdf2-hash',
+    }, {
+      label: 'Salt', value: salt, defaultEncoding: ENCODING.BASE64, filename: 'pbkdf2-salt',
+    }]);
   } catch (e) { handleError(e); }
 
   button.disabled = false;

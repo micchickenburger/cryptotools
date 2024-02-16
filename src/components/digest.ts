@@ -63,7 +63,13 @@ button.addEventListener('click', async () => {
         ),
       }]);
     } else {
-      showResults([{ label: `${algorithm} Digest`, value: digest, defaultEncoding: ENCODING.HEXADECIMAL }]);
+      showResults([{
+        label: `${algorithm} Digest`,
+        value: digest,
+        defaultEncoding: ENCODING.HEXADECIMAL,
+        filename: 'digest',
+        extension: algorithm.replace(/-/g, '').toLowerCase(),
+      }]);
     }
   } catch (e) { handleError(e); }
 });
@@ -115,15 +121,22 @@ const digestFiles = async (
 
       let label: string;
       let value: string | ArrayBuffer;
+      let filename = 'digest';
+      let extension: string | undefined;
+
       if (checksum) {
         label = `${algorithm} Digest of ${file.name} Verifies Checksum? • ${file.size.toLocaleString()} bytes • ${file.type || 'Unknown type'}`;
         value = String(checksum === encode(digest, ENCODING.HEXADECIMAL));
       } else {
         label = `${algorithm} Digest of ${file.name} • ${file.size.toLocaleString()} bytes • ${file.type || 'Unknown type'}`;
         value = digest;
+        filename = file.name;
+        extension = algorithm.replace(/-/g, '').toLowerCase();
       }
 
-      results.push({ label, value });
+      results.push({
+        label, value, filename, extension,
+      });
     }));
   } catch (e) { handleError(e); }
 
