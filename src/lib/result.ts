@@ -122,7 +122,7 @@ const buildResultElement = ({
     tooltip: 'Copy',
     tooltipAfter: 'Copied!',
     icon: COPY_SVG,
-    callback: () => navigator.clipboard.writeText(content.textContent!),
+    callback: () => navigator.clipboard.writeText(value),
   }];
 
   // Positive radixes are safe to encode and decode
