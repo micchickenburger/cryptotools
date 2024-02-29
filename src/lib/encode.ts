@@ -9,25 +9,25 @@ import * as bcrypt from 'bcryptjs';
 
 enum ENCODING {
   // Non-transformable encodings
+  UNKNOWN = 0,
   BOOLEAN = -1,
   BIGINT = -2,
   INTEGER = -3,
   UUID = -4,
   JSON = -5,
   PEM = -6,
-  UNKNOWN = 0,
-
-  // Transformable encodings
-  BINARY = 2,
-  OCTAL = 8,
-  'UTF-8' = 100,
-  HEXADECIMAL = 16,
-  BASE64 = 64, // RFC 4648
-  BASE64_CRYPT = 640, // Nonstandard OpenBSD alphabet used by crypt, bcrypt
 
   // Password Hashing Formats
   PHC_STRING = -100,
   MODULAR_CRYPT_FORMAT = -200,
+
+  // Transformable encodings (corresponding to radix)
+  BINARY = 2,
+  OCTAL = 8,
+  HEXADECIMAL = 16,
+  BASE64 = 64, // RFC 4648
+  BASE64_CRYPT = 640, // Nonstandard OpenBSD alphabet used by crypt, bcrypt
+  'UTF-8' = 100,
 }
 
 /**

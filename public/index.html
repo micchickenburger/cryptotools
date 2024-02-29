@@ -209,14 +209,14 @@
               <svg viewBox="0 0 256 256"><path fill="currentColor" d="M208 128a80 80 0 1 1-80-80a80 80 0 0 1 80 80" opacity=".2"/><path fill="currentColor" d="M232 120h-16.37a87.27 87.27 0 0 0-7.74-28.88l14.18-8.19a8 8 0 0 0-8-13.86l-14.2 8.2a88.78 88.78 0 0 0-21.14-21.14l8.2-14.2a8 8 0 0 0-13.86-8l-8.19 14.18A87.27 87.27 0 0 0 136 40.37V24a8 8 0 0 0-16 0v16.37a87.27 87.27 0 0 0-28.88 7.74l-8.19-14.18a8 8 0 0 0-13.86 8l8.2 14.2a88.78 88.78 0 0 0-21.14 21.14l-14.2-8.2a8 8 0 0 0-8 13.86l14.18 8.19A87.27 87.27 0 0 0 40.37 120H24a8 8 0 0 0 0 16h16.37a87.27 87.27 0 0 0 7.74 28.88l-14.18 8.19a8 8 0 0 0 4 14.93a7.92 7.92 0 0 0 4-1.07l14.2-8.2a88.78 88.78 0 0 0 21.14 21.14l-8.2 14.2a8 8 0 0 0 13.86 8l8.19-14.18a87.27 87.27 0 0 0 28.88 7.74V232a8 8 0 0 0 16 0v-16.37a87.27 87.27 0 0 0 28.88-7.74l8.19 14.18a8 8 0 0 0 13.86-8l-8.2-14.2a88.78 88.78 0 0 0 21.14-21.14l14.2 8.2A8 8 0 0 0 225 184a8 8 0 0 0-2.92-10.93l-14.18-8.19a87.27 87.27 0 0 0 7.73-28.88H232a8 8 0 0 0 0-16M85.31 185.94a71.92 71.92 0 0 1 0-115.88L118.76 128ZM128 200a71.58 71.58 0 0 1-28.84-6l33.46-58h66.92A72.08 72.08 0 0 1 128 200m4.62-80L99.16 62.05a71.94 71.94 0 0 1 100.38 58Z"/></svg>
               <span>Generate Key</span>
             </li>
-            <li data-target="import-keys">
+            <li data-target="import-key">
               <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M168 80H88l40-40Z" opacity=".2"/><path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0M80.61 83.06a8 8 0 0 1 1.73-8.72l40-40a8 8 0 0 1 11.32 0l40 40A8 8 0 0 1 168 88h-32v64a8 8 0 0 1-16 0V88H88a8 8 0 0 1-7.39-4.94M107.31 72h41.38L128 51.31Z"/></g></svg>
-              <span>Import Keys</span>
+              <span>Import Key</span>
             </li>
           </menu>
           <section class="settings active" data-tab="list-keys">
             <ul>
-              <li>No Keys.  Generate a key to get started.</li>
+              <li>No Keys.  Generate or import a key to get started.</li>
             </ul>
           </section>
           <section class="settings column" data-tab="generate-key">
@@ -360,8 +360,51 @@
               </div>
             </div>
           </section>
-          <section data-tab="import-keys" class="operation-area">
+          <section data-tab="import-key" class="operation-area">
             <form autocomplete="off">
+              <div class="settings active flex">
+                <label class="control name">
+                  <span class="label required">Key Name</span>
+                  <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M67.41 142.56C35.71 129.52 45.41 32.07 78 32c33.82.05 14 58.26-10.59 110.56" opacity=".2"/><path d="M232 168H63.86c2.66-5.24 5.33-10.63 8-16.11c14.94 1.65 32.62-8.8 52.74-31.22c.6 1.66 1.27 3.37 2 5.1c6.51 15.25 14.91 23.94 25 25.85c10.34 2 20.58-3.23 31.08-15.82C189.5 143.87 203.5 152 232 152a8 8 0 0 0 0-16c-30.63 0-39.55-10.59-40-16.22a8 8 0 0 0-15.51-2.54c-12.17 18.25-19.38 19.14-22 18.66c-8.33-1.57-16.08-20.93-18.69-33.51a8 8 0 0 0-14.8-2.23c-19.8 24.62-33.08 33-41.41 35.14c8.49-18.88 14.83-35.45 18.89-49.4c6.82-23.44 7.32-39.83 1.51-50.1c-3-5.36-9.29-11.75-21.91-11.8h-.25c-16 .11-28.6 15.3-34.62 41.7c-3.59 15.71-4.18 33.19-1.63 48s7.86 25.51 15.55 31.89c-3.72 7.73-7.53 15.28-11.23 22.43H24a8 8 0 0 0 0 16h13.41c-11.32 21-20.12 35.64-20.26 35.88a8 8 0 1 0 13.71 8.24c.15-.26 11.27-18.79 24.7-44.12H232a8 8 0 0 0 0-16Zm-40-48v-.21a1.11 1.11 0 0 1 0 .21M58.79 69.26C62.78 51.78 70.48 40 78 40c5.25 0 7 1.86 8 3.67c3 5.33 6.52 24.19-21.65 86.37c-8.19-11.29-10.98-37.04-5.56-60.78"/></g></svg>
+                  <input type="text" placeholder="My Key" required autocomplete="off">
+                </label>
+                <label class="control save">
+                  <span class="label">Persist</span>
+                  <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 91.31V208a8 8 0 0 1-8 8h-32v-64a8 8 0 0 0-8-8H88a8 8 0 0 0-8 8v64H48a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8h116.69a8 8 0 0 1 5.65 2.34l43.32 43.31a8 8 0 0 1 2.34 5.66" opacity=".2"/><path d="M219.31 80L176 36.69A15.86 15.86 0 0 0 164.69 32H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V91.31A15.86 15.86 0 0 0 219.31 80M168 208H88v-56h80Zm40 0h-24v-56a16 16 0 0 0-16-16H88a16 16 0 0 0-16 16v56H48V48h116.69L208 91.31ZM160 72a8 8 0 0 1-8 8H96a8 8 0 0 1 0-16h56a8 8 0 0 1 8 8"/></g></svg>
+                  <span>Save Locally</span>
+                  <input type="checkbox">
+                </label>
+                <label class="control extractable">
+                  <span class="label">Exportable</span>
+                  <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M208 104v112H48V104Z" opacity=".2"/><path d="M216 112v96a16 16 0 0 1-16 16H56a16 16 0 0 1-16-16v-96a16 16 0 0 1 16-16h24a8 8 0 0 1 0 16H56v96h144v-96h-24a8 8 0 0 1 0-16h24a16 16 0 0 1 16 16M93.66 69.66L120 43.31V136a8 8 0 0 0 16 0V43.31l26.34 26.35a8 8 0 0 0 11.32-11.32l-40-40a8 8 0 0 0-11.32 0l-40 40a8 8 0 0 0 11.32 11.32"/></g></svg>
+                  <span>Enable Key Export</span>
+                  <input type="checkbox">
+                </label>
+                <label class="control algorithm required">
+                  <span class="label">Algorithm</span>
+                  <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M192 48v160H64l64-80l-64-80Z" opacity=".2"/><path d="M184 72V56H80.65l53.6 67a8 8 0 0 1 0 10l-53.6 67H184v-16a8 8 0 0 1 16 0v24a8 8 0 0 1-8 8H64a8 8 0 0 1-6.25-13l60-75l-60-75A8 8 0 0 1 64 40h128a8 8 0 0 1 8 8v24a8 8 0 0 1-16 0"/></g></svg>
+                  <select>
+                    <option data-target="aes" value="AES-CBC" data-mode="AES Cipher Block Chaining Mode" data-type="Symmetric">AES CBC</option>
+                    <option data-target="aes" value="AES-CTR" data-mode="AES Counter Mode" data-type="Symmetric">AES CTR</option>
+                    <option data-target="aes" value="AES-GCM" data-mode="AES Galois Counter Mode" data-type="Symmetric">AES GCM</option>
+                    <option data-target="ec" value="ECDSA" data-mode="Elliptic Curve Digital Signature Algorithm" data-type="Asymmetric">ECDSA</option>
+                    <option data-target="hmac" value="HMAC" data-mode="Hash-Based Message Authentication Code" data-type="Symmetric">HMAC</option>
+                    <option data-target="rsa" value="RSA-OAEP" data-mode="RSA Optimal Asymmetric Encryption Padding Mode" data-type="Asymmetric">RSA OAEP</option>
+                    <option data-target="rsa" value="RSA-PSS" data-mode="RSA Probabilistic Signature Scheme" data-type="Asymmetric">RSA PSS</option>
+                    <option data-target="rsa" value="RSASSA-PKCS1-v1_5" data-mode="RSA Signature Scheme with Appendix - PKCS#1 v1.5" data-type="Asymmetric" selected>RSA SSA PKCS#1 v1.5</option>
+                  </select>
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
+                </label>
+                <label class="control key-type required">
+                  <span class="label">Key Type</span>
+                  <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M215.39 128c-7 73.93-71.47 99.12-84.93 103.59a7.93 7.93 0 0 1-2.46.41V128zM128 48H48a8 8 0 0 0-8 8v58.77q0 6.85.61 13.21H128Z" opacity=".2"/><path d="M208 40H48a16 16 0 0 0-16 16v58.77c0 89.62 75.82 119.34 91 124.38a15.44 15.44 0 0 0 10 0c15.2-5.05 91-34.77 91-124.39V56a16 16 0 0 0-16-16m0 74.79c0 1.77 0 3.5-.11 5.21H136V56h72ZM48 56h72v64H48.11c-.07-1.71-.11-3.44-.11-5.21Zm1.74 80H120v84.92c-19.68-8.36-61.27-32-70.26-84.92M136 220.91V136h70.26c-8.99 52.89-50.54 76.54-70.26 84.91"/></g></svg>
+                  <select>
+                    <option value="private">Private Key</option>
+                    <option value="public" selected>Public Key</option>
+                  </select>
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
+                </label>
+              </div>
               <div class="input">
                 <textarea rows="10" placeholder="Paste text or drop key files..." spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
               </div>
@@ -374,7 +417,9 @@
                     <option value="8">octal</option>
                     <option value="16">hexadecimal</option>
                     <option value="64">base64</option>
-                    <option value="100" selected>utf-8</option>
+                    <option value="100">utf-8</option>
+                    <option value="-5">json</option>
+                    <option value="-6" selected>pem</option>
                   </select>
                   <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
                 </label>

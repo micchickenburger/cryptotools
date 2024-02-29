@@ -45,7 +45,7 @@ const updateKeyList = () => {
   const array = Object.entries(keys);
   if (!array.length) {
     const li = document.createElement('li');
-    li.textContent = 'No Keys.  Generate a key to get started.';
+    li.textContent = 'No Keys.  Generate or import a key to get started.';
     list.appendChild(li);
   }
 
