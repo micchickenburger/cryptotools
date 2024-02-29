@@ -63,7 +63,7 @@ const PRIVATE_KEY_SCHEMA = new asn1js.Sequence({
   ],
 });
 
-const section = document.querySelector<HTMLElement>('#encryption [data-tab="import-keys"]')!;
+const section = document.querySelector<HTMLElement>('#encryption [data-tab="import-key"]')!;
 const importButton = section.querySelector<HTMLButtonElement>('button');
 const textarea = section.querySelector<HTMLTextAreaElement>('textarea')!;
 const algorithmSelect = section.querySelector<HTMLSelectElement>('.algorithm select')!;

@@ -31,6 +31,71 @@ type Key = {
 const keys: { [keyName: string]: Key } = {};
 
 /**
+ * Handle key export clicks
+ */
+const exportKeyHandler = (key: CryptoKey, name: string) => async (event: Event) => {
+  event.preventDefault();
+  event.stopPropagation(); // prevent li click from registering
+
+  const type = `${key.type.charAt(0).toUpperCase()}${key.type.slice(1)}`;
+  const filename = `${name.replace(/\s/g, '-')}.${key.type}`;
+  const results: Result[] = [];
+
+  try {
+    switch (key.algorithm.name) {
+      // Symmetric algorithms
+      case 'AES-CTR': case 'AES-CBC': case 'AES-GCM': case 'HMAC':
+        results.push({
+          label: `${type} Key "${name}" in Raw Format`,
+          value: await exportKey(key, 'raw')() as ArrayBuffer,
+          filename,
+          extension: 'key',
+        });
+        break;
+      // Asymmetric algorithms
+      case 'RSASSA-PKCS1-v1_5': case 'RSA-PSS': case 'RSA-OAEP': case 'ECDSA': {
+        const isPrivate = key.type === 'private';
+        const value = await exportKey(key, isPrivate ? 'pkcs8' : 'spki')() as ArrayBuffer;
+        results.push({
+          label: `${type} Key "${name}" in ${isPrivate ? 'PKCS#8' : 'Subject Public Key Info (SPKI)'} Format, DER-Encoded`,
+          value,
+          defaultEncoding: ENCODING.BASE64,
+          filename,
+          extension: 'der',
+        }, {
+          label: `${type} Key "${name}" in PKCS#8 Format, PEM-Encoded`,
+          value: `-----BEGIN ${type.toUpperCase()} KEY-----\n${encode(value, ENCODING.BASE64)}\n-----END ${type.toUpperCase()} KEY-----\n`,
+          filename,
+          extension: isPrivate ? 'key' : 'pem',
+        });
+        break;
+      }
+      default:
+        throw new Error(`Unsupported key algorithm ${key.algorithm.name}`);
+    }
+
+    // For some reason, Elliptic Curve public keys (not private) can also be exported in raw format
+    if (key.algorithm.name === 'ECDSA' && key.type === 'public') {
+      results.push({
+        label: `${type} Key "${name}" in Raw Format`,
+        value: await exportKey(key, 'raw')() as ArrayBuffer,
+        defaultEncoding: ENCODING.BASE64,
+        filename,
+      });
+    }
+
+    // All algorithms have a JWK export format
+    results.push({
+      label: `${type} Key "${name}" in JSON Web Key (JWK) Format`,
+      value: JSON.stringify(await exportKey(key, 'jwk')() as JsonWebKey, null, 2),
+      filename,
+    });
+
+    showResults(results);
+  } catch (e) { handleError(e); }
+};
+
+/**
  * Update Key List
  */
 const updateKeyList = () => {
@@ -78,26 +143,27 @@ const updateKeyList = () => {
       name.appendChild(disk);
     }
 
-    const isSymmetric = keyStructure instanceof CryptoKey;
+    const isSingleKey = keyStructure instanceof CryptoKey;
+    const isSymmetric = isSingleKey && keyStructure.type === 'secret';
 
     const attributes = document.createElement('span');
-    let type: string;
+    let description: string;
     let alg: string;
     let usages: KeyUsage[];
 
-    if (isSymmetric) {
+    if (isSingleKey) {
       icon.innerHTML = KEY_SVG;
-      type = 'Symmetric Key';
+      description = isSymmetric ? 'Symmetric Key' : `Asymmetric ${keyStructure.type.charAt(0).toUpperCase()}${keyStructure.type.slice(1)} Key`;
       alg = keyStructure.algorithm.name;
       usages = keyStructure.usages;
     } else {
       icon.innerHTML = KEYS_SVG;
-      type = 'Asymmetric Key Pair';
+      description = 'Asymmetric Key Pair';
       alg = keyStructure.privateKey.algorithm.name;
       usages = keyStructure.privateKey.usages.concat(keyStructure.publicKey.usages);
     }
 
-    attributes.textContent = `${type} • ${alg} • ${usages.join(', ')}`;
+    attributes.textContent = `${description} • ${alg} • ${usages.join(', ')}`;
     meta.appendChild(attributes);
 
     const actions = document.createElement('div');
@@ -105,121 +171,26 @@ const updateKeyList = () => {
     li.appendChild(actions);
 
     // At minimum, public keys are always exportable
-    if (!isSymmetric) {
+    if (!isSingleKey) {
       const exportPublic = document.createElement('a');
       exportPublic.href = '#';
       exportPublic.innerHTML = PUBLIC_EXPORT_SVG;
       exportPublic.dataset.tooltip = 'Export Public Key';
-      exportPublic.addEventListener('click', async (event) => {
-        event.preventDefault();
-        event.stopPropagation(); // prevent li click from registering
-
-        const key = keyStructure.publicKey;
-        const filename = `${k.replace(/\s/g, '-')}.public`;
-        const results: Result[] = [];
-
-        try {
-          switch (key.algorithm.name) {
-            case 'RSASSA-PKCS1-v1_5': case 'RSA-PSS': case 'RSA-OAEP': case 'ECDSA': {
-              const spki = await exportKey(key, 'spki')() as ArrayBuffer;
-              results.push({
-                label: `Public Key "${k}" in Subject Public Key Info (SPKI) Format, DER-Encoded`,
-                value: spki,
-                defaultEncoding: ENCODING.BASE64,
-                filename,
-                extension: 'der',
-              }, {
-                label: `Public Key "${k}" in Subject Public Key Info (SPKI) Format, PEM-Encoded`,
-                value: `-----BEGIN PUBLIC KEY-----\n${encode(spki, ENCODING.BASE64)}\n-----END PUBLIC KEY-----\n`,
-                filename,
-                extension: 'pem',
-              });
-              break;
-            }
-            default:
-              throw new Error(`Unsupported key algorithm ${key.algorithm.name}`);
-          }
-
-          // For some reason, Elliptic Curve public keys can also be exported in raw format
-          if (key.algorithm.name === 'ECDSA') {
-            results.push({
-              label: `Public Key "${k}" in Raw Format`,
-              value: await exportKey(key, 'raw')() as ArrayBuffer,
-              defaultEncoding: ENCODING.BASE64,
-              filename,
-            });
-          }
-
-          // All algorithms have a JWK export format
-          results.push({
-            label: `Public Key "${k}" in JSON Web Key (JWK) Format`,
-            value: JSON.stringify(await exportKey(key, 'jwk')() as JsonWebKey, null, 2),
-            filename,
-          });
-
-          showResults(results);
-        } catch (e) { handleError(e); }
-      });
+      exportPublic.addEventListener('click', exportKeyHandler(keyStructure.publicKey, k));
       actions.appendChild(exportPublic);
     }
 
     // Symmetric keys or asymmetric private keys marked as extractable
     if (
-      (!isSymmetric && keyStructure.privateKey.extractable)
-      || (isSymmetric && keyStructure.extractable)
+      (!isSingleKey && keyStructure.privateKey.extractable)
+      || (isSingleKey && keyStructure.extractable)
     ) {
+      const key = isSingleKey ? keyStructure : keyStructure.privateKey;
       const exportPrivate = document.createElement('a');
       exportPrivate.href = '#';
-      exportPrivate.innerHTML = PRIVATE_EXPORT_SVG;
-      exportPrivate.dataset.tooltip = isSymmetric ? 'Export Secret Key' : 'Export Private Key';
-      exportPrivate.addEventListener('click', async (event) => {
-        event.preventDefault();
-        event.stopPropagation(); // prevent li click from registering
-
-        const key = isSymmetric ? keyStructure : keyStructure.privateKey;
-        const filename = `${k.replace(/\s/g, '-')}.${isSymmetric ? 'secret' : 'private'}`;
-        const results: Result[] = [];
-
-        try {
-          switch (key.algorithm.name) {
-            case 'AES-CTR': case 'AES-CBC': case 'AES-GCM': case 'HMAC':
-              results.push({
-                label: `Secret Key "${k}" in Raw Format`,
-                value: await exportKey(key, 'raw')() as ArrayBuffer,
-                filename,
-                extension: 'key',
-              });
-              break;
-            case 'RSASSA-PKCS1-v1_5': case 'RSA-PSS': case 'RSA-OAEP': case 'ECDSA': {
-              const pkcs8 = await exportKey(key, 'pkcs8')() as ArrayBuffer;
-              results.push({
-                label: `Private Key "${k}" in PKCS#8 Format, DER-Encoded`,
-                value: pkcs8,
-                defaultEncoding: ENCODING.BASE64,
-                filename,
-                extension: 'der',
-              }, {
-                label: `Private Key "${k}" in PKCS#8 Format, PEM-Encoded`,
-                value: `-----BEGIN PRIVATE KEY-----\n${encode(pkcs8, ENCODING.BASE64)}\n-----END PRIVATE KEY-----\n`,
-                filename,
-                extension: 'key',
-              });
-              break;
-            }
-            default:
-              throw new Error(`Unsupported key algorithm ${key.algorithm.name}`);
-          }
-
-          // All algorithms have a JWK export format
-          results.push({
-            label: `${isSymmetric ? 'Secret' : 'Private'} Key "${k}" in JSON Web Key (JWK) Format`,
-            value: JSON.stringify(await exportKey(key, 'jwk')() as JsonWebKey, null, 2),
-            filename,
-          });
-
-          showResults(results);
-        } catch (e) { handleError(e); }
-      });
+      exportPrivate.innerHTML = key.type === 'public' ? PUBLIC_EXPORT_SVG : PRIVATE_EXPORT_SVG;
+      exportPrivate.dataset.tooltip = `Export ${key.type.charAt(0).toUpperCase()}${key.type.slice(1)} Key`;
+      exportPrivate.addEventListener('click', exportKeyHandler(key, k));
       actions.appendChild(exportPrivate);
     }
 
