@@ -9,7 +9,7 @@
  * cryptographic operations.
  */
 
-import { guessEncoding } from './encode';
+import { ENCODING, guessEncoding } from './encode';
 
 const opAreas = document.querySelectorAll<HTMLElement>('.operation-area');
 
@@ -45,6 +45,13 @@ opAreas.forEach((opArea) => {
         if (count === 1) characterCount.textContent = '1 character';
         else characterCount.textContent = `${count} characters`;
       }
+    });
+
+    // Change encoding to UTF-8 if user is typing (because who manually types Binary, Hex, etc)
+    textarea.addEventListener('keypress', () => {
+      const encodingSelect = textarea.parentElement!.querySelector<HTMLSelectElement>('.encoding select')
+        || textarea.parentElement!.parentElement!.querySelector<HTMLSelectElement>('.encoding select');
+      encodingSelect!.value = String(ENCODING['UTF-8']);
     });
   });
 });
