@@ -246,8 +246,8 @@ interface Result {
 const showResults = (results: Result[]) => {
   resultElement.innerHTML = DOUBLE_CHEVRON_SVG; // remove any previous results
   clearError(); // as well as any previous error
-  resultElement.scrollIntoView({
-    block: 'start',
+  window.scrollTo({
+    top: resultElement.offsetTop,
     behavior: 'smooth',
   });
 

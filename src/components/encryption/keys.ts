@@ -37,6 +37,9 @@ const exportKeyHandler = (key: CryptoKey, name: string) => async (event: Event) 
   event.preventDefault();
   event.stopPropagation(); // prevent li click from registering
 
+  // Hide operation area if it's already opened
+  document.querySelector<HTMLElement>('#encryption .crypto-operations')?.classList.remove('active');
+
   const type = `${key.type.charAt(0).toUpperCase()}${key.type.slice(1)}`;
   const filename = `${name.replace(/\s/g, '-')}.${key.type}`;
   const results: Result[] = [];

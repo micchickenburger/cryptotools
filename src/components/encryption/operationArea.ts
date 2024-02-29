@@ -5,6 +5,7 @@
  * license GPL-3.0-or-later
  */
 
+import { hideResults } from '../../lib/result';
 import { KEY_SVG } from '../../lib/svg';
 // eslint-disable-next-line import/no-cycle
 import { getKey } from './keys';
@@ -59,6 +60,7 @@ const updateOpArea = (
   cryptoKey: CryptoKey | CryptoKeyPair,
   operation?: KeyUsage,
 ) => () => {
+  hideResults();
   opArea?.classList.add('active');
   opArea?.scrollIntoView({
     block: 'center',
