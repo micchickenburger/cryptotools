@@ -66,6 +66,7 @@ const PRIVATE_KEY_SCHEMA = new asn1js.Sequence({
 const section = document.querySelector<HTMLElement>('#encryption [data-tab="import-key"]')!;
 const importButton = section.querySelector<HTMLButtonElement>('button');
 const textarea = section.querySelector<HTMLTextAreaElement>('textarea')!;
+const rsaSettings = section.querySelector<HTMLElement>('.settings.rsa');
 const algorithmSelect = section.querySelector<HTMLSelectElement>('.algorithm select')!;
 const keyTypeSelect = section.querySelector<HTMLSelectElement>('.key-type select')!;
 
@@ -80,6 +81,8 @@ textarea.addEventListener('paste', () => setTimeout(() => {
   let keyData: ArrayBuffer | object | undefined;
   let algorithm: string = 'AES-GCM';
   const keyUsages: KeyUsage[] = [];
+
+  rsaSettings?.classList.remove('active');
 
   // Detect key type
   try {
@@ -134,7 +137,6 @@ textarea.addEventListener('paste', () => setTimeout(() => {
           root,
           PUBLIC_KEY_SCHEMA,
         );
-        format = 'spki';
 
         // Or a private key?
         if (!schema || !schema.verified) {
@@ -143,8 +145,6 @@ textarea.addEventListener('paste', () => setTimeout(() => {
             root,
             PRIVATE_KEY_SCHEMA,
           );
-          isPrivate = true;
-          format = 'pkcs8';
         }
 
         if (!schema || !schema.verified) {
@@ -155,24 +155,13 @@ textarea.addEventListener('paste', () => setTimeout(() => {
           break;
         }
 
-        console.debug('schema', schema);
-
         const algorithmId = schema.result.algorithm.valueBlock.toString();
         switch (algorithmId) {
-          case '1.2.840.10045.2.1': // ECDSA
-            console.debug('algorithm', 'ecdsa', 'isPrivate?', isPrivate);
-            algorithm = 'ECDSA';
-            break;
-          case '1.2.840.113549.1.1.1': // RSA
-            console.debug('algorithm', 'rsa', 'isPrivate?', isPrivate);
-            algorithm = 'RSASSA-PKCS1-v1_5'; // Could also be PSS or OAEP mode
-            break;
+          case '1.2.840.10045.2.1': break; // ECDSA
+          case '1.2.840.113549.1.1.1': rsaSettings?.classList.add('active'); break; // RSA
           default:
             throw new Error(`Unknown algorithm ID ${algorithmId}`);
         }
-
-        if (isPrivate) keyUsages.push('decrypt', 'sign');
-        else keyUsages.push('encrypt', 'verify');
       }
     }
   } catch (e) { handleError(e); }
@@ -208,6 +197,7 @@ importButton?.addEventListener('click', async () => {
   // Detect key type
   try {
     if (!keyName) throw new Error('A key name is required.');
+    if (!value) throw new Error('A key must be provided.');
 
     switch (encoding) {
       // JSON Web Keys
@@ -295,6 +285,8 @@ importButton?.addEventListener('click', async () => {
           format = 'pkcs8';
         }
 
+        // Treat as raw
+        // TODO
         if (!schema || !schema.verified) {
           console.log('Input does not look like a PEM-encoded, ASN.1 DER-encoded, or JSON-encoded cryptokey. Assuming raw.');
           format = 'raw';
@@ -305,16 +297,58 @@ importButton?.addEventListener('click', async () => {
 
         const algorithmId = schema.result.algorithm.valueBlock.toString();
         switch (algorithmId) {
-          // TODO: Extract curve and hash settings from DER data
-          case '1.2.840.10045.2.1': algorithm = 'ECDSA'; break;
-          case '1.2.840.113549.1.1.1': algorithm = 'RSASSA-PKCS1-v1_5'; break; // Could also be PSS or OAEP mode
-          // TODO: ECDH
+          // Elliptic Curve
+          case '1.2.840.10045.2.1': {
+            // @link https://www.ietf.org/rfc/rfc5480.txt
+            const curve = schema.result.parameters.valueBlock.toString();
+            let namedCurve = '';
+            switch (curve) {
+              case '1.2.840.10045.3.1.7': namedCurve = 'P-256'; break; // secp256r1
+              case '1.3.132.0.34': namedCurve = 'P-384'; break; // secp384r1
+              case '1.3.132.0.35': namedCurve = 'P-521'; break; // secp521r1
+
+              /* eslint-disable no-fallthrough */
+              case '1.2.840.10045.3.1.1': namedCurve = 'secp192r1';
+              case '1.3.132.0.1': namedCurve = 'sect163k1';
+              case '1.3.132.0.15': namedCurve = 'sect163r2';
+              case '1.3.132.0.33': namedCurve = 'secp224r1';
+              case '1.3.132.0.26': namedCurve = 'sect233k1';
+              case '1.3.132.0.27': namedCurve = 'sect233r1';
+              case '1.3.132.0.16': namedCurve = 'sect283k1';
+              case '1.3.132.0.17': namedCurve = 'sect283r1';
+              case '1.3.132.0.36': namedCurve = 'sect409k1';
+              case '1.3.132.0.37': namedCurve = 'sect409r1';
+              case '1.3.132.0.38': namedCurve = 'sect571k1';
+              case '1.3.132.0.39': namedCurve = 'sect571r1';
+              default:
+                throw new Error(`Unsupported named curve ${namedCurve}`);
+              /* eslint-enable no-fallthrough */
+            }
+
+            // TODO: ECDH
+            algorithm = { name: 'ECDSA', namedCurve } as EcKeyImportParams;
+            if (isPrivate) keyUsages.push('sign');
+            else keyUsages.push('verify');
+            break;
+          }
+          // RSA
+          case '1.2.840.113549.1.1.1': {
+            const name = form.querySelector<HTMLSelectElement>('.settings.rsa .algorithm select')!.value;
+            const hash = form.querySelector<HTMLSelectElement>('.settings.rsa .hash-function select')!.value;
+            algorithm = { name, hash } as RsaHashedImportParams;
+
+            if (name === 'RSA-OAEP') { // encryption
+              if (isPrivate) keyUsages.push('decrypt');
+              else keyUsages.push('encrypt');
+            } else // digital signatures
+              if (isPrivate) keyUsages.push('sign');
+              else keyUsages.push('verify');
+
+            break;
+          }
           default:
             throw new Error(`Unknown algorithm ID "${algorithmId}"`);
         }
-
-        if (isPrivate) keyUsages.push('decrypt', 'sign');
-        else keyUsages.push('encrypt', 'verify');
       }
     }
 
@@ -329,6 +363,9 @@ importButton?.addEventListener('click', async () => {
     }
 
     addKey(keyName, key, saveKey);
+
+    // Reset
+    rsaSettings?.classList.remove('active');
     form.reset();
   } catch (e) { handleError(e); }
 });
