@@ -198,11 +198,12 @@ importButton?.addEventListener('click', async () => {
   let keyData: ArrayBuffer | JsonWebKey;
   let algorithm: RsaHashedImportParams | EcKeyImportParams
   | HmacImportParams | AlgorithmIdentifier | AesKeyAlgorithm;
-  const extractable = !!section.querySelector<HTMLInputElement>('.extractable input')?.checked;
   const keyUsages: KeyUsage[] = [];
 
-  const keyName = section.querySelector<HTMLInputElement>('.name input')?.value;
-  const saveKey = !!section.querySelector<HTMLInputElement>('.save input')?.checked;
+  const form = section.querySelector<HTMLFormElement>('form')!;
+  const keyName = form.querySelector<HTMLInputElement>('.name input')?.value;
+  const saveKey = !!form.querySelector<HTMLInputElement>('.save input')?.checked;
+  const extractable = !!form.querySelector<HTMLInputElement>('.extractable input')?.checked;
 
   // Detect key type
   try {
@@ -328,5 +329,6 @@ importButton?.addEventListener('click', async () => {
     }
 
     addKey(keyName, key, saveKey);
+    form.reset();
   } catch (e) { handleError(e); }
 });
