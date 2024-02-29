@@ -380,34 +380,47 @@
                   <span>Enable Key Export</span>
                   <input type="checkbox">
                 </label>
-                <label class="control algorithm required">
-                  <span class="label">Algorithm</span>
+                <label class="control algorithm">
+                  <span class="label required">Algorithm</span>
                   <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M192 48v160H64l64-80l-64-80Z" opacity=".2"/><path d="M184 72V56H80.65l53.6 67a8 8 0 0 1 0 10l-53.6 67H184v-16a8 8 0 0 1 16 0v24a8 8 0 0 1-8 8H64a8 8 0 0 1-6.25-13l60-75l-60-75A8 8 0 0 1 64 40h128a8 8 0 0 1 8 8v24a8 8 0 0 1-16 0"/></g></svg>
                   <select>
                     <option data-target="aes" value="AES-CBC" data-mode="AES Cipher Block Chaining Mode" data-type="Symmetric">AES CBC</option>
                     <option data-target="aes" value="AES-CTR" data-mode="AES Counter Mode" data-type="Symmetric">AES CTR</option>
-                    <option data-target="aes" value="AES-GCM" data-mode="AES Galois Counter Mode" data-type="Symmetric">AES GCM</option>
-                    <option data-target="ec" value="ECDSA" data-mode="Elliptic Curve Digital Signature Algorithm" data-type="Asymmetric">ECDSA</option>
+                    <option data-target="aes" value="AES-GCM" data-mode="AES Galois Counter Mode" data-type="Symmetric" selected>AES GCM</option>
+                    <option data-target="ec" value="ECDSA" data-mode="Elliptic Curve Digital Signature Algorithm" data-type="Asymmetric">ECDSA Public Key</option>
                     <option data-target="hmac" value="HMAC" data-mode="Hash-Based Message Authentication Code" data-type="Symmetric">HMAC</option>
-                    <option data-target="rsa" value="RSA-OAEP" data-mode="RSA Optimal Asymmetric Encryption Padding Mode" data-type="Asymmetric">RSA OAEP</option>
-                    <option data-target="rsa" value="RSA-PSS" data-mode="RSA Probabilistic Signature Scheme" data-type="Asymmetric">RSA PSS</option>
-                    <option data-target="rsa" value="RSASSA-PKCS1-v1_5" data-mode="RSA Signature Scheme with Appendix - PKCS#1 v1.5" data-type="Asymmetric" selected>RSA SSA PKCS#1 v1.5</option>
                   </select>
                   <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
                 </label>
-                <label class="control key-type required">
-                  <span class="label">Key Type</span>
-                  <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M215.39 128c-7 73.93-71.47 99.12-84.93 103.59a7.93 7.93 0 0 1-2.46.41V128zM128 48H48a8 8 0 0 0-8 8v58.77q0 6.85.61 13.21H128Z" opacity=".2"/><path d="M208 40H48a16 16 0 0 0-16 16v58.77c0 89.62 75.82 119.34 91 124.38a15.44 15.44 0 0 0 10 0c15.2-5.05 91-34.77 91-124.39V56a16 16 0 0 0-16-16m0 74.79c0 1.77 0 3.5-.11 5.21H136V56h72ZM48 56h72v64H48.11c-.07-1.71-.11-3.44-.11-5.21Zm1.74 80H120v84.92c-19.68-8.36-61.27-32-70.26-84.92M136 220.91V136h70.26c-8.99 52.89-50.54 76.54-70.26 84.91"/></g></svg>
-                  <select>
-                    <option value="private">Private Key</option>
-                    <option value="public" selected>Public Key</option>
+              </div>
+              <div class="settings flex hmac">
+                <label class="control hash-function">
+                  <span class="label required">Hash Function</span>
+                  <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M224 128a96 96 0 1 1-96-96a96 96 0 0 1 96 96" opacity=".2"/><path d="M72 128a134.63 134.63 0 0 1-14.16 60.47a8 8 0 1 1-14.32-7.12A118.8 118.8 0 0 0 56 128a71.73 71.73 0 0 1 27-56.2a8 8 0 1 1 10 12.49A55.76 55.76 0 0 0 72 128m56-8a8 8 0 0 0-8 8a184.12 184.12 0 0 1-23 89.1a8 8 0 0 0 14 7.76A200.19 200.19 0 0 0 136 128a8 8 0 0 0-8-8m0-32a40 40 0 0 0-40 40a8 8 0 0 0 16 0a24 24 0 0 1 48 0a214.09 214.09 0 0 1-20.51 92a8 8 0 1 0 14.51 6.83A230 230 0 0 0 168 128a40 40 0 0 0-40-40m0-64A104.11 104.11 0 0 0 24 128a87.76 87.76 0 0 1-5 29.33a8 8 0 0 0 15.09 5.33A103.9 103.9 0 0 0 40 128a88 88 0 0 1 176 0a282.24 282.24 0 0 1-5.29 54.45a8 8 0 0 0 6.3 9.4a8.22 8.22 0 0 0 1.55.15a8 8 0 0 0 7.84-6.45A298.37 298.37 0 0 0 232 128A104.12 104.12 0 0 0 128 24M94.4 152.17a8 8 0 0 0-9.4 6.25a151 151 0 0 1-17.21 45.44a8 8 0 0 0 13.86 8a166.67 166.67 0 0 0 19-50.25a8 8 0 0 0-6.25-9.44M128 56a72.85 72.85 0 0 0-9 .56a8 8 0 0 0 2 15.87A56.08 56.08 0 0 1 184 128a252.12 252.12 0 0 1-1.92 31a8 8 0 0 0 6.92 9a8.39 8.39 0 0 0 1 .06a8 8 0 0 0 7.92-7a266.48 266.48 0 0 0 2-33A72.08 72.08 0 0 0 128 56m57.93 128.25a8 8 0 0 0-9.75 5.75c-1.46 5.69-3.15 11.4-5 17a8 8 0 0 0 5 10.13a7.88 7.88 0 0 0 2.55.42a8 8 0 0 0 7.58-5.46c2-5.92 3.79-12 5.35-18.05a8 8 0 0 0-5.72-9.78Z"/></g></svg>
+                  <select class="hash">
+                    <option value="SHA-1">SHA-1 (weak)</option>
+                    <option value="SHA-256" selected>SHA-256</option>
+                    <option dvalue="SHA-384">SHA-384</option>
+                    <option value="SHA-512">SHA-512</option>
+                  </select>
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
+                </label>
+              </div>
+              <div class="settings flex ec">
+                <label class="control curve">
+                  <span class="label required">Elliptic Curve</span>
+                  <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M152 80a24 24 0 1 1-24-24a24 24 0 0 1 24 24M40 152a24 24 0 1 0 24 24a24 24 0 0 0-24-24m176 0a24 24 0 1 0 24 24a24 24 0 0 0-24-24" opacity=".2"/><path d="M221.07 144.41A96.68 96.68 0 0 0 181 88h59a8 8 0 0 0 0-16h-81a32 32 0 0 0-62 0H16a8 8 0 0 0 0 16h59a96.68 96.68 0 0 0-40.07 56.41A32 32 0 1 0 51.08 146A80.6 80.6 0 0 1 99 93.44a32 32 0 0 0 58.06 0A80.6 80.6 0 0 1 204.92 146a32 32 0 1 0 16.15-1.57ZM56 176a16 16 0 1 1-16-16a16 16 0 0 1 16 16m72-80a16 16 0 1 1 16-16a16 16 0 0 1-16 16m88 96a16 16 0 1 1 16-16a16 16 0 0 1-16 16"/></g></svg>
+                  <select class="curve">
+                    <option value="P-256" selected>P-256</option>
+                    <option value="P-384">P-384</option>
+                    <option value="P-521">P-521</option>
                   </select>
                   <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
                 </label>
               </div>
               <div class="settings flex rsa">
-                <label class="control algorithm required">
-                  <span class="label">RSA Algorithm</span>
+                <label class="control algorithm">
+                  <span class="label required">RSA Algorithm</span>
                   <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M192 48v160H64l64-80l-64-80Z" opacity=".2"/><path d="M184 72V56H80.65l53.6 67a8 8 0 0 1 0 10l-53.6 67H184v-16a8 8 0 0 1 16 0v24a8 8 0 0 1-8 8H64a8 8 0 0 1-6.25-13l60-75l-60-75A8 8 0 0 1 64 40h128a8 8 0 0 1 8 8v24a8 8 0 0 1-16 0"/></g></svg>
                   <select>
                     <option value="RSA-OAEP" data-mode="RSA Optimal Asymmetric Encryption Padding Mode" data-type="Asymmetric">RSA OAEP</option>
@@ -416,8 +429,8 @@
                   </select>
                   <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
                 </label>
-                <label class="control hash-function required">
-                  <span class="label">Hash Function</span>
+                <label class="control hash-function">
+                  <span class="label required">Hash Function</span>
                   <svg viewBox="0 0 256 256"><g fill="currentColor"><path d="M224 128a96 96 0 1 1-96-96a96 96 0 0 1 96 96" opacity=".2"/><path d="M72 128a134.63 134.63 0 0 1-14.16 60.47a8 8 0 1 1-14.32-7.12A118.8 118.8 0 0 0 56 128a71.73 71.73 0 0 1 27-56.2a8 8 0 1 1 10 12.49A55.76 55.76 0 0 0 72 128m56-8a8 8 0 0 0-8 8a184.12 184.12 0 0 1-23 89.1a8 8 0 0 0 14 7.76A200.19 200.19 0 0 0 136 128a8 8 0 0 0-8-8m0-32a40 40 0 0 0-40 40a8 8 0 0 0 16 0a24 24 0 0 1 48 0a214.09 214.09 0 0 1-20.51 92a8 8 0 1 0 14.51 6.83A230 230 0 0 0 168 128a40 40 0 0 0-40-40m0-64A104.11 104.11 0 0 0 24 128a87.76 87.76 0 0 1-5 29.33a8 8 0 0 0 15.09 5.33A103.9 103.9 0 0 0 40 128a88 88 0 0 1 176 0a282.24 282.24 0 0 1-5.29 54.45a8 8 0 0 0 6.3 9.4a8.22 8.22 0 0 0 1.55.15a8 8 0 0 0 7.84-6.45A298.37 298.37 0 0 0 232 128A104.12 104.12 0 0 0 128 24M94.4 152.17a8 8 0 0 0-9.4 6.25a151 151 0 0 1-17.21 45.44a8 8 0 0 0 13.86 8a166.67 166.67 0 0 0 19-50.25a8 8 0 0 0-6.25-9.44M128 56a72.85 72.85 0 0 0-9 .56a8 8 0 0 0 2 15.87A56.08 56.08 0 0 1 184 128a252.12 252.12 0 0 1-1.92 31a8 8 0 0 0 6.92 9a8.39 8.39 0 0 0 1 .06a8 8 0 0 0 7.92-7a266.48 266.48 0 0 0 2-33A72.08 72.08 0 0 0 128 56m57.93 128.25a8 8 0 0 0-9.75 5.75c-1.46 5.69-3.15 11.4-5 17a8 8 0 0 0 5 10.13a7.88 7.88 0 0 0 2.55.42a8 8 0 0 0 7.58-5.46c2-5.92 3.79-12 5.35-18.05a8 8 0 0 0-5.72-9.78Z"/></g></svg>
                   <select class="hash">
                     <option value="SHA-1">SHA-1 (weak)</option>

@@ -66,22 +66,29 @@ const PRIVATE_KEY_SCHEMA = new asn1js.Sequence({
 const section = document.querySelector<HTMLElement>('#encryption [data-tab="import-key"]')!;
 const importButton = section.querySelector<HTMLButtonElement>('button');
 const textarea = section.querySelector<HTMLTextAreaElement>('textarea')!;
+const hmacSettings = section.querySelector<HTMLElement>('.settings.hmac');
+const ecSettings = section.querySelector<HTMLElement>('.settings.ec');
 const rsaSettings = section.querySelector<HTMLElement>('.settings.rsa');
 const algorithmSelect = section.querySelector<HTMLSelectElement>('.algorithm select')!;
-const keyTypeSelect = section.querySelector<HTMLSelectElement>('.key-type select')!;
+
+/**
+ * Show HMAC or EC settings on algorithm change
+ */
+algorithmSelect.addEventListener('change', () => {
+  hmacSettings?.classList.remove('active');
+  ecSettings?.classList.remove('active');
+  if (algorithmSelect.value === 'HMAC') hmacSettings?.classList.add('active');
+  if (algorithmSelect.value === 'ECDSA') ecSettings?.classList.add('active');
+});
 
 // Update settings based on textarea detection
 // setTimeout is needed to await the browser paste to complete
 textarea.addEventListener('paste', () => setTimeout(() => {
   const { value } = textarea;
   const encoding = guessEncoding(value);
-  let isSymmetric = false;
-  let isPrivate = false;
-  let format: string;
   let keyData: ArrayBuffer | object | undefined;
-  let algorithm: string = 'AES-GCM';
-  const keyUsages: KeyUsage[] = [];
 
+  algorithmSelect.parentElement!.style.display = 'none';
   rsaSettings?.classList.remove('active');
 
   // Detect key type
@@ -92,26 +99,7 @@ textarea.addEventListener('paste', () => setTimeout(() => {
         const jwk = JSON.parse(value);
 
         // kty parameter is required in a JWK
-        if (jwk && jwk.kty) {
-          format = 'jwk';
-          keyData = jwk;
-          keyUsages.push(...jwk.key_ops);
-          if (jwk.d) isPrivate = true;
-
-          if (jwk.kty === 'oct') isSymmetric = true;
-          switch (true) {
-            case /^A\d+CBC$/.test(jwk.alg): algorithm = 'AES-CBC'; break;
-            case /^A\d+CTR$/.test(jwk.alg): algorithm = 'AES-CTR'; break;
-            case /^A\d+GCM$/.test(jwk.alg): algorithm = 'AES-GCM'; break;
-            case /^HS\d+$/.test(jwk.alg): algorithm = 'HMAC'; break;
-            case /^RSA-OAEP-\d+$/.test(jwk.alg): algorithm = 'RSA-OAEP'; break;
-            case /^PS\d+$/.test(jwk.alg): algorithm = 'RSA-PSS'; break;
-            case /^RS\d+$/.test(jwk.alg): algorithm = 'RSASSA-PKCS1-v1_5'; break;
-            default:
-              // No alg for ECDSA
-              if (jwk.kty === 'EC') algorithm = 'ECDSA';
-          }
-        } else throw new Error('JSON object is not a valid JSON Web Key');
+        if (!jwk || !jwk.kty) throw new Error('JSON object is not a valid JSON Web Key');
         break;
       }
 
@@ -124,7 +112,9 @@ textarea.addEventListener('paste', () => setTimeout(() => {
           // Decode PEM to DER
           const der = value.match(/^-{5}BEGIN (.+)-{5}(?:\r\n?|\n)((?:[0-9a-zA-Z+/]{4})*[0-9a-zA-Z+/]{2}[0-9a-zA-Z+/=]{2})(\r\n?|\n)-{5}END .+-{5}(\r\n?|\n)?$/);
           if (der && der.length > 2) keyData = decode(der[2], ENCODING.BASE64);
-        } else keyData = decode(value, encoding);
+        } else {
+          try { keyData = decode(value, encoding); } catch (e) { throw new Error('Pasted content does not look like key material.'); }
+        }
 
         // Decode DER to ASN.1
         const asn = asn1js.fromBER(keyData as ArrayBuffer);
@@ -147,11 +137,9 @@ textarea.addEventListener('paste', () => setTimeout(() => {
           );
         }
 
+        // Or treat as raw key material
         if (!schema || !schema.verified) {
-          console.log('Input does not look like a PEM-encoded, ASN.1 DER-encoded, or JSON-encoded cryptokey. Assuming raw.');
-          format = 'raw';
-          isSymmetric = true;
-          algorithm = 'AES-GCM'; // Could also be CBC or CTR modes, or HMAC
+          algorithmSelect.parentElement!.style.display = 'flex';
           break;
         }
 
@@ -165,16 +153,6 @@ textarea.addEventListener('paste', () => setTimeout(() => {
       }
     }
   } catch (e) { handleError(e); }
-  console.debug(format!, keyData, algorithm, keyUsages, isSymmetric);
-
-  // Set fields for user
-  algorithmSelect.value = algorithm;
-  if (isSymmetric) {
-    keyTypeSelect.parentElement!.style.display = 'none';
-  } else {
-    keyTypeSelect.parentElement!.style.display = 'flex';
-    keyTypeSelect.value = isPrivate ? 'private' : 'public';
-  }
 }, 0));
 
 // Import key
@@ -193,6 +171,8 @@ importButton?.addEventListener('click', async () => {
   const keyName = form.querySelector<HTMLInputElement>('.name input')?.value;
   const saveKey = !!form.querySelector<HTMLInputElement>('.save input')?.checked;
   const extractable = !!form.querySelector<HTMLInputElement>('.extractable input')?.checked;
+  const ecCurve = form.querySelector<HTMLSelectElement>('.ec .curve select')?.value;
+  const hmacHash = form.querySelector<HTMLSelectElement>('.hmac .hash-function select')?.value;
 
   // Detect key type
   try {
@@ -288,10 +268,31 @@ importButton?.addEventListener('click', async () => {
         // Treat as raw
         // TODO
         if (!schema || !schema.verified) {
-          console.log('Input does not look like a PEM-encoded, ASN.1 DER-encoded, or JSON-encoded cryptokey. Assuming raw.');
+          console.warn('Input does not look like a PEM-encoded, ASN.1 DER-encoded, or JSON-encoded cryptokey. Assuming raw.');
           format = 'raw';
-          algorithm = algorithmSelect.value as AlgorithmIdentifier;
-          keyUsages.push('encrypt', 'decrypt'); // TODO: differentiate for HMAC; exclude options that don't make sense
+
+          const alg = algorithmSelect.value;
+          if (alg === 'ECDSA') {
+            algorithm = {
+              name: 'ECDSA',
+              namedCurve: ecCurve,
+            } as EcKeyImportParams;
+            keyUsages.push('verify'); // only ecdsa public keys can be exported as raw key material
+            break;
+          }
+
+          if (alg === 'HMAC') {
+            algorithm = {
+              name: 'HMAC',
+              hash: hmacHash,
+            } as HmacImportParams;
+            keyUsages.push('sign', 'verify'); // used for symmetric digital signature
+            break;
+          }
+
+          // Otherwise we have AES
+          algorithm = { name: alg };
+          keyUsages.push('encrypt', 'decrypt');
           break;
         }
 
@@ -365,6 +366,9 @@ importButton?.addEventListener('click', async () => {
     addKey(keyName, key, saveKey);
 
     // Reset
+    algorithmSelect.parentElement!.style.display = 'none';
+    hmacSettings?.classList.remove('active');
+    ecSettings?.classList.remove('active');
     rsaSettings?.classList.remove('active');
     form.reset();
   } catch (e) { handleError(e); }
