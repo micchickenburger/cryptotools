@@ -388,6 +388,7 @@ importButton?.addEventListener('click', async () => {
     ecSettings?.classList.remove('active');
     rsaSettings?.classList.remove('active');
     form.reset();
+    textarea.dispatchEvent(new Event('update'));
   } catch (e) { handleError(e); }
 });
 
