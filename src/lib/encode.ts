@@ -13,6 +13,8 @@ enum ENCODING {
   BOOLEAN = -1,
   BIGINT = -2,
   INTEGER = -3,
+
+  // String encodings
   UUID = -4,
   JSON = -5,
   PEM = -6,

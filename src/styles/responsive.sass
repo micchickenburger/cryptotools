@@ -47,7 +47,7 @@
     margin-top: 0.4rem
 
     .upload
-      margin-right: 0
+      margin: 1.2rem 0
 
   // Result stats get squished, so show as column instead 
   .stats
@@ -72,12 +72,27 @@
     border-radius: 0 0 5px 5px
     margin-top: 1rem
 
-  #encryption .operation-area
-    button
-      margin-top: 1rem
+  #encryption
+    [data-tab='list-keys'] ul li
+      .container
+        align-items: baseline
+      .actions
+        margin: 0.2rem 0 0 1.6rem
 
-    .footer label.upload
-      margin: 0.5rem 0
+    .operation-area
+      button
+        margin-top: 1rem
+
+      .footer
+        .links
+          margin-right: 0.5rem
+        label.upload
+          margin: 0.7rem 0
+
+    [data-tab="import-key"]
+      .links
+        top: unset
+        bottom: 12rem
 
   footer
     flex-direction: column

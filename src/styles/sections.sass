@@ -74,7 +74,7 @@ form.settings
     margin: 0 1rem 0 auto
 
 #encryption
-  .operation-area, .operation-area div.signature, [data-tab="import-key"] .algorithm
+  .operation-area, .operation-area div.signature, [data-tab="import-key"] .raw.algorithm
     display: none
 
   .operation-area div.signature
@@ -166,6 +166,13 @@ form.settings
           &:last-child
             color: $error
             padding-right: 0
+
+  [data-tab="import-key"]
+    form > .settings:first-child
+      padding-top: 1rem
+
+    .settings
+      border-radius: 0
 
 // Advanced Settings 
 details

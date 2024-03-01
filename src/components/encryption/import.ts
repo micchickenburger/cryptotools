@@ -72,7 +72,7 @@ const textarea = section.querySelector<HTMLTextAreaElement>('textarea')!;
 const hmacSettings = section.querySelector<HTMLElement>('.settings.hmac');
 const ecSettings = section.querySelector<HTMLElement>('.settings.ec');
 const rsaSettings = section.querySelector<HTMLElement>('.settings.rsa');
-const algorithmSelect = section.querySelector<HTMLSelectElement>('.algorithm select')!;
+const algorithmSelect = section.querySelector<HTMLSelectElement>('.raw.algorithm select')!;
 
 /**
  * Show HMAC or EC settings on algorithm change
