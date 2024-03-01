@@ -5,5 +5,6 @@
  * license GPL-3.0-or-later
  */
 
-import './generate';
 import './encrypt';
+import './generate';
+import './import';

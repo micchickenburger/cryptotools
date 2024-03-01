@@ -144,11 +144,13 @@ registerButton.addEventListener('click', async () => {
     const routines = getSRPRoutines({ strict, primeGroup, hashAlgorithm });
     const { salt, verifier } = await register({ routines, username, password });
 
-    showResults([
-      { label: 'Salt • Store in user record', value: salt.toString(), defaultEncoding: ENCODING.BIGINT },
-      { label: 'Verifier • Store in user record', value: verifier.toString(), defaultEncoding: ENCODING.BIGINT },
-      { label: 'Prime', value: SRPParameters.PrimeGroup[primeGroup].N.toString(), defaultEncoding: ENCODING.BIGINT },
-    ]);
+    showResults([{
+      label: 'Salt • Store in user record', value: salt.toString(), defaultEncoding: ENCODING.BIGINT, filename: 'srp-salt',
+    }, {
+      label: 'Verifier • Store in user record', value: verifier.toString(), defaultEncoding: ENCODING.BIGINT, filename: 'srp-verifier',
+    }, {
+      label: 'Prime', value: SRPParameters.PrimeGroup[primeGroup].N.toString(), defaultEncoding: ENCODING.BIGINT, filename: 'srp-prime',
+    }]);
   } catch (e) { handleError(e); }
 });
 
@@ -171,10 +173,18 @@ authenticateButton.addEventListener('click', async () => {
       routines, username, password, salt, verifier,
     });
 
-    results.push({ label: 'Client Public Key A', value: A.toString(), defaultEncoding: ENCODING.BIGINT });
-    results.push({ label: 'Client Proof M1', value: M1.toString(), defaultEncoding: ENCODING.BIGINT });
-    results.push({ label: 'Server Public Key B', value: B.toString(), defaultEncoding: ENCODING.BIGINT });
-    results.push({ label: 'Server Proof M2', value: M2.toString(), defaultEncoding: ENCODING.BIGINT });
+    results.push({
+      label: 'Client Public Key A', value: A.toString(), defaultEncoding: ENCODING.BIGINT, filename: 'srp-client-public-key',
+    });
+    results.push({
+      label: 'Client Proof M1', value: M1.toString(), defaultEncoding: ENCODING.BIGINT, filename: 'srp-client-proof',
+    });
+    results.push({
+      label: 'Server Public Key B', value: B.toString(), defaultEncoding: ENCODING.BIGINT, filename: 'srp-server-public-key',
+    });
+    results.push({
+      label: 'Server Proof M2', value: M2.toString(), defaultEncoding: ENCODING.BIGINT, filename: 'srp-server-proof',
+    });
 
     showResults(results);
   } catch (e) { handleError(e); }
@@ -200,8 +210,12 @@ proveIdentityButton.addEventListener('click', async () => {
       routines, username, password, salt, serverPublicKey,
     });
 
-    results.push({ label: 'Client Public Key A', value: A.toString(), defaultEncoding: ENCODING.BIGINT });
-    results.push({ label: 'Client Proof M1', value: M1.toString(), defaultEncoding: ENCODING.BIGINT });
+    results.push({
+      label: 'Client Public Key A', value: A.toString(), defaultEncoding: ENCODING.BIGINT, filename: 'srp-client-public-key',
+    });
+    results.push({
+      label: 'Client Proof M1', value: M1.toString(), defaultEncoding: ENCODING.BIGINT, filename: 'srp-client-proof',
+    });
 
     showResults(results);
   } catch (e) { handleError(e); }

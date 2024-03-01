@@ -41,9 +41,9 @@ const bcryptComplete = (
     const hash = result.substring(sansHash.length);
 
     showResults([
-      { label: 'Bcrypt String', value: result },
-      { label: 'Salt', value: salt },
-      { label: 'Hash', value: hash },
+      { label: 'Bcrypt String', value: result, filename: 'bcrypt-string' },
+      { label: 'Salt', value: salt, filename: 'bcrypt-salt' },
+      { label: 'Hash', value: hash, filename: 'bcrypt-hash' },
     ]);
   }
 

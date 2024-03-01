@@ -5,12 +5,13 @@
  * license GPL-3.0-or-later
  */
 
+import { hideResults } from '../../lib/result';
 import { KEY_SVG } from '../../lib/svg';
 // eslint-disable-next-line import/no-cycle
 import { getKey } from './keys';
 
 const encryptionSection = document.querySelector<HTMLElement>('#encryption')!;
-const opArea = encryptionSection.querySelector<HTMLElement>('.operation-area');
+const opArea = encryptionSection.querySelector<HTMLElement>('.crypto-operations');
 const tabs = opArea?.querySelectorAll<HTMLLIElement>('menu li');
 
 // Hide operation area when switching main tabs
@@ -59,6 +60,7 @@ const updateOpArea = (
   cryptoKey: CryptoKey | CryptoKeyPair,
   operation?: KeyUsage,
 ) => () => {
+  hideResults();
   opArea?.classList.add('active');
   opArea?.scrollIntoView({
     block: 'center',

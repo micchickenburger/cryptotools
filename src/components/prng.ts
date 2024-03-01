@@ -37,7 +37,7 @@ prngGenerateButton.addEventListener('click', () => {
     const op = randomElement.querySelector<HTMLElement>('menu li.active')!.dataset.target;
 
     if (op === 'uuid') {
-      showResults([{ label: 'UUID', value: window.crypto.randomUUID() }]);
+      showResults([{ label: 'UUID', value: window.crypto.randomUUID(), filename: 'prng-uuid' }]);
       return;
     }
 
@@ -49,7 +49,7 @@ prngGenerateButton.addEventListener('click', () => {
     const out = prngOutput.selectedOptions[0].value;
 
     if (out === 'display') {
-      showResults([{ label: 'Random Values', value: array.buffer }]);
+      showResults([{ label: 'Random Values', value: array.buffer, filename: `prng-${bytes}-bytes` }]);
       return;
     }
 

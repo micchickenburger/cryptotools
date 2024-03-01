@@ -9,7 +9,7 @@
  * cryptographic operations.
  */
 
-import { guessEncoding } from './encode';
+import { ENCODING, guessEncoding } from './encode';
 
 const opAreas = document.querySelectorAll<HTMLElement>('.operation-area');
 
@@ -17,7 +17,7 @@ const opAreas = document.querySelectorAll<HTMLElement>('.operation-area');
  * Guess encoding of textarea content
  */
 const checkTextareaEncoding = (textarea: HTMLTextAreaElement) => () => {
-  const encodingSelect = textarea.parentElement!.parentElement!.querySelector('.encoding select');
+  const encodingSelect = textarea.parentElement!.querySelector('.encoding select') || textarea.parentElement!.parentElement!.querySelector('.encoding select');
   const encoding = guessEncoding(textarea.value);
 
   if (encoding) { // UNKNOWN is radix 0, a falsey value
@@ -28,32 +28,38 @@ const checkTextareaEncoding = (textarea: HTMLTextAreaElement) => () => {
   }
 };
 
-/**
- * Guess encoding of input-encoding fields, used by any control that should
- * accept an input of arbitrary encoding, such as digest verification,
- * encryption IVs and counters, or salt values.
- */
-const checkInputEncoding = (encodingSelect: HTMLSelectElement, input: HTMLInputElement) => () => {
-  const encoding = guessEncoding(input.value);
-
-  if (encoding) { // UNKNOWN is radix 0, a falsey value
-    encodingSelect.childNodes.forEach((op) => {
-      const option = op as HTMLOptionElement;
-      if (Number(option.value) === encoding) option.selected = true;
-    });
-  }
-};
-
 opAreas.forEach((opArea) => {
   const textareas = opArea.querySelectorAll<HTMLTextAreaElement>('textarea');
-  const selects = opArea.querySelectorAll<HTMLSelectElement>('select.input-encoding');
 
   // If user is typing, it's probably plain text, so let's just check onpaste
   // We use setTimeout to allow the paste to complete before evaluating the whole textarea contents
-  textareas.forEach((textarea) => textarea.addEventListener('paste', () => setTimeout(checkTextareaEncoding(textarea), 0)));
-  selects.forEach((select) => {
-    const input = select.parentElement!.querySelector('input');
-    input?.addEventListener('paste', () => setTimeout(checkInputEncoding(select, input), 0));
+  textareas.forEach((textarea) => {
+    textarea.addEventListener('paste', () => setTimeout(checkTextareaEncoding(textarea), 0));
+
+    // Character Count
+    const countCharacters = () => {
+      const characterCount = textarea.parentElement!.querySelector('.character-count') || textarea.parentElement!.parentElement!.querySelector('.character-count');
+
+      if (characterCount) {
+        const count = textarea.value.length;
+        if (count === 1) characterCount.textContent = '1 character';
+        else characterCount.textContent = `${count} characters`;
+      }
+    };
+    textarea.addEventListener('input', countCharacters);
+
+    // Change encoding to UTF-8 if user is typing (because who manually types Binary, Hex, etc)
+    textarea.addEventListener('keypress', () => {
+      const encodingSelect = textarea.parentElement!.querySelector<HTMLSelectElement>('.encoding select')
+        || textarea.parentElement!.parentElement!.querySelector<HTMLSelectElement>('.encoding select');
+      encodingSelect!.value = String(ENCODING['UTF-8']);
+    });
+
+    // Allow manually triggering updates.  This helps get around dispatch event restrictions
+    textarea.addEventListener('update', () => {
+      setTimeout(checkTextareaEncoding(textarea), 0);
+      countCharacters();
+    });
   });
 });
 
@@ -84,14 +90,6 @@ opAreas.forEach((opArea) => {
     textarea?.addEventListener('dragend', classState(textarea, false));
     textarea?.addEventListener('drop', preventDefault);
     textarea?.addEventListener('drop', classState(textarea, false));
-
-    // Character Count
-    textarea?.addEventListener('input', () => {
-      const characterCount = textarea.parentElement!.parentElement!.querySelector('.character-count')!;
-      const count = textarea.value.length;
-      if (count === 1) characterCount.textContent = '1 character';
-      else characterCount.textContent = `${count} characters`;
-    });
   });
 });
 

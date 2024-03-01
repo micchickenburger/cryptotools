@@ -74,7 +74,7 @@ form.settings
     margin: 0 1rem 0 auto
 
 #encryption
-  .operation-area, .operation-area div.signature
+  .operation-area, .operation-area div.signature, [data-tab="import-key"] .algorithm
     display: none
 
   .operation-area div.signature
@@ -92,7 +92,7 @@ form.settings
   .operation-area .settings > label.additional-data
     width: 100%
 
-  .operation-area button
+  .crypto-operations button
     width: 100%
     border-radius: 0 0 5px 5px
 
@@ -109,58 +109,63 @@ form.settings
     top: 4px
     left: 11px
 
-  .list-keys ul
+  [data-tab="list-keys"] ul
     text-align: left
     padding: 0
     margin: 1rem
     width: 100%
 
-  .list-keys li
-    display: flex
-    flex-wrap: wrap
-    line-height: 1.5rem
-    padding: 1rem
-    border-top: 2px solid $border
-    cursor: pointer
+    li
+      display: flex
+      flex-wrap: wrap
+      line-height: 1.5rem
+      padding: 1rem
+      border-top: 2px solid $border
+      cursor: pointer
 
-  .list-keys li:first-child
-    border-top: none
+      &:first-child
+        border-top: none
 
-  // Hover effect prevents tooltip visibility 
-  // .list-keys li:hover
-    // background: $border
-    // border-radius: 5px
-  // .list-keys li:hover + li
-  //   border-top-color: transparent
+      // Hover effect prevents tooltip visibility 
+      // &:hover
+        // background: $border
+        // border-radius: 5px
+      // &:hover + li
+      //   border-top-color: transparent
 
-  .list-keys li .container svg
-    color: $primary
+      .container
+        display: flex
+        align-items: center
 
-  .list-keys li .container
-    display: flex
-    align-items: center
+        svg
+          color: $primary
 
-  .list-keys li .meta
-    display: flex
-    flex-direction: column
-    margin-left: 1rem
+      .meta
+        display: flex
+        flex-direction: column
+        margin-left: 1rem
 
-  .list-keys li span:first-child
-    font: 100 italic 1rem 'Lora', serif
-    color: $primary
+      span:first-child
+        font: 100 italic 1rem 'Lora', serif
+        color: $primary
 
-  .list-keys li .saved svg
-    color: $text
-    vertical-align: text-top
-    margin-left: 0.5rem
+      .saved svg
+        color: $text
+        vertical-align: text-top
+        margin-left: 0.5rem
 
-  .list-keys li .actions
-    display: flex
-    align-items: center
-    margin: 0 0 0 auto
+      .actions
+        display: flex
+        align-items: center
+        margin: 0 0 0 auto
 
-  .list-keys li .actions a:first-child
-    color: $error
+        a
+          color: $secondary
+          padding: 0 0.5rem
+
+          &:last-child
+            color: $error
+            padding-right: 0
 
 // Advanced Settings 
 details
@@ -202,15 +207,15 @@ summary::-webkit-details-marker
     align-items: center
     border-radius: 0 0 5px 5px
 
-  .footer div
-    margin: 0.5rem 1rem
+    div
+      margin: 0.5rem 1rem
+
+    button
+      border-radius: 0 0 5px 0
+      height: 75px
 
   // We may use javascript to create these elements, which causes
   // "automatic" spacing between the svg and span elements.  Using
   // flexbox removes this
   .footer div, .stats .datum
     display: flex
-
-  .footer button
-    border-radius: 0 0 5px 0
-    height: 75px

@@ -9,24 +9,25 @@ import * as bcrypt from 'bcryptjs';
 
 enum ENCODING {
   // Non-transformable encodings
+  UNKNOWN = 0,
   BOOLEAN = -1,
   BIGINT = -2,
   INTEGER = -3,
   UUID = -4,
   JSON = -5,
-  UNKNOWN = 0,
-
-  // Transformable encodings
-  BINARY = 2,
-  OCTAL = 8,
-  'UTF-8' = 100,
-  HEXADECIMAL = 16,
-  BASE64 = 64, // RFC 4648
-  BASE64_CRYPT = 640, // Nonstandard OpenBSD alphabet used by crypt, bcrypt
+  PEM = -6,
 
   // Password Hashing Formats
   PHC_STRING = -100,
   MODULAR_CRYPT_FORMAT = -200,
+
+  // Transformable encodings (corresponding to radix)
+  BINARY = 2,
+  OCTAL = 8,
+  HEXADECIMAL = 16,
+  BASE64 = 64, // RFC 4648
+  BASE64_CRYPT = 640, // Nonstandard OpenBSD alphabet used by crypt, bcrypt
+  'UTF-8' = 100,
 }
 
 /**
@@ -145,6 +146,7 @@ const guessEncoding = (encodedData: string): ENCODING => {
   if (/^([0-7]{3})+$/.test(encodedData)) return ENCODING.OCTAL;
   if (/^([0-9a-f]{2})+$|^([0-9A-F]{2})+$/.test(encodedData)) return ENCODING.HEXADECIMAL;
   if (/^([0-9a-zA-Z+/]{4})*[0-9a-zA-Z+/]{2}[0-9a-zA-Z+/=]{2}$/.test(encodedData)) return ENCODING.BASE64;
+  if (/^-{5}BEGIN .+-{5}(\r\n?|\n)([0-9a-zA-Z+/]{4})*[0-9a-zA-Z+/]{2}[0-9a-zA-Z+/=]{2}(\r\n?|\n)-{5}END .+-{5}(\r\n?|\n)?$/.test(encodedData)) return ENCODING.PEM;
 
   // Base64 crypt uses a dot instead of a plus, and has no padding or groupings
   if (/^[0-9a-zA-Z./]+$/.test(encodedData)) return ENCODING.BASE64_CRYPT;

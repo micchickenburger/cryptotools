@@ -9,7 +9,7 @@ import load from '../../lib/loader';
 import { handleError } from '../../lib/error';
 import { addKey } from './keys';
 
-const generateElement = document.querySelector('#encryption .generate-key')!;
+const generateElement = document.querySelector('#encryption [data-tab="generate-key"]')!;
 const purposeElement = generateElement.querySelector<HTMLSelectElement>('.control.purpose select')!;
 
 /**
@@ -153,7 +153,8 @@ button?.addEventListener('click', async () => {
         throw new Error('No algorithm selected.');
     }
 
-    const key = await window.crypto.subtle.generateKey(params, false, keyUsage);
+    const extractable = generateElement.querySelector<HTMLInputElement>('.extractable input')?.checked || false;
+    const key = await window.crypto.subtle.generateKey(params, extractable, keyUsage);
     const persist = generateElement.querySelector<HTMLInputElement>('.save input')?.checked;
     addKey(name, key, persist);
   } catch (e) {

@@ -21,13 +21,31 @@ import {
 
 const resultElement = document.querySelector<HTMLElement>('#results')!;
 
-const downloadEvent = (data: string | ArrayBuffer) => async () => {
+/**
+ * Trigger a file download
+ * @param data Data to download
+ * @param filename Suggested filename
+ * @param extension Suggested file extension
+ */
+const downloadEvent = (
+  data: string | ArrayBuffer,
+  filename?: string,
+  extension?: string | null,
+) => async () => {
   let array: ArrayBuffer;
-  let extension = 'bin';
+  let ext = extension === null ? '' : (extension || 'bin');
 
   if (typeof data === 'string') {
     array = (new TextEncoder()).encode(data);
-    extension = 'txt';
+
+    if (!extension) {
+      const encoding = guessEncoding(data);
+      switch (encoding) {
+        case ENCODING.JSON: ext = 'json'; break;
+        case ENCODING.PEM: ext = 'pem'; break;
+        default: ext = 'txt';
+      }
+    }
   } else array = data;
 
   const blob = new Blob([array], { type: 'application/octet-stream' });
@@ -35,7 +53,8 @@ const downloadEvent = (data: string | ArrayBuffer) => async () => {
 
   const a = document.createElement('a');
   a.href = uri;
-  a.download = `cryptotools-result.${extension}`;
+  const suffix = ext ? `.${ext}` : '';
+  a.download = filename ? `${filename}${suffix}` : `cryptotools-result${suffix}`;
   document.body.appendChild(a);
   a.click();
 
@@ -44,13 +63,29 @@ const downloadEvent = (data: string | ArrayBuffer) => async () => {
   window.URL.revokeObjectURL(uri);
 };
 
-const buildResultElement = (
+type BuildResultData = {
   label: string,
   value: string,
   encoding: ENCODING,
   bitLength: number,
   rawData: string | ArrayBuffer,
-) => {
+  filename?: string,
+  extension?: string | null,
+};
+
+/**
+ * Build result element
+ * @param label Title of result
+ * @param value The encoded result
+ * @param encoding The encoding used
+ * @param bitLength The length of the raw data
+ * @param rawData The unencoded, raw data
+ * @param filename The suggested download filename
+ * @param extension The suggested download file extension
+ */
+const buildResultElement = ({
+  label, value, encoding, bitLength, rawData, filename, extension,
+}: BuildResultData) => {
   const container = document.createElement('div');
   container.classList.add('result');
 
@@ -76,26 +111,28 @@ const buildResultElement = (
     statValue: `${bitLength.toLocaleString()} bits`,
   }];
 
+  const canChangeEncoding = encoding > 0 && typeof rawData === 'object';
+
   const actionItems = [{
     tooltip: 'Download Text',
     tooltipAfter: 'Downloaded!',
     icon: DOWNLOAD_SVG,
-    callback: downloadEvent(value),
+    callback: downloadEvent(value, filename, canChangeEncoding ? `${ENCODING[encoding].toLocaleLowerCase()}.txt` : extension),
   }, {
     tooltip: 'Copy',
     tooltipAfter: 'Copied!',
     icon: COPY_SVG,
-    callback: () => navigator.clipboard.writeText(content.textContent!),
+    callback: () => navigator.clipboard.writeText(value),
   }];
 
   // Positive radixes are safe to encode and decode
-  if (encoding > 0 && typeof rawData === 'object') {
+  if (canChangeEncoding) {
     // First, add the Download Raw Data action button
     actionItems.unshift({
       tooltip: 'Download Raw Data',
       tooltipAfter: 'Downloaded!',
       icon: DOWNLOAD_BINARY_SVG,
-      callback: downloadEvent(rawData),
+      callback: downloadEvent(rawData, filename, extension),
     });
 
     // Then add encoding transformation control
@@ -116,7 +153,9 @@ const buildResultElement = (
 
       try {
         const newValue = encode(rawData, radix);
-        const result = buildResultElement(label, newValue, radix, bitLength, rawData);
+        const result = buildResultElement({
+          label, value: newValue, encoding: radix, bitLength, rawData, filename, extension,
+        });
         container.replaceWith(result);
       } catch (e) { handleError(e); }
     });
@@ -200,17 +239,21 @@ interface Result {
   label: string;
   defaultEncoding?: ENCODING;
   value: ArrayBuffer | string;
+  filename?: string;
+  extension?: string | null;
 }
 
 const showResults = (results: Result[]) => {
   resultElement.innerHTML = DOUBLE_CHEVRON_SVG; // remove any previous results
   clearError(); // as well as any previous error
-  resultElement.scrollIntoView({
-    block: 'start',
+  window.scrollTo({
+    top: resultElement.offsetTop,
     behavior: 'smooth',
   });
 
-  results.forEach(({ label, value, defaultEncoding }) => {
+  results.forEach(({
+    label, value, defaultEncoding, filename, extension,
+  }) => {
     let encoding: ENCODING;
     let content: string;
     let byteLength: number;
@@ -234,7 +277,15 @@ const showResults = (results: Result[]) => {
     }
 
     try {
-      const result = buildResultElement(label, content, encoding, byteLength * 8, value);
+      const result = buildResultElement({
+        label,
+        value: content,
+        encoding,
+        bitLength: byteLength * 8,
+        rawData: value,
+        filename,
+        extension,
+      });
       resultElement.appendChild(result);
     } catch (e) { handleError(e); }
   });

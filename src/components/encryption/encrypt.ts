@@ -20,11 +20,13 @@ const textarea = opArea.querySelector<HTMLTextAreaElement>('.input textarea')!;
  * @param operation One of encrypt, decrypt, sign, or verify
  * @param data Data upon which to operate
  * @param labelSuffix Whether to append any additional information to the result title
+ * @param filename When performing an op on a file, whether to influence result download filename
  * @returns A set of results for display
  */
 const encrypt = async (
   operation: string,
   data: ArrayBuffer,
+  filename?: string,
   labelSuffix: string = '',
 ): Promise<Result[]> => {
   const results: Result[] = [];
@@ -32,6 +34,7 @@ const encrypt = async (
 
   const cryptoKey = getKey(opArea.dataset.key || '').key;
   const isSymmetric = cryptoKey instanceof CryptoKey;
+  const filenamePrefix = filename ? `${filename}-${operation}` : operation;
 
   switch (operation) {
     case 'verify': {
@@ -93,10 +96,12 @@ const encrypt = async (
           label: 'Counter • Needed to decrypt',
           value: counter,
           defaultEncoding: ENCODING.BASE64,
+          filename: `${filenamePrefix}-counter`,
         }, {
           label: 'Counter Length • Needed to decrypt',
           value: algorithm.length,
           defaultEncoding: ENCODING.INTEGER,
+          filename: `${filenamePrefix}-counter-length`,
         });
       }
 
@@ -118,6 +123,7 @@ const encrypt = async (
           label: 'Initialization Vector (IV) • Needed to decrypt • Not Secret',
           value: iv,
           defaultEncoding: ENCODING.BASE64,
+          filename: `${filenamePrefix}-iv`,
         });
       }
 
@@ -142,6 +148,7 @@ const encrypt = async (
           label: 'Initialization Vector (IV) • Needed to decrypt • Not Secret',
           value: iv,
           defaultEncoding: ENCODING.BASE64,
+          filename: `${filenamePrefix}-iv`,
         });
 
         // Additional data can be authenticated and not encrypted
@@ -152,6 +159,7 @@ const encrypt = async (
             label: 'Authenticated but Unencrypted Data • Needed to decrypt',
             value: authenticatedDataTextArea.value,
             defaultEncoding: ENCODING['UTF-8'],
+            filename: `${filenamePrefix}-authenticated-data`,
           });
         }
       }
@@ -161,6 +169,7 @@ const encrypt = async (
         label: `Ciphertext${suffix}`,
         value: ciphertext,
         defaultEncoding: ENCODING.BASE64,
+        filename: filename ? `${filename}.enc` : 'ciphertext',
       });
       break;
     }
@@ -187,6 +196,7 @@ const encrypt = async (
           label: 'RSA-PSS Salt Length • Needed for signature verification',
           value: String(algorithm.saltLength),
           defaultEncoding: ENCODING.INTEGER,
+          filename: `${filenamePrefix}-salt-length`,
         });
 
         // TODO: MDN reports the following as the ceiling for salt length.  However,
@@ -204,6 +214,7 @@ const encrypt = async (
           label: 'Hash Function • Needed for signature verification',
           value: String(hashAlgorithm),
           defaultEncoding: ENCODING['UTF-8'],
+          filename: `${filenamePrefix}-hash`,
         });
       }
 
@@ -212,6 +223,7 @@ const encrypt = async (
         label: `Signature${suffix}`,
         value: sig,
         defaultEncoding: ENCODING.BASE64,
+        filename: filename ? `${filename}.sig` : 'signature',
       });
       break;
     }
@@ -287,6 +299,8 @@ const encrypt = async (
         label: `Plaintext${suffix}`,
         value: plaintext,
         defaultEncoding: ENCODING['UTF-8'],
+        filename: filename ? filename.replace(/(\.?enc)|(\.?bin)/ig, '') : 'plaintext',
+        extension: null,
       });
       break;
     }
@@ -353,7 +367,7 @@ const encryptFiles = (files?: FileList | null) => {
         const label = `${file.name} • ${file.size.toLocaleString()} bytes • ${file.type || 'Unknown type'}`;
 
         try {
-          results.push(await encrypt(operation, event.target.result, label));
+          results.push(await encrypt(operation, event.target.result, file.name, label));
         } catch (error) { handleError(error); }
 
         if (results.length === files.length) showResults(results.flat());
