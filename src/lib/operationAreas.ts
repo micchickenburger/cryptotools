@@ -37,7 +37,7 @@ opAreas.forEach((opArea) => {
     textarea.addEventListener('paste', () => setTimeout(checkTextareaEncoding(textarea), 0));
 
     // Character Count
-    textarea.addEventListener('input', () => {
+    const countCharacters = () => {
       const characterCount = textarea.parentElement!.querySelector('.character-count') || textarea.parentElement!.parentElement!.querySelector('.character-count');
 
       if (characterCount) {
@@ -45,13 +45,20 @@ opAreas.forEach((opArea) => {
         if (count === 1) characterCount.textContent = '1 character';
         else characterCount.textContent = `${count} characters`;
       }
-    });
+    };
+    textarea.addEventListener('input', countCharacters);
 
     // Change encoding to UTF-8 if user is typing (because who manually types Binary, Hex, etc)
     textarea.addEventListener('keypress', () => {
       const encodingSelect = textarea.parentElement!.querySelector<HTMLSelectElement>('.encoding select')
         || textarea.parentElement!.parentElement!.querySelector<HTMLSelectElement>('.encoding select');
       encodingSelect!.value = String(ENCODING['UTF-8']);
+    });
+
+    // Allow manually triggering updates.  This helps get around dispatch event restrictions
+    textarea.addEventListener('update', () => {
+      setTimeout(checkTextareaEncoding(textarea), 0);
+      countCharacters();
     });
   });
 });

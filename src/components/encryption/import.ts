@@ -7,7 +7,10 @@
 
 import * as asn1js from 'asn1js';
 import { handleError } from '../../lib/error';
-import { ENCODING, decode, guessEncoding } from '../../lib/encode';
+import load from '../../lib/loader';
+import {
+  ENCODING, decode, encode, guessEncoding,
+} from '../../lib/encode';
 import { addKey } from './keys';
 
 /**
@@ -83,9 +86,8 @@ algorithmSelect.addEventListener('change', () => {
 
 // Update settings based on textarea detection
 // setTimeout is needed to await the browser paste to complete
-textarea.addEventListener('paste', () => setTimeout(() => {
-  const { value } = textarea;
-  const encoding = guessEncoding(value);
+const evaluateKeyMaterial = () => setTimeout(() => {
+  let { value } = textarea;
   let keyData: ArrayBuffer | object | undefined;
 
   algorithmSelect.parentElement!.style.display = 'none';
@@ -93,6 +95,14 @@ textarea.addEventListener('paste', () => setTimeout(() => {
 
   // Detect key type
   try {
+    // Coerce textarea value to UTF-8 to discover JSON, PEM, and other plain text
+    // encoding types from binary source data
+    try {
+      const val = encode(decode(value, guessEncoding(value)), ENCODING['UTF-8']);
+      if (guessEncoding(val)) value = val; // will be 0 if unknown
+    } catch (e) { /* do nothing */ }
+    const encoding = guessEncoding(value);
+
     switch (encoding) {
       // JSON Web Keys
       case ENCODING.JSON: {
@@ -110,7 +120,7 @@ textarea.addEventListener('paste', () => setTimeout(() => {
       default: {
         if (encoding === ENCODING.PEM) {
           // Decode PEM to DER
-          const der = value.match(/^-{5}BEGIN (.+)-{5}(?:\r\n?|\n)((?:[0-9a-zA-Z+/]{4})*[0-9a-zA-Z+/]{2}[0-9a-zA-Z+/=]{2})(\r\n?|\n)-{5}END .+-{5}(\r\n?|\n)?$/);
+          const der = value.match(/^-{5}BEGIN (.+)-{5}(?:\r\n?|\n)((?:[0-9a-zA-Z+/]{4})*[0-9a-zA-Z+/]{2}[0-9a-zA-Z+/=]{2})(\r\n?|\n)-{5}END .+-{5}(\r\n?|\n)*$/);
           if (der && der.length > 2) keyData = decode(der[2], ENCODING.BASE64);
         } else {
           try { keyData = decode(value, encoding); } catch (e) { throw new Error('Pasted content does not look like key material.'); }
@@ -153,12 +163,12 @@ textarea.addEventListener('paste', () => setTimeout(() => {
       }
     }
   } catch (e) { handleError(e); }
-}, 0));
+}, 0);
+textarea.addEventListener('paste', evaluateKeyMaterial);
 
 // Import key
 importButton?.addEventListener('click', async () => {
-  const { value } = textarea;
-  const encoding = guessEncoding(value);
+  let { value } = textarea;
   let isPrivate = false;
 
   let format: KeyFormat;
@@ -176,6 +186,14 @@ importButton?.addEventListener('click', async () => {
 
   // Detect key type
   try {
+    // Coerce textarea value to UTF-8 to discover JSON, PEM, and other plain text
+    // encoding types from binary source data
+    try {
+      const val = encode(decode(value, guessEncoding(value)), ENCODING['UTF-8']);
+      if (guessEncoding(val)) value = val; // will be 0 if unknown
+    } catch (e) { /* do nothing */ }
+    const encoding = guessEncoding(value);
+
     if (!keyName) throw new Error('A key name is required.');
     if (!value) throw new Error('A key must be provided.');
 
@@ -266,7 +284,6 @@ importButton?.addEventListener('click', async () => {
         }
 
         // Treat as raw
-        // TODO
         if (!schema || !schema.verified) {
           console.warn('Input does not look like a PEM-encoded, ASN.1 DER-encoded, or JSON-encoded cryptokey. Assuming raw.');
           format = 'raw';
@@ -373,3 +390,50 @@ importButton?.addEventListener('click', async () => {
     form.reset();
   } catch (e) { handleError(e); }
 });
+
+/**
+ * Upload a key
+ *
+ * Just encode the contents and paste into the textarea since the format
+ * dictates whether additional settings are necessary
+ */
+const uploadKey = (files: FileList | null | undefined) => {
+  if (!files || files.length !== 1) {
+    handleError('Only one key can be uploaded at a time.');
+    return;
+  }
+  load(0);
+
+  const [file] = Array.from(files);
+  const reader = new FileReader();
+
+  reader.onprogress = (event) => {
+    load((event.loaded / file.size) * 100);
+  };
+
+  reader.onload = (event) => {
+    if (!event.target?.result || !(event.target.result instanceof ArrayBuffer)) {
+      handleError(new Error(`File [${file.name}] of type [${file.type}] failed to load.`));
+      return;
+    }
+
+    // Show in UTF-8 if key is in PEM or JSON format, else base64 encode
+    let value: string;
+    const utf8 = encode(event.target.result, ENCODING['UTF-8']);
+    switch (guessEncoding(utf8)) {
+      case ENCODING.JSON: case ENCODING.PEM:
+        value = utf8; break;
+      default: value = encode(event.target.result, ENCODING.BASE64);
+    }
+
+    textarea.value = value;
+    textarea.dispatchEvent(new Event('update'));
+    evaluateKeyMaterial();
+  };
+
+  reader.readAsArrayBuffer(file);
+};
+
+const upload = section.querySelector<HTMLInputElement>('.upload input');
+upload?.addEventListener('change', () => uploadKey(upload.files));
+textarea.addEventListener('drop', (event) => uploadKey(event.dataTransfer?.files));
