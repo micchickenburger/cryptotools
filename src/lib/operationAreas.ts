@@ -57,7 +57,7 @@ opAreas.forEach((opArea) => {
 
     // Allow manually triggering updates.  This helps get around dispatch event restrictions
     textarea.addEventListener('update', () => {
-      checkTextareaEncoding(textarea);
+      checkTextareaEncoding(textarea)();
       countCharacters();
     });
   });
