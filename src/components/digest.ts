@@ -168,6 +168,13 @@ const readFiles = (files?: FileList | null) => {
         return;
       }
 
+      // Allow verifying a single file
+      if (files.length === 1) {
+        textarea.value = encode(event.target.result, ENCODING.BASE64);
+        textarea.dispatchEvent(new Event('update'));
+        return;
+      }
+
       // Look for checksum files
       try {
         const checksumExistsError = new Error('More than one checksum file exists in the file list.');
