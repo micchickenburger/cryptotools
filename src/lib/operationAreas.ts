@@ -43,7 +43,7 @@ opAreas.forEach((opArea) => {
       if (characterCount) {
         const count = textarea.value.length;
         if (count === 1) characterCount.textContent = '1 character';
-        else characterCount.textContent = `${count} characters`;
+        else characterCount.textContent = `${count.toLocaleString()} characters`;
       }
     };
     textarea.addEventListener('input', countCharacters);
@@ -57,7 +57,7 @@ opAreas.forEach((opArea) => {
 
     // Allow manually triggering updates.  This helps get around dispatch event restrictions
     textarea.addEventListener('update', () => {
-      setTimeout(checkTextareaEncoding(textarea), 0);
+      checkTextareaEncoding(textarea)();
       countCharacters();
     });
   });
