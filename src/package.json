@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node esbuild.mjs --watch",
     "build": "node esbuild.mjs",
-    "lint": "cd .. && npx eslint src"
+    "lint": "cd .. && npx eslint src",
+    "format": "cd .. && npx prettier --write src && npx eslint src --fix"
   },
   "author": "Micah Henning <hello@micah.soy>",
   "license": "GPL-3.0-or-later",
